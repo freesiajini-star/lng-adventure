@@ -1,0 +1,6 @@
+import {writeFileSync} from 'node:fs';
+import {makeQuestion} from '../math.js';
+import {renderVisual} from '../public/visuals.js';
+const cases=[[1,0],[1,1],[1,2],[1,4],[3,0],[5,3],[6,0],[6,6],[8,0],[8,6],[9,6],[9,7],[4,6],[11,0],[11,2],[15,4],[15,5],[6,4],[6,5],[16,1]];
+const html=`<!doctype html><meta charset="utf-8"><title>복원한 본문 그림 20묶음</title><style>body{font:14px 'Malgun Gothic',sans-serif;background:#edf2e9;margin:15px;color:#304f4b}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}article{background:#fffefa;border:1px solid #ccd9c6;border-radius:10px;padding:12px;min-width:0}h2{font-size:15px;margin:0 0 10px}.art{height:230px;display:flex;align-items:center;justify-content:center}.art>svg{width:100%;max-height:220px}.restored-pair{display:flex;width:100%;gap:8px}.restored-pair>*{width:50%;min-width:0}.recipe-visual svg{height:85px;width:100%}.recipe-visual{font-size:12px;line-height:1.5;text-align:center}.recipe-visual p{margin:3px}</style><h1>원본 본문 그림 20묶음 복원 대조</h1><div class="grid">${cases.map(([s,t])=>{const q=makeQuestion(s,t,31);return`<article data-stage="${s}" data-type="${t}"><h2>${q.source} · ${s}단계 ${t+1}유형</h2><div class="art">${renderVisual(q.visual)}</div></article>`;}).join('')}</div>`;
+writeFileSync('review/그림복원20.html',html);writeFileSync('docs/qa-review.html',html);

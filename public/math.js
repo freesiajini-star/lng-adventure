@@ -1,13 +1,17 @@
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js';
 import {reviewQuestion} from './curriculum.js';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
 export const TYPE_NAMES=[['넘치는 물','같은 그릇','컵의 개수','들이 순서','채우는 횟수','몇 배일까?'],['L를 mL로','mL를 L와 mL로','단위 바꾸기','옳은 변환','크기 비교','순서 정하기'],['기준으로 어림','알맞은 단위','알맞은 물건','단위 고치기','가까운 어림','눈금 읽기'],['들이 더하기','받아올려 더하기','들이 빼기','받아내려 빼기','남은 양','빈칸 찾기'],['차이 구하기','옮길 양','같아진 양','눈금과 물 옮기기','옮긴 양 판단','처음 양 찾기'],['저울 기울기','무게 순서','단위 물체','무게 차이','단위 물체 비교','한 개씩 비교'],['kg를 g으로','g을 kg와 g으로','t와 kg','상자와 배','크기 비교','순서 정하기'],['알맞은 단위','기준으로 어림','단위 고치기','1 kg과 비교','한 눈금의 값','저울 읽기'],['무게 더하기','받아올려 더하기','무게 빼기','받아내려 빼기','더 담을 무게','빈칸 찾기'],['똑같이 나누기','상자 무게 빼기','평형 저울','두 저울 연결','거꾸로 찾기','묶음 거꾸로'],['횟수로 비교','이어 비교','가까운 어림','어림의 차이','가까운 순서','덜어낸 횟수'],['넣고 빼기','처음 양','한 컵의 들이','한 번 덜어낸 양','한 개의 무게','빈 상자의 무게'],['합과 차','남은 양 나누기','두 사람의 양','세 그릇의 양','큰 통 바꾸기','무게 나누기'],['최대 개수','최소 트럭 수','최소 통 수','두 종류의 짐','내린 뒤의 여유','남은 한도'],['기준 무게와 가격','두 물건의 가격','거스름돈','가격으로 양 찾기','요리 재료','기준량의 몇 배'],['저울 연결','묶음 바꾸기','두 식 더하기','두 식 빼기','개수 맞추기','묶음의 무게'],['두 수도','새는 물','시간 단위 맞추기','일부 찬 물통','모인 양','나가는 양 찾기']];
+for(const [stage,names] of Object.entries(EXTRA_TYPES))TYPE_NAMES[Number(stage)-1].push(...names);
 export const NICKS=[['🐱','고양이'],['🐰','토끼'],['🦊','여우'],['🐻','곰'],['🐼','판다'],['🐨','코알라'],['🐯','호랑이'],['🦁','사자'],['🐸','개구리'],['🐧','펭귄'],['🦉','부엉이'],['🐬','돌고래'],['🐢','거북이'],['🦔','고슴도치'],['🐿️','다람쥐'],['🦦','수달'],['🦌','사슴'],['🦒','기린'],['🦓','얼룩말'],['🦘','캥거루'],['🦭','물개'],['🦋','나비'],['🐝','꿀벌'],['🐹','햄스터'],['🐺','늑대']];
 export const cap=n=>n<1000?`${n} mL`:`${Math.floor(n/1000)} L${n%1000?' '+n%1000+' mL':''}`;
 export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%1000+' g':''}`;
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
+ if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');
+ if(type>=6){const q=restoreQuestion({stage,type,title:TYPE_NAMES[stage-1][type],lines:[],fields:[],facts:[],work:[]});validateQuestion(q);return q;}
  const random=rng(seed), r=(a,b)=>a+Math.floor(random()*(b-a+1)), pick=a=>a[r(0,a.length-1)];
  let q={stage,type,title:TYPE_NAMES[stage-1][type],lines:[],fields:[],visual:null,explanation:'',facts:[]};
  const num=(label,value,unit='')=>{q.fields.push({label,unit,kind:'number',answer:String(value)});};
@@ -109,7 +113,7 @@ export function makeQuestion(stage,type,seed=1){
   if(type===5){lines(`빈 ${cap(capacity)} 수조에 1초에 ${inflow} mL씩 물을 넣었습니다.`,`동시에 일정하게 물을 빼니 ${time}초 뒤 가득 찼습니다.`,'1초에 몇 mL씩 물을 뺐나요?');num('빠져나간 양',out,'mL');q.explanation=`초당 늘어난 양은 ${capacity} ÷ ${time} = ${net} mL입니다. ${inflow} − ${net} = ${out} mL입니다.`;}
   q.visual={kind:'flow',inflow:type===0?400:type===2?'1500 mL / 2초':inflow,outflow:type===0?0:type===2?350:type===5?'?':out};
  }
- reviewQuestion(q,{r,pick,cap,mass});validateQuestion(q);return q;
+ reviewQuestion(q,{r,pick,cap,mass});restoreQuestion(q);validateQuestion(q);return q;
 }
 export function validateQuestion(q){
  if(!q.lines.length||!q.fields.length||!q.explanation)throw Error('불완전한 문항');

@@ -7,9 +7,15 @@
   "scripts": {
     "build": "node scripts/build-free.mjs",
     "preview": "node scripts/preview-free.mjs",
-    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs",
+    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs tests/restoration.test.mjs",
     "rules": "node scripts/make-rules.mjs"
   },
-  "dependencies": {"qrcode-generator": "2.0.4"},
-  "devDependencies": {"@firebase/rules-unit-testing": "6.0.0", "firebase": "13.3.0", "firebase-tools": "15.36.0"}
+  "dependencies": {
+    "qrcode-generator": "2.0.4"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.3.0",
+    "firebase-tools": "15.36.0"
+  }
 }
