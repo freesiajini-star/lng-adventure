@@ -10,3 +10,4 @@ database-debug.log*
 *service-account*.json
 *serviceAccount*.json
 review/
+docs/qa-review.html

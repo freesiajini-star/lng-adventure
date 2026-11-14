@@ -22,7 +22,11 @@
           "$student": {
             ".write": "(auth != null && auth.token.lngRole == 'teacher') || ((auth != null && auth.token.lngRole == 'student' && auth.token.lngStudent == $student && (auth.token.lngKind != 'qr' || auth.token.auth_time >= root.child('lngAdventure/students').child(auth.token.lngClass + '').child($student).child('qrValidAfter').val())) && data.child('initialized').val() != true)",
             ".validate": "newData.hasChildren(['id','class_no','student_no','nickname','initialized','qrValidAfter']) && ((auth != null && auth.token.lngRole == 'teacher') || (newData.child('id').val() == data.child('id').val() && newData.child('class_no').val() == data.child('class_no').val() && newData.child('student_no').val() == data.child('student_no').val() && newData.child('qrValidAfter').val() == data.child('qrValidAfter').val() && newData.child('initialized').val() == true && root.child('lngAdventure/nicknames').child($class).child(newData.child('nickname').val()).val() == $student))",
+            "initialized": {
+              ".read": "auth != null"
+            },
             "nickname": {
+              ".read": "auth != null",
               ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20"
             },
             "qrValidAfter": {

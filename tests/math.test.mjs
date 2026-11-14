@@ -9,5 +9,5 @@ test('container capacity and linear scale positions are within mathematical boun
 test('indivisible loads use packing counts rather than only total weight',()=>{for(let seed=0;seed<1000;seed++){const q=makeQuestion(14,1,seed),numbers=q.lines[0].match(/\d+/g).map(Number),[weight,count]=numbers,answer=Number(q.fields[0].answer),perTruck=Math.floor(1000/weight);assert.ok(answer*perTruck>=count);assert.ok((answer-1)*perTruck<count);}});
 test('sum-and-difference, balances and rate examples have independent reference results',()=>{
  assert.equal(makeQuestion(16,4,1).fields[0].answer,'2100');assert.deepEqual(makeQuestion(17,0,1).fields.map(x=>x.answer),['400','5']);assert.deepEqual(makeQuestion(17,2,1).fields.map(x=>x.answer),['750','15']);
- for(let seed=0;seed<100;seed++){const q=makeQuestion(13,0,seed),[low,high]=q.fields.map(f=>Number(f.answer)),total=q.facts.find(f=>f.label==='두 양의 합').right,diff=q.facts.find(f=>f.label==='두 양의 차').right;assert.equal(low,(total-diff)/2);assert.equal(high,(total+diff)/2);}
+ for(let seed=0;seed<100;seed++){const q=makeQuestion(13,0,seed),[low,high]=q.fields.slice(-2).map(f=>Number(f.answer)),total=q.facts.find(f=>f.label==='두 양의 합').right,diff=q.facts.find(f=>f.label==='두 양의 차').right;assert.equal(low,(total-diff)/2);assert.equal(high,(total+diff)/2);}
 });

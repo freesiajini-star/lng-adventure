@@ -15,4 +15,3 @@ export function applyAttempt(old,event,previous=[]){
 }
 export function dayProjection(d){return d?{total:d.total,stages:d.stages,sessions:d.sessions,locked:!!d.locked,updatedAt:d.updatedAt||0}:null;}
 export function updateMonthly(old,day,projection){const m=structuredClone(old||{days:{}});m.days??={};if((m.days[day]?.updatedAt||0)>(projection?.updatedAt||0))return m;m.days[day]=projection;const total=empty(),stages={};for(const d of Object.values(m.days)){for(const field of Object.keys(total))total[field]+=Number(d.total?.[field]||0);for(const [n,s]of Object.entries(d.stages||{})){stages[n]??=empty();for(const field of Object.keys(stages[n]))stages[n][field]+=Number(s[field]||0);}}return{...m,total,stages};}
-
