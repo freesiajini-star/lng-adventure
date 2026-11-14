@@ -1,0 +1,12 @@
+node_modules/
+.private/
+.data/
+.firebase/
+firebase-debug.log*
+database-debug.log*
+*-debug.log
+.env*
+*.pem
+*service-account*.json
+*serviceAccount*.json
+review/
