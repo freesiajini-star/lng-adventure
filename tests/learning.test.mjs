@@ -4,3 +4,6 @@ test('all fields share one outcome, retries deduplicate and wrong-then-correct s
 test('stage cap and sessions preserve existing 100-question and 30-minute boundaries',()=>{let d;for(let i=1;i<=100;i++)d=applyAttempt(d,event(i));assert.throws(()=>applyAttempt(d,event(101)),/100문제/);assert.equal(dayUsage(d).stages[1],100);const two=applyAttempt(applyAttempt(null,event(1)),{...event(2),at:1801000});assert.equal(Object.keys(two.sessions).length,2);});
 test('daily snapshot retry cannot double monthly totals or replace newer snapshots',()=>{const d=applyAttempt(null,event(1)),p=dayProjection(d);let m=updateMonthly(null,'2026-11-15',p);m=updateMonthly(m,'2026-11-15',p);assert.equal(m.total.correct,1);const later=applyAttempt(d,event(2));m=updateMonthly(m,'2026-11-15',dayProjection(later));m=updateMonthly(m,'2026-11-15',p);assert.equal(m.total.correct,2);});
 test('Korea night boundary',()=>{assert.equal(night(new Date('2026-11-15T21:00:00+09:00').getTime()),true);assert.equal(night(new Date('2026-11-15T06:00:00+09:00').getTime()),false);});
+test('missing previous-day records are treated as zero usage',()=>{
+ assert.equal(dayUsage({total:{total:300}},[null,null]).locked,false);
+});
