@@ -26,3 +26,8 @@ body.theme-bakery .teacher-top{background:#4b2e1bbf;padding:18px 22px;border-rad
 @media(max-width:700px){body.theme-bakery .masthead{min-height:95px;height:95px;padding:10px}.theme-select{max-width:105px;padding:7px;font-size:10px}body.theme-bakery .header-right{margin-left:auto}.theme-bakery .intro{margin-top:15px}.header-right{flex-wrap:wrap}.theme-bakery .entry-screen{margin-top:10px}}
 @media print{body{background:#fff!important}}
 body.theme-bakery .header-right{margin-left:auto}
+@media(max-height:760px) and (min-width:961px){
+ .visual-box svg{max-height:125px}.visual-box{margin-bottom:9px}
+ .answer-row{min-height:36px}.answers{gap:6px}.choice{padding:6px 10px;font-size:14px;min-height:36px}
+ .problem-body{padding-bottom:12px}.actions{margin-top:10px}.stage-note{display:none}
+}
