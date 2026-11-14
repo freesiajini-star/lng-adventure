@@ -1,6 +1,6 @@
-import {api} from './firebase-client.js';
-import {STAGES,COLORS,TYPE_NAMES,NICKS,makeQuestion,publicQuestion,grade} from './math.js';
-import {renderVisual} from './visuals.js';
+import {api} from './firebase-client.js?v=53cae1ce3daf';
+import {STAGES,COLORS,TYPE_NAMES,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=53cae1ce3daf';
+import {renderVisual} from './visuals.js?v=53cae1ce3daf';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let student=null,preview=false,course=0,stage=1,selected=new Set([1]),q=null,fullQ=null,answers=[],activeField=0,questionCount=0,correctCount=0,previewScore=0,rows=[],submitting=false,correctRecorded=false,wrongRecorded=false,usage=null,forcedType=-1,lastActive=Date.now(),busy=false;
 const bags=new Map();
