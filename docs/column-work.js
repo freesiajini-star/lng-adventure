@@ -1,4 +1,4 @@
-import {columnSteps} from './column-calculation.js?v=217cb952ba44';
+import {columnSteps} from './column-calculation.js?v=0a45ad565ff8';
 export function columnMarkup(){return '<section class="column-work" aria-label="격자 세로셈 풀이"><h2>세로셈으로 풀어보기</h2><div class="column-grid-host"></div><p class="column-message" aria-live="polite"></p><div class="column-controls"><button data-column="play" type="button">풀이 시작</button><button data-column="step" type="button">한 단계씩</button><button data-column="reset" type="button">처음부터</button></div></section>';}
 export function mountColumn(root,data){
  if(!root)return;const model=columnSteps(data.a,data.b,data.operation);let index=-1,timer=null;

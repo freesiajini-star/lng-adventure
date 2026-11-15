@@ -1,4 +1,4 @@
-import {seeded} from './core-revisions.js?v=217cb952ba44';
+import {seeded} from './core-revisions.js?v=0a45ad565ff8';
 // Each table is a fictional plan, recipe, product label or a measured result.
 export const LIFE_SCENES=[
  {title:'학교 텃밭',intro:'오늘 정한 화분 물주기 계획입니다.',items:['상추','방울토마토','고추','꽃'],values:[200,300,400,500],art:'plant',unit:'화분 1개',count:'개'},
@@ -28,7 +28,7 @@ export function makeLifeQuestion(q,seed){
  const variation=r(0,2),step=scene.art==='ice'?5:scene.art==='tank'?100:scene.art==='balloon'?10:25;
  const rows=order.map(i=>({label:scene.items[i],value:scene.values[i]+variation*step,art:scene.art,index:i}));
  if(sceneIndex===3&&rows[0].value+rows[1].value>5000){const j=rows.findIndex((x,i)=>i>1&&x.value+rows[0].value<=5000);[rows[1],rows[j]]=[rows[j],rows[1]];}
- const[a,b]=rows,mode=scene.mode||'multiply',ca=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4),cb=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4);
+ const[a,b]=rows,mode=scene.mode||'multiply',ca=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4),cb=['sum','pour','remain'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4);
  const pa=a.value*ca,pb=b.value*cb,total=pa+pb,initial=mode==='remain'?Math.ceil((total+200+r(0,4)*100)/1000)*1000:null;
  let question,answer=total;
  // Korean wording below is deliberately short and names the exact measured quantity.

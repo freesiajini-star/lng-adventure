@@ -28,7 +28,7 @@ export function makeLifeQuestion(q,seed){
  const variation=r(0,2),step=scene.art==='ice'?5:scene.art==='tank'?100:scene.art==='balloon'?10:25;
  const rows=order.map(i=>({label:scene.items[i],value:scene.values[i]+variation*step,art:scene.art,index:i}));
  if(sceneIndex===3&&rows[0].value+rows[1].value>5000){const j=rows.findIndex((x,i)=>i>1&&x.value+rows[0].value<=5000);[rows[1],rows[j]]=[rows[j],rows[1]];}
- const[a,b]=rows,mode=scene.mode||'multiply',ca=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4),cb=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4);
+ const[a,b]=rows,mode=scene.mode||'multiply',ca=['sum','pour'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4),cb=['sum','pour','remain'].includes(mode)?1:scene.art==='ice'?r(5,12):r(1,scene.values.some(x=>x>=750)?3:4);
  const pa=a.value*ca,pb=b.value*cb,total=pa+pb,initial=mode==='remain'?Math.ceil((total+200+r(0,4)*100)/1000)*1000:null;
  let question,answer=total;
  // Korean wording below is deliberately short and names the exact measured quantity.

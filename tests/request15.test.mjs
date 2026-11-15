@@ -28,6 +28,7 @@ test('20 life contexts each have 100 valid table-based variants and unique answe
   const variants=new Set();for(let n=0;n<100;n++){const seed=n*20+scene,q=makeQuestion(4,6,seed),v=q.visual;assert.equal(v.scene,scene);assert.equal(v.rows.length,4);assert.equal(new Set(v.rows.map(x=>x.label)).size,4);const a=v.rows.find(x=>x.label===v.selected[0]),b=v.rows.find(x=>x.label===v.selected[1]),pa=a.value*v.quantities[0],pb=b.value*v.quantities[1];assert.equal(v.total,pa+pb);assert.ok(v.total>=100&&v.total<=5000,'total '+scene+':'+v.total);const target=v.initial===null?v.total:v.initial-v.total;assert.ok(target>0);const f=q.fields;
    if(scene===19){assert.equal(Number(f[0].answer),pa);assert.equal(Number(f[1].answer),pb);}
    const last=f.slice(scene===19?2:0);const actual=last.length===2?Number(last[0].answer)*1000+Number(last[1].answer):Number(last[0].answer);assert.equal(actual,target);if(last.length===2)assert.ok(Number(last[1].answer)<1000);
+   if(scene===8)assert.equal(v.quantities[1],1);
    if(scene===7){const capacity=Number(q.lines[0].match(/들이 (\d+) mL/)[1]);assert.ok(capacity>=target);}
    if(scene===0)assert.match(q.lines[0],/오늘 정한/);if(scene===16)assert.match(q.lines[0],/공간을 남기고/);if(scene===18)assert.match(q.lines[0],/처음/);
    const drawing=renderVisual(v);for(const row of v.rows){assert.ok(drawing.includes(row.label));assert.ok(drawing.includes(row.value+' mL'));}assert.ok(!/NaN|undefined|Infinity/.test(drawing));variants.add(JSON.stringify([v.rows,v.quantities]));assert.equal(grade(q,f.map(x=>x.answer)).ok,true);
