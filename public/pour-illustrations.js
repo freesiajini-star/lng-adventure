@@ -3,7 +3,7 @@ import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18,color='#3e5d61')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-family="Malgun Gothic,sans-serif" font-size="${size}">${esc(s)}</text>`;
 const outline=p=>'M'+p.map(([y,r])=>`${r},${y}`).join('L')+'L'+[...p].reverse().map(([y,r])=>`${-r},${y}`).join('L')+'Z';
-function illustration(v,capacity,amount,liquid,cx,baseline,camera,id,receiving){
+export function illustration(v,capacity,amount,liquid,cx,baseline,camera,id,receiving){
  const g=vesselGeometry(v.id,capacity,amount),p=g.profile,d=outline(p),top=p[0][0],bottom=p.at(-1)[0],scale=g.scale*camera,y=baseline-bottom*scale;
  const liquidColors=liquid==='우유'?['#fffcef','#f1dfb9']:liquid==='주스'?['#ffce78','#e9a348']:['#9de1eb','#55b7d1'];
  const maxRadius=Math.max(...p.map(x=>x[1]));

@@ -31,3 +31,56 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 .stage-button.active:after{color:inherit}
 @media(max-width:700px){.paper .choice.selected{padding:8px}}
 @media(max-height:760px) and (min-width:961px){.paper .choice.selected{padding:6px 10px}}
+/* Worksheet layout shared by all stages. */
+.paper .paper-head{min-height:202px;gap:20px}
+.paper-head .question-count{flex:0 0 200px;min-height:80px}
+.question-grade{width:240px;height:186px;left:-20px;right:auto;top:50%;bottom:auto;transform:translateY(-50%)}
+.question-text p{margin:0 0 15px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere}
+.paper .answers{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.paper .answer-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;width:100%}
+.paper .answer-label{min-width:0;text-align:right;flex:0 0 auto}
+.paper .choice-group{justify-content:center;align-items:center;max-width:100%}
+.comparison-slot{display:inline-grid;place-items:center;width:1.65em;height:1.65em;border:2px solid var(--accent);border-radius:50%;vertical-align:middle;color:var(--stage-ink);font-weight:800;margin:0 .3em;line-height:1}
+#entryClass,#entryNumber{width:58px;text-align:center}
+#otherRanks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:18px}
+#otherRanks .side-card{margin:0;padding:11px 9px;min-width:0;background:#fffdf7ed;border:1px solid var(--stage-edge);border-radius:13px}
+#otherRanks h2{font-size:12px;line-height:1.5;min-height:36px}
+#otherRanks .rank-row{font-size:10px;gap:4px;flex-wrap:wrap}
+#otherRanks .empty-rank{font-size:10px;padding:5px 0}
+@media(max-width:1100px){#otherRanks{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.paper .paper-head{min-height:185px;gap:6px;padding:12px}.paper-head .question-count{flex-basis:190px}.question-grade{left:-25px}.paper-head h1{font-size:17px}#otherRanks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:410px){.paper .paper-head{flex-wrap:wrap}.paper-head .question-count{margin:auto}.paper-head>div{width:100%;text-align:center}.paper .answer-label{text-align:center;flex-basis:100%}}
+.column-work{margin:12px auto 20px;width:100%;text-align:center;border:1px solid var(--stage-edge);border-radius:15px;background:#fffdf8;padding:14px}
+.column-work h2{font-size:16px;margin:0 0 12px;color:var(--stage-ink)}
+.column-grid{--cell:44px;display:grid;grid-template-columns:repeat(var(--columns),var(--cell));grid-template-rows:28px repeat(4,var(--cell));width:max-content;margin:auto;border:1px solid #cbd6da;background-color:white;background-image:linear-gradient(to right,#dde5e7 1px,transparent 1px),linear-gradient(to bottom,#dde5e7 1px,transparent 1px);background-size:var(--cell) var(--cell);background-position:0 28px;font-variant-numeric:tabular-nums;font-family:'Malgun Gothic',sans-serif;font-weight:700}
+.column-cell{display:grid;place-items:center;position:relative;font-size:27px;min-width:0}.column-cell.unit-edge{border-left:2px solid #9fbdc4}.column-unit{background:#edf3ef;display:grid;place-items:center;font-size:16px;border-bottom:1px solid #b6c9ce}.column-note{font-size:17px;line-height:28px;min-width:29px;height:29px;border:1px solid var(--accent);color:var(--stage-ink);border-radius:4px;background:var(--stage-soft)}
+.borrowed-digit{position:relative;color:#74858c}.borrowed-digit:after{content:'';position:absolute;left:-4px;right:-4px;top:49%;border-top:2px solid #c2574d;transform:rotate(-42deg)}
+.current-digit{background:var(--stage-soft)}.result-digit{color:var(--stage-ink)}.column-rule{align-self:start;border-top:2px solid #4e6670;pointer-events:none;z-index:2}
+.column-message{font-size:14px;line-height:1.6;min-height:46px;margin:10px 0}.column-controls{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.paper .column-controls button{font-size:12px;padding:7px 9px}
+.numeric-work:has(.column-work) .numeric-content{display:block!important}
+.visual-box[data-visual="lifeTable"],.visual-box[data-visual="referenceEstimate"]{padding:8px}
+.visual-box[data-visual="lifeTable"] svg,.visual-box[data-visual="referenceEstimate"] svg{max-height:none;width:100%}
+.numeric-work:has([data-visual="lifeTable"], [data-visual="equalizeTanks"]) .numeric-content{display:contents!important}
+.numeric-work:has([data-visual="lifeTable"], [data-visual="equalizeTanks"]) .visual-box{grid-column:1/-1}
+.numeric-work:has([data-visual="lifeTable"], [data-visual="equalizeTanks"]) .answers{grid-column:1}
+.numeric-work:has([data-visual="lifeTable"], [data-visual="equalizeTanks"]) .numeric-pad{grid-column:2;grid-row:2}
+.numeric-work:has([data-visual="lifeTable"], [data-visual="equalizeTanks"]) #feedback{grid-column:1/-1}
+@media(max-width:420px){.column-grid{--cell:36px}.column-cell{font-size:23px}.paper .paper-head{min-height:210px}}
+/* Give the large grading mark room only after an attempt. */
+.paper .paper-head{min-height:100px}
+.paper .paper-head:has(.grading-mark){min-height:202px}
+.numeric-work:not(:has(.numeric-pad)) .numeric-content:has(.visual-box){display:block!important}
+.numeric-work:not(:has(.numeric-pad)) .answers{margin-top:18px}
+.paper .numeric-pad .pad-clear{white-space:nowrap;font-size:11px;letter-spacing:-.5px}
+@media(max-width:700px){.paper .paper-head{min-height:100px}.paper .paper-head:has(.grading-mark){min-height:202px}}
+@media(max-width:410px){.paper .paper-head{min-height:125px}.paper .paper-head:has(.grading-mark){min-height:240px}}
+/* Keep the mobile stage strip scrollable without widening the worksheet. */
+.stage-panel,.main-column,.numeric-content,.rank-sidebar{min-width:0}
+@media(max-width:700px){.workspace{grid-template-columns:minmax(0,1fr);width:100%;max-width:100%}.stage-panel{max-width:100%;overflow:hidden}.stage-list{max-width:100%;width:100%;overflow-x:auto}.main-column{width:100%;max-width:100%}}
+@media(max-width:420px){.numeric-work{grid-template-columns:minmax(0,1fr)!important}.numeric-work .numeric-pad{grid-column:1!important;grid-row:auto!important}.numeric-work .answers{grid-column:1!important}.numeric-work #feedback{grid-column:1!important}}
+.paper .paper-head{flex-wrap:nowrap}
+.paper .paper-head .question-count{flex-basis:86px;min-height:56px}
+.paper .paper-head>div{width:auto;text-align:left}
+.paper .paper-head:has(.grading-mark) .question-count{flex-basis:200px;min-height:80px}
+@media(max-width:410px){.paper .paper-head{min-height:96px}.paper .paper-head:has(.grading-mark){flex-wrap:wrap;justify-content:center}.paper .paper-head:has(.grading-mark)>div{text-align:center}.actions{gap:7px;flex-wrap:wrap}.paper .actions button{white-space:nowrap;flex:1 1 92px;padding:9px 10px}.paper .actions #next{margin-left:0}}
+.visual-box[data-visual="balances"] svg,.visual-box[data-visual="equalizeTanks"] svg{max-height:360px}

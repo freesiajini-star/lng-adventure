@@ -1,7 +1,9 @@
+import {makeLifeQuestion} from './life-problems.js';
+import {reviseCore} from './core-revisions.js';
 import {makeFillTableQuestion} from './fill-tables.js';
 import {makePourQuestion} from './pour-problems.js';
 // Restores the visual evidence and questions from the user-supplied pages.
-export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 물의 양'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
+export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 액체의 들이'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
  const s=q.stage,t=q.type;
  const n=(label,answer,unit='')=>({label,answer:String(answer),unit,kind:'number'});
@@ -61,5 +63,6 @@ export function restoreQuestion(q,seed=1){
  if(s===16&&t===1)set('심화110:대표5',['감 7개와 사과 8개의 무게가 같습니다.','사과 4개와 배 3개의 무게가 같습니다.','감 한 개가 200 g일 때 배 6개의 무게는 몇 kg 몇 g인가요?','같은 종류의 과일은 한 개의 무게가 같습니다.'],[n('감 7개의 무게',1400,'g'),n('배 6개의 무게 kg',1,'kg'),n('나머지 g',400,'g')],{kind:'balances',items:[bal('감','사과',7,8,1400),bal('사과','배',4,3,700)]},'사과 8개는 배 6개와 같습니다. 감 7개의 무게와 같으므로 200 × 7 = 1400 g = 1 kg 400 g입니다.');
  if(s===16&&t===6)set('심화126:원리 그림',['우유의 무게는 빵의 무게보다 100 g 더 무겁습니다.','빵 한 개와 우유 한 개의 무게를 더하면 200 g입니다.','빵 한 개와 우유 한 개는 각각 몇 g인가요?'],[n('빵 두 개의 무게',100,'g'),n('빵 한 개',50,'g'),n('우유 한 개',150,'g')],{kind:'substitution'},'우유를 빵 + 100 g으로 바꾸면 빵 두 개 + 100 g = 200 g입니다. 빵은 50 g, 우유는 150 g입니다.');
  if(s===17&&q.visual?.kind==='flow')q.visual={...q.visual,kind:'bathFlow'};
- return q;
+ if(s===4&&t===6)makeLifeQuestion(q,seed);
+ return reviseCore(q,seed);
 }
