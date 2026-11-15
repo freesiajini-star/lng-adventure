@@ -1,4 +1,4 @@
-import {source,sourceDefs} from './source-vessels.js?v=0a45ad565ff8';
+import {source,sourceDefs} from './source-vessels.js?v=b4485d52e7f2';
 const text=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${s}</text>`;
 export function renderFillTable(v){
  const names=v.sources||v.shapes?.map(n=>({'대접':'유리그릇','원통':'텀블러','목 긴 병':'물병'}[n]||n))||['작은 컵','텀블러','머그잔','유리그릇'];

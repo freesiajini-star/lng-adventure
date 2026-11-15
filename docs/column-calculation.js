@@ -4,7 +4,7 @@ export function columnSteps(a,b,operation){
  const save=(message,focus)=>steps.push({top:[...current],notes:[...notes],changed:[...changed],result:[...result],message,focus});
  let carry=0;
  for(let i=length-1;i>=0;i--){
-  const place=Math.pow(10,length-1-i),label=place>=1000?(place/1000)+' L 자리':place+' mL 자리';
+  const label='이 자리';
   if(operation==='+'){
    const sum=top[i]+bottom[i]+carry;result[i]=sum%10;
    const prev=carry;carry=Math.floor(sum/10);if(carry&&i>0)notes[i-1]=carry;
@@ -22,4 +22,18 @@ export function columnSteps(a,b,operation){
   }
  }
  return {a,b,operation:operation==='+'?'+':'−',top,bottom,length,steps,result:Number(result.join(''))};
+}
+
+// Tasks contain one student action each; no task is advanced by a timer.
+export function columnTasks(model){
+ const tasks=[],struck=new Set();let priorNotes=Array(model.length).fill(null),priorResult=Array(model.length).fill(null);
+ for(const state of model.steps){
+  for(let i=0;i<model.length;i++)if(state.notes[i]!==priorNotes[i]){
+   if(model.operation!=='+'&&!struck.has(i)){tasks.push({kind:'strike',index:i});struck.add(i);}
+   tasks.push({kind:'note',index:i,answer:String(state.notes[i])});
+  }
+  for(let i=model.length-1;i>=0;i--)if(state.result[i]!==priorResult[i])tasks.push({kind:'result',index:i,answer:String(state.result[i])});
+  priorNotes=[...state.notes];priorResult=[...state.result];
+ }
+ return tasks;
 }

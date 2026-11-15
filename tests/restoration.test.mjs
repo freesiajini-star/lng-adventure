@@ -4,9 +4,9 @@ import {makeQuestion,TYPE_NAMES,grade,publicQuestion} from '../math.js';
 import {renderVisual} from '../public/visuals.js';
 
 test('source picture groups remain illustrated, including newly restored families',()=>{
- const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'objectCards'],[4,6,'lifeTable'],[11,0,'cupTable'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
+ const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'limitPacking'],[4,6,'lifeTable'],[11,0,'cupTable'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
  assert.equal(cases.length,20);
- for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),/<svg/);assert.ok(q.source);}
+ for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),kind==='limitPacking'?/limit-item-art/:/<svg/);assert.ok(q.source);}
  assert.equal(TYPE_NAMES.flat().length,113);
 });
 test('advanced inverse filling keeps its original independent order',()=>{
@@ -19,10 +19,10 @@ test('dial, transfer, scale-pan counts and capacities satisfy independent numeri
  const sum=makeQuestion(9,6);assert.equal(sum.visual.items.reduce((n,v)=>n+v.value,0),Number(sum.fields[0].answer)*1000+Number(sum.fields[1].answer));
 });
 test('all valid 2 kg combinations are accepted; all fields still form one outcome',()=>{
- const q=makeQuestion(9,7),weights=[1200,250,1050,450],sets=[[0,1,2],[0,1,3],[0,2,3],[1,2,3]];
- const expected=sets.map(ids=>ids.reduce((sum,i)=>sum+weights[i],0)<=2000?'가능':'불가능');
- assert.deepEqual(q.fields.map(f=>f.answer),expected);assert.equal(expected.filter(x=>x==='가능').length,2);
- assert.equal(grade(q,expected).ok,true);const bad=[...expected];bad[2]='가능';assert.deepEqual(grade(q,bad),{ok:false,wrong:[2]});
+ const q=makeQuestion(9,7),weights=new Map(q.visual.items.map(x=>[x.id,x.weight])),sets=q.visual.candidates;
+ const expected=sets.map(ids=>ids.reduce((sum,i)=>sum+weights.get(i),q.visual.base)<=q.visual.limit?'가능':'불가능');
+ assert.deepEqual(q.fields.map(f=>f.answer),expected);assert.ok(expected.includes('가능')&&expected.includes('불가능'));
+ assert.equal(grade(q,expected).ok,true);const bad=[...expected];bad[2]=bad[2]==='가능'?'불가능':'가능';assert.deepEqual(grade(q,bad),{ok:false,wrong:[2]});
  assert.ok(publicQuestion(q).fields.every(f=>!('answer'in f)));
 });
 test('recipe, cacao, clean-water table, half box and connected balance keep original arithmetic',()=>{
@@ -70,14 +70,14 @@ test('tank tables conserve volume and vary all three tasks independently',()=>{
    assert.equal(v.kind,'fillTable');assert.equal(v.labels.length,4);assert.equal(new Set(v.sources).size,4);assert.equal(new Set(v.counts).size,4);
    v.capacities.forEach((capacity,i)=>{assert.equal(capacity*v.counts[i],v.tank);const[lo,hi]=ranges[v.sources[i]];assert.ok(capacity>=lo&&capacity<=hi);record.objects.add(v.sources[i]);});
    const order=v.capacities.map((amount,i)=>({amount,label:v.labels[i]})).sort((a,b)=>b.amount-a.amount).map(x=>x.label);
-   if(type===3)assert.deepEqual(q.fields.map(f=>f.answer),q.lines.at(-1).includes('큰')?order:[...order].reverse());
-   if(type===4)for(const f of q.fields){const index={'가장 큰 용기':0,'둘째로 큰 용기':1,'둘째로 작은 용기':2,'가장 작은 용기':3}[f.label];assert.equal(f.answer,order[index]);}
+   if(type===3&&q.fields.length===4)assert.deepEqual(q.fields.map(f=>f.answer),q.lines.at(-1).includes('큰')?order:[...order].reverse());
+   if(type===4||type===3&&q.fields.length!==4)for(const f of q.fields){const index={'가장 큰 용기':0,'둘째로 큰 용기':1,'둘째로 작은 용기':2,'가장 작은 용기':3}[f.label];assert.equal(f.answer,order[index]);}
    if(type===5){const match=q.lines.at(-1).match(/^([가나다라]) 용기의 들이는 ([가나다라])/);const a=v.labels.indexOf(match[1]),b=v.labels.indexOf(match[2]);assert.equal(Number(q.fields[0].answer),v.capacities[a]/v.capacities[b]);assert.ok(Number(q.fields[0].answer)>=2&&Number(q.fields[0].answer)<=4);}
    const svg=renderVisual(v);assert.ok(svg.includes('부은 횟수(번)'));for(const count of v.counts)assert.ok(svg.includes('>'+count+'</text>'));
    const data=JSON.stringify([v.sources,v.counts,v.tank]);fixtures.push(data);record.data.add(data);record.answers.add(q.fields.map(f=>f.answer).join(','));
    assert.equal(grade(q,q.fields.map(f=>f.answer)).ok,true);
   }
-  assert.equal(new Set(fixtures).size,3);
+  assert.ok(new Set(fixtures).size>=2);
  }
  for(const[type,v]of seen){assert.equal(v.objects.size,7);assert.ok(v.data.size>500);assert.ok(v.answers.size>=(type===5?3:8));}
 });

@@ -1,7 +1,8 @@
-import {makeLifeQuestion} from './life-problems.js?v=0a45ad565ff8';
-import {reviseCore} from './core-revisions.js?v=0a45ad565ff8';
-import {makeFillTableQuestion} from './fill-tables.js?v=0a45ad565ff8';
-import {makePourQuestion} from './pour-problems.js?v=0a45ad565ff8';
+import {makeLimitQuestion} from './limit-problems.js?v=b4485d52e7f2';
+import {makeLifeQuestion} from './life-problems.js?v=b4485d52e7f2';
+import {reviseCore} from './core-revisions.js?v=b4485d52e7f2';
+import {makeFillTableQuestion} from './fill-tables.js?v=b4485d52e7f2';
+import {makePourQuestion} from './pour-problems.js?v=b4485d52e7f2';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 액체의 들이'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
@@ -47,7 +48,6 @@ export function restoreQuestion(q,seed=1){
  if(s===8&&(t===4||t===5))q.visual={...q.visual,kind:'illustratedDial',label:'호박',zoom:true};
  if(s===8&&t===6)set('원리125:30',['두 저울의 바늘을 읽으세요.','호박과 무 중 더 무거운 것을 고르세요.'],[c('더 무거운 것',['호박','무'],'호박')],{kind:'pairedDials',items:[{label:'호박',value:1750,max:2000,step:50},{label:'무',value:850,max:2000,step:50}]},'호박은 1750 g, 무는 850 g이므로 호박이 더 무겁습니다.');
  if(s===9&&t===6)set('원리127:44',['두 바구니의 감을 각각 저울에 올렸습니다. 바구니의 무게는 생각하지 않습니다.','감의 무게는 모두 몇 kg 몇 g인가요?'],[n('모두 kg',2,'kg'),n('모두 나머지 g',800,'g')],{kind:'pairedDials',items:[{label:'감 바구니',value:1670,max:2000,step:10},{label:'감 바구니',value:1130,max:2000,step:10}]},'1670 + 1130 = 2800 g = 2 kg 800 g입니다.');
- if(s===9&&t===7){const opts=['가능','불가능'];set('원리127:46',['그림의 네 물건 중 서로 다른 세 개를 고르려고 합니다.','각 묶음의 무게 합이 2 kg을 넘지 않는지 판단하세요.'],[c('책가방·신발·학용품',opts,'불가능'),c('책가방·신발·축구공',opts,'가능'),c('책가방·학용품·축구공',opts,'불가능'),c('신발·학용품·축구공',opts,'가능')],{kind:'objectCards',cards:[['책가방','1 kg 200 g'],['신발','250 g'],['학용품','1050 g'],['축구공','450 g']]},'각 합은 2500 g, 1900 g, 2700 g, 1750 g입니다. 따라서 둘째와 넷째 묶음이 가능합니다.');}
  if(s===4&&t===6)set('원리119:22',['음식 10 mL를 정화하는 데 필요한 맑은 물의 양입니다.','라면 국물 50 mL와 우유 30 mL를 정화하려면 맑은 물이 모두 몇 L 필요한가요?'],[n('라면 국물에 필요한 물',250,'L'),n('우유에 필요한 물',450,'L'),n('모두',700,'L')],{kind:'objectCards',cards:[['라면 국물','10 mL → 물 50 L'],['간장','10 mL → 물 300 L'],['우유','10 mL → 물 150 L'],['식용유','10 mL → 물 1980 L']]},'50 × 5 = 250 L, 150 × 3 = 450 L. 모두 700 L입니다.');
  if(s===11&&t===3)q.visual={kind:'guessDistance',actual:q.lines[0],rows:q.visual.rows};
  if(s===11&&t===0)set('심화106:1-1',['각 그릇을 가득 채워 같은 크기의 어항에 부었습니다.','어항이 가득 찰 때까지 부은 횟수를 보고, 들이가 작은 그릇부터 고르세요.','남거나 넘친 물은 없습니다.'],['다','가','나'].map((x,i)=>c((i+1)+'번째',['가','나','다'],x)),{kind:'cupTable',labels:['가','나','다'],counts:[12,9,14],shapes:['대접','원통','목 긴 병']},'같은 어항을 채우는 데 부은 횟수가 많을수록 그릇의 들이가 작습니다. 14, 12, 9번 순서이므로 다, 가, 나입니다.');
@@ -64,5 +64,7 @@ export function restoreQuestion(q,seed=1){
  if(s===16&&t===6)set('심화126:원리 그림',['우유의 무게는 빵의 무게보다 100 g 더 무겁습니다.','빵 한 개와 우유 한 개의 무게를 더하면 200 g입니다.','빵 한 개와 우유 한 개는 각각 몇 g인가요?'],[n('빵 두 개의 무게',100,'g'),n('빵 한 개',50,'g'),n('우유 한 개',150,'g')],{kind:'substitution'},'우유를 빵 + 100 g으로 바꾸면 빵 두 개 + 100 g = 200 g입니다. 빵은 50 g, 우유는 150 g입니다.');
  if(s===17&&q.visual?.kind==='flow')q.visual={...q.visual,kind:'bathFlow'};
  if(s===4&&t===6)makeLifeQuestion(q,seed);
+ if(s===9&&t===7)makeLimitQuestion(q,seed);
+ if(s===9&&t===6)q.column={a:q.visual.items[0].value,b:q.visual.items[1].value,operation:'+',large:'kg',small:'g'};
  return reviseCore(q,seed);
 }

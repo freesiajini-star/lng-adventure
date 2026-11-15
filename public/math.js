@@ -1,3 +1,4 @@
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js';
 export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js';
 import {restoreQuestion,EXTRA_TYPES} from './restoration.js';
 import {reviewQuestion} from './curriculum.js';
@@ -7,12 +8,17 @@ export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81'
 export const TYPE_NAMES=[['옮겨 담기','같은 그릇','컵의 개수','들이 순서','채우는 횟수','몇 배일까?'],['L를 mL로','mL를 L와 mL로','단위 바꾸기','옳은 변환','크기 비교','순서 정하기'],['기준으로 어림','알맞은 단위','알맞은 물건','단위 고치기','가까운 어림','눈금 읽기'],['들이 더하기','받아올려 더하기','들이 빼기','받아내려 빼기','남은 양','빈칸 찾기'],['차이 구하기','옮길 양','같아진 양','눈금과 물 옮기기','옮긴 양 판단','처음 양 찾기'],['저울 기울기','무게 순서','단위 물체','무게 차이','단위 물체 비교','한 개씩 비교'],['kg를 g으로','g을 kg와 g으로','t와 kg','상자와 배','크기 비교','순서 정하기'],['알맞은 단위','기준으로 어림','단위 고치기','1 kg과 비교','한 눈금의 값','저울 읽기'],['무게 더하기','받아올려 더하기','무게 빼기','받아내려 빼기','더 담을 무게','빈칸 찾기'],['똑같이 나누기','상자 무게 빼기','평형 저울','두 저울 연결','거꾸로 찾기','묶음 거꾸로'],['횟수로 비교','이어 비교','가까운 어림','어림의 차이','가까운 순서','덜어낸 횟수'],['넣고 빼기','처음 양','한 컵의 들이','한 번 덜어낸 양','한 개의 무게','빈 상자의 무게'],['합과 차','남은 양 나누기','두 사람의 양','세 그릇의 양','큰 통 바꾸기','무게 나누기'],['최대 개수','최소 트럭 수','최소 통 수','두 종류의 짐','내린 뒤의 여유','남은 한도'],['기준 무게와 가격','두 물건의 가격','거스름돈','가격으로 양 찾기','요리 재료','기준량의 몇 배'],['저울 연결','묶음 바꾸기','두 식 더하기','두 식 빼기','개수 맞추기','묶음의 무게'],['두 수도','새는 물','시간 단위 맞추기','일부 찬 물통','모인 양','나가는 양 찾기']];
 for(const [stage,names] of Object.entries(EXTRA_TYPES))TYPE_NAMES[Number(stage)-1].push(...names);
 TYPE_NAMES[4][0]='같게 옮기기';TYPE_NAMES[4][3]='처음 양 찾기';TYPE_NAMES[5][0]='무게 비교하기';TYPE_NAMES[5][4]='한 개의 무게 비교';TYPE_NAMES[5][6]='무게는 몇 배';TYPE_NAMES[5][5]='가장 가벼운 것과 무거운 것';
-export const ACTIVE_TYPES=TYPE_NAMES.map((names,i)=>i===4?[0,3]:i===5?[0,4,6,5]:names.map((_,t)=>t));
+for(const[stage,titles]of Object.entries(GROUP_TITLES))for(const[type,title]of Object.entries(titles))TYPE_NAMES[stage-1][type]=title;
+export const ACTIVE_TYPES=TYPE_NAMES.map((names,i)=>i===5?[0,4,6,5]:Object.keys(TYPE_GROUPS[i+1]||names).map(Number));
 export const NICKS=[['🐱','고양이'],['🐰','토끼'],['🦊','여우'],['🐻','곰'],['🐼','판다'],['🐨','코알라'],['🐯','호랑이'],['🦁','사자'],['🐸','개구리'],['🐧','펭귄'],['🦉','부엉이'],['🐬','돌고래'],['🐢','거북이'],['🦔','고슴도치'],['🐿️','다람쥐'],['🦦','수달'],['🦌','사슴'],['🦒','기린'],['🦓','얼룩말'],['🦘','캥거루'],['🦭','물개'],['🦋','나비'],['🐝','꿀벌'],['🐹','햄스터'],['🐺','늑대']];
 export const cap=n=>n<1000?`${n} mL`:`${Math.floor(n/1000)} L${n%1000?' '+n%1000+' mL':''}`;
 export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%1000+' g':''}`;
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
+ const variants=TYPE_GROUPS[stage]?.[type],variant=variants?.[(Math.max(0,seed-1)>>>0)%variants.length]??type;
+ const q=makeQuestionRaw(stage,variant,seed);q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
+}
+function makeQuestionRaw(stage,type,seed=1){
  if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');
  if(type>=6){const q=restoreQuestion({stage,type,title:TYPE_NAMES[stage-1][type],lines:[],fields:[],facts:[],work:[]},seed);validateQuestion(q);return q;}
  const random=rng(seed), r=(a,b)=>a+Math.floor(random()*(b-a+1)), pick=a=>a[r(0,a.length-1)];
@@ -49,7 +55,7 @@ export function makeQuestion(stage,type,seed=1){
   else if(type===2||type===3){x=(a+b)*1000+(type===2?800:200);y=b*1000+(type===2?300:600);z=x-y;lines('계산하세요.');q.visual={kind:'equation',text:`${fmt(x)} − ${fmt(y)}`};}
   else if(type===4){x=(a+b)*1000+200;y=b*1000+700;z=x-y;lines(vol?`물 ${fmt(x)} 중 ${fmt(y)}를 사용했습니다.`:`최대 ${fmt(x)}까지 담는 가방에 ${fmt(y)}를 담았습니다.`,vol?'남은 물은 얼마인가요?':'더 담을 수 있는 무게는 얼마인가요?');}
   else{x=(a+b)*1000+300;y=b*1000+800;z=x-y;lines('빈칸에 알맞은 양을 구하세요.');q.visual={kind:'equation',text:`${fmt(x)} − □ = ${fmt(z)}`};}
-  if(vol)q.column={a:x,b:type===5?z:y,operation:type<2?'+':'−'};
+  q.column={a:x,b:type===5?z:y,operation:type<2?'+':'−',large:vol?'L':'kg',small:vol?'mL':'g'};
   const ans=type===5?y:z;num(vol?'L':'kg',Math.floor(ans/1000),vol?'L':'kg');num(small,ans%1000,small);q.explanation=type===5?`${fmt(x)} − ${fmt(z)} = ${fmt(y)}입니다.`:`${fmt(x)} ${type<2?'+':'−'} ${fmt(y)} = ${fmt(z)}입니다.`;fact('연산',type<2?x+y:x-y,z);
  }
  if(stage===5){const low=r(2,7)*100,move=r(1,4)*100,high=low+move*2,equal=low+move;
@@ -121,11 +127,11 @@ export function makeQuestion(stage,type,seed=1){
 }
 export function validateQuestion(q){
  if(!q.lines.length||!q.fields.length||!q.explanation)throw Error('불완전한 문항');
- for(const f of q.fields){if(f.kind==='number'&&(!/^\d+$/.test(f.answer)||Number(f.answer)>10000000))throw Error(`정수가 아닌 답: ${q.stage}/${q.type}`);if(f.options&&!f.options.includes(f.answer))throw Error('선택지에 없는 답');if(f.options&&new Set(f.options).size!==f.options.length)throw Error('중복 선택지');}
+ for(const f of q.fields){if(f.kind==='number'&&(!/^\d+$/.test(f.answer)||Number(f.answer)>10000000))throw Error(`정수가 아닌 답: ${q.stage}/${q.type}`);if(f.kind==='multi'&&(!Array.isArray(f.answer)||!f.answer.length||new Set(f.answer).size!==f.answer.length||f.answer.some(x=>!f.options.includes(x))))throw Error('잘못된 복수 선택 정답');if(f.kind!=='multi'&&f.options&&!f.options.includes(f.answer))throw Error('선택지에 없는 답');if(f.options&&new Set(f.options).size!==f.options.length)throw Error('중복 선택지');}
  for(const f of q.facts)if(f.left!==f.right)throw Error(`수학 검증 실패: ${f.label}`);
  if(q.visual?.kind==='vessels')for(const v of q.visual.values)if(v<0||v>q.visual.max)throw Error('용량 초과');
  if(q.visual?.kind==='dial'&&(q.visual.value<0||q.visual.value>q.visual.max||q.visual.value%q.visual.step))throw Error('저울 범위');
  return true;
 }
 export function publicQuestion(q){const {explanation,facts,...rest}=q;return {...rest,fields:q.fields.map(({answer,...f})=>f)};}
-export function grade(q,answers){const wrong=q.fields.map((f,i)=>String(answers[i]??'').trim()===f.answer?-1:i).filter(i=>i>=0);return {ok:!wrong.length,wrong};}
+export function grade(q,answers){const wrong=q.fields.map((f,i)=>{const answer=answers[i];if(f.kind==='multi')return Array.isArray(answer)&&new Set(answer).size===answer.length&&JSON.stringify([...answer].sort())===JSON.stringify([...f.answer].sort())?-1:i;return String(answer??'').trim()===f.answer?-1:i;}).filter(i=>i>=0);return {ok:!wrong.length,wrong};}

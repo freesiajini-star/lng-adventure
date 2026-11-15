@@ -1,4 +1,4 @@
-import {sourceDefs} from './source-vessels.js?v=0a45ad565ff8';
+import {sourceDefs} from './source-vessels.js?v=b4485d52e7f2';
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${s}</text>`;
 function produce(label){
  if(label==='볼펜')return '<path d="M5 23 22 3" stroke="#698da6" stroke-width="6" stroke-linecap="round"/><path d="M5 23 1 28 8 25" fill="#7b858d"/><path d="M15 3 24 10" stroke="#b3cbd5" stroke-width="6"/><path d="M10 15 18 6" stroke="#e7f3f7" stroke-width="1.5"/><path d="M19 1 25 6" stroke="#52778d" stroke-width="3"/>';
