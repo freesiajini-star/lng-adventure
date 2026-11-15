@@ -1,6 +1,6 @@
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=740d1adefa5f';
-import {artImage,vesselArt} from './art-catalog.js?v=740d1adefa5f';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=740d1adefa5f';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=30a61c3aa5ff';
+import {artImage,vesselArt} from './art-catalog.js?v=30a61c3aa5ff';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=30a61c3aa5ff';
 const profiles={...ART_PROFILES,milkCarton:[[150,210],[880,210]],juiceCarton:[[150,210],[880,210]]};
 export function paintedGeometry(id,capacity,amount){if(!(capacity>0)||amount<0||amount>capacity)throw Error('Invalid painted volume');const profile=profiles[id].map(p=>[...p]);if(id.endsWith('Carton'))profile.depth=420;const volume=volumeBelow(profile,profile[0][0]);return {profile,volume,scale:Math.cbrt(capacity*1000/volume),level:fillLevel(profile,amount/capacity)};}
 const center=id=>ART_AXES[id]??500;

@@ -35,6 +35,6 @@ export function reviseQuality(q,seed){
   const [dish,liquid,art]=pick([['라따뚜이','토마토소스','ratatouille'],['토마토 수프','토마토소스','soup-tomato'],['옥수수 수프','우유','soup-corn'],['감자 수프','우유','soup-potato'],['채소 수프','채소 국물','soup-vegetable'],['과일 음료','주스','glass-juice-full']]),servings=pick([2,3,4]),multiple=r(2,6),cups=pick([1,2,3]),cup=pick([100,200,250]),total=cups*cup*multiple;
   set([`${dish} ${servings}인분에 ${liquid} ${cups}컵이 필요합니다. 한 컵은 ${cup} mL입니다. 한 사람에게 필요한 양이 같도록 ${servings*multiple}인분을 만들려면 ${topic(liquid)} 몇 mL 필요한가요?`],[num('필요한 양',total,'mL')],{kind:'recipe',dish,liquid,art,servings,cups,cup},`${servings*multiple} ÷ ${servings} = ${multiple}, ${cups} × ${cup} × ${multiple} = ${total} mL입니다.`);
  }
- if(q.stage===16&&q.visual)q.visual.objectScale=2;
+ if(q.stage===16&&q.visual){q.visual.objectScale=2;if(q.type===4)q.lines=q.lines.filter(line=>line!=='같은 종류의 물건은 한 개의 무게나 한 병의 들이가 모두 같습니다.');else q.lines=q.lines.map(line=>line==='같은 종류의 물건은 한 개의 무게나 한 병의 들이가 모두 같습니다.'?'같은 종류의 물건은 한 개의 무게가 같습니다.':line);}
  return q;
 }

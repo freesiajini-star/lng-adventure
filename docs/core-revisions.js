@@ -1,4 +1,4 @@
-import {reviseQuality} from './quality-revisions.js?v=740d1adefa5f';
+import {reviseQuality} from './quality-revisions.js?v=30a61c3aa5ff';
 export const seeded=(seed=1)=>{let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};};
 const number=(label,value,unit='mL')=>({kind:'number',label,answer:String(value),unit});
 const choice=(label,options,answer)=>({kind:'choice',label,options:[...options],answer});
