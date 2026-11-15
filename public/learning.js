@@ -6,7 +6,14 @@ const empty=()=>({correct:0,wrong:0,score:0,total:0});
 export function dayUsage(day,previous=[]){const d=day||{},sessions=Object.values(d.sessions||{}),daily=d.total?.total||0;const hits=[daily>=500,[d,...previous].length>=3&&[d,...previous].slice(0,3).every(x=>(x?.total?.total||0)>=300),sessions.some(x=>x.count>=200),sessions.length>=7];return{daily,sessions,hits,locked:!!d.locked||hits.filter(Boolean).length>=2,stages:Object.fromEntries(Object.entries(d.stages||{}).map(([n,v])=>[n,v.questions||0]))};}
 export function applyAttempt(old,event,previous=[]){
  const d=structuredClone(old||{total:empty(),stages:{},seen:{},sessions:{}});d.total??=empty();d.stages??={};d.seen??={};d.sessions??={};const seen=d.seen[event.qid]||{};
- if(seen.correct||(event.ok?seen.correct:seen.wrong))return d;
+ if(seen.correct||(event.ok?seen.corrected:seen.wrong))return d;
+ // Correcting a previously wrong answer completes practice without earning credit.
+ if(event.ok&&(seen.wrong||event.correction)){
+  // A correction can arrive before its queued wrong event after reconnecting.
+  // Commit the original -1 exactly once in that case, never award positive credit.
+  const base=seen.wrong?d:applyAttempt(d,{...event,ok:false,correction:false,points:-1,at:event.firstWrongAt??event.at},previous);
+  base.seen[event.qid].corrected=true;base.updatedAt=Math.max(base.updatedAt||0,event.at);return base;
+ }
  if(dayUsage(d,previous).locked)throw Error('오늘은 충분히 탐험했어요. 내일 다시 만나요!');
  const s=d.stages[event.stage]||{...empty(),questions:0};if(!seen.counted&&s.questions>=100)throw Error('이 단계는 오늘 100문제를 풀었어요. 다른 단계를 골라 주세요.');
  if(!seen.counted){s.questions++;seen.counted=true;}for(const target of[d.total,s]){target.correct+=event.ok?1:0;target.wrong+=event.ok?0:1;target.total++;target.score+=event.points;}
