@@ -1,4 +1,4 @@
-import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js?v=48d29769671c';
+import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js?v=a4b9c8bf8e91';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18,color='#3e5d61')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-family="Malgun Gothic,sans-serif" font-size="${size}">${esc(s)}</text>`;
 const outline=p=>'M'+p.map(([y,r])=>`${r},${y}`).join('L')+'L'+[...p].reverse().map(([y,r])=>`${-r},${y}`).join('L')+'Z';
@@ -46,7 +46,7 @@ export function renderPourComparison(v){
  const a=vesselGeometry(v.from.id,v.source,v.source),b=vesselGeometry(v.to.id,v.target,v.filled);
  const extent=(v,g)=>(g.profile.at(-1)[0]-(v.id==='pitcher'?-12:v.id.endsWith('Bottle')?g.profile[0][0]-12:g.profile[0][0]))*g.scale;
  const camera=Math.min(1.15,182/Math.max(extent(v.from,a),extent(v.to,b)));
- const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,190,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,receiverCenterX(v,b,camera),232,camera,uid+'-b',true);
+ const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,receiverCenterX({to:v.from,outcome:'space'},a,camera)-430,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,receiverCenterX(v,b,camera),232,camera,uid+'-b',true);
  let effect='';if(v.outcome==='overflow'){
  const flow=wallOverflow(to.geometry.profile,to.scale,to.originX,to.originY),pool=flow.pool;
  const path='M'+flow.points.map(p=>p.join(',')).join('L')+'L'+pool.cx+','+pool.cy;
