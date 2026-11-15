@@ -25,11 +25,28 @@ function illustration(v,capacity,amount,liquid,cx,baseline,camera,id,receiving){
  const shadow=`<ellipse cx="${cx}" cy="${baseline+6}" rx="${Math.max(25,maxRadius*scale)}" ry="6" fill="#8da7a1" opacity=".15"/>`;
  return {markup:`<defs>${defs}</defs>${shadow}<g transform="translate(${cx} ${y}) scale(${scale})">${art}</g>`,geometry:g,topY:y+top*scale,rightX:cx+p[0][1]*scale,base:baseline,scale,originX:cx,originY:y};
 }
+// Center the whole receiver silhouette, handle and spilled liquid together.
+export function receiverCenterX(v,g,camera){
+ const scale=g.scale*camera,r=Math.max(...g.profile.map(p=>p[1]));
+ let left=-(r+.85)*scale,right=(r+.85)*scale;
+ if(['mug','measureJug'].includes(v.to.id)){
+  const t=Math.sqrt(3422)-58,u=1-t,h=radiusAt(g.profile,65);
+  const x=u*u*u*(h-3)+3*u*u*t*(h+55)+3*u*t*t*(h+55)+t*t*t*(h-4);
+  right=Math.max(right,(x+7.5)*scale);
+ }
+ if(v.to.id==='pitcher'){left=Math.min(left,-42.5*scale);right=Math.max(right,42.5*scale);}
+ if(v.outcome==='overflow'){
+  const flow=wallOverflow(g.profile,scale,0,0);
+  left=Math.min(left,flow.pool.cx-flow.pool.rx,...flow.points.map(p=>p[0]-1.9));
+  right=Math.max(right,flow.pool.cx+flow.pool.rx,...flow.points.map(p=>p[0]+1.9));
+ }
+ return 595-(left+right)/2;
+}
 export function renderPourComparison(v){
  const a=vesselGeometry(v.from.id,v.source,v.source),b=vesselGeometry(v.to.id,v.target,v.filled);
  const extent=(v,g)=>(g.profile.at(-1)[0]-(v.id==='pitcher'?-12:v.id.endsWith('Bottle')?g.profile[0][0]-12:g.profile[0][0]))*g.scale;
  const camera=Math.min(1.15,182/Math.max(extent(v.from,a),extent(v.to,b)));
- const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,190,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,v.outcome==='overflow'?570:595,232,camera,uid+'-b',true);
+ const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,190,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,receiverCenterX(v,b,camera),232,camera,uid+'-b',true);
  let effect='';if(v.outcome==='overflow'){
  const flow=wallOverflow(to.geometry.profile,to.scale,to.originX,to.originY),pool=flow.pool;
  const path='M'+flow.points.map(p=>p.join(',')).join('L')+'L'+pool.cx+','+pool.cy;
