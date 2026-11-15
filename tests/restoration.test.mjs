@@ -4,7 +4,7 @@ import {makeQuestion,TYPE_NAMES,grade,publicQuestion} from '../math.js';
 import {renderVisual} from '../public/visuals.js';
 
 test('source picture groups remain illustrated, including newly restored families',()=>{
- const cases=[[1,0,'bottleOverflow'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'cupTable'],[3,0,'kettleEstimate'],[5,3,'zoomTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'objectCards'],[4,6,'objectCards'],[11,0,'cupTable'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
+ const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'cupTable'],[3,0,'kettleEstimate'],[5,3,'zoomTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'objectCards'],[4,6,'objectCards'],[11,0,'cupTable'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
  assert.equal(cases.length,20);
  for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),/<svg/);assert.ok(q.source);}
  assert.equal(TYPE_NAMES.flat().length,113);

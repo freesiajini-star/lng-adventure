@@ -1,12 +1,13 @@
+import {makePourQuestion} from './pour-problems.js?v=1e3075f97de4';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 물의 양'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
-export function restoreQuestion(q){
+export function restoreQuestion(q,seed=1){
  const s=q.stage,t=q.type;
  const n=(label,answer,unit='')=>({label,answer:String(answer),unit,kind:'number'});
  const c=(label,options,answer)=>({label,options:[...options],answer,kind:'choice'});
  const set=(source,lines,fields,visual,explanation,work=[])=>Object.assign(q,{source,lines,fields,visual,explanation,work,facts:[]});
  const bal=(left,right,leftCount,rightCount,leftMass,rightMass=leftMass)=>({left,right,leftCount,rightCount,leftMass,rightMass});
- if(s===1&&t===0)q.visual={...q.visual,kind:'bottleOverflow'};
+ if(s===1&&t===0)makePourQuestion(q,seed);
  if(s===1&&(t===1||t===3)){q.visual={...q.visual,kind:'sourceVessels',sources:['주전자','작은 컵','머그잔']};q.lines[0]='주전자·작은 컵·머그잔에 가득 있던 물을 같은 모양과 크기의 그릇에 각각 옮겼습니다.';q.visual.values=[900,300,600];const order=['가','다','나'];q.fields=t===1?[c('가장 큰 용기',['가','나','다'],'가')]:order.map((x,i)=>c((i+1)+'번째',['가','나','다'],x));}
  if(s===1&&t===2){q.visual={...q.visual,kind:'bottleCups'};}
  if(s===1&&(t===4||t===5)){

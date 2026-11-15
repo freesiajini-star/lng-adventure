@@ -9,3 +9,10 @@
 .header-right>a,.header-right>button,.header-right>.theme-select{order:0}#studentEntry{order:1}body.theme-bakery .masthead{height:128px}
 @media(min-width:1101px){.numeric-work:not(:has(.numeric-pad)) .numeric-content:has(.visual-box){display:grid;grid-template-columns:minmax(0,1.25fr) minmax(210px,1fr);gap:14px;align-items:center}.numeric-work:not(:has(.numeric-pad)) .numeric-content:has(.visual-box) .answers{grid-column:2}.numeric-work:not(:has(.numeric-pad)) .numeric-content:has(.visual-box) #feedback{grid-column:1/-1}.numeric-work:not(:has(.numeric-pad)) .visual-box{margin:0}}
 @media(max-width:1100px){body.theme-bakery .masthead{height:160px}}@media(max-width:700px){body.theme-bakery .masthead{height:auto}}
+/* Pouring comparisons need enough room to recognize the everyday vessels. */
+.numeric-work:not(:has(.numeric-pad)) .numeric-content:has([data-visual="pourCompare"]){display:block}
+.numeric-work .visual-box[data-visual="pourCompare"]{padding:4px 6px;margin:0 0 12px;background:#f4f8ef;border-color:#dfe9db}
+.visual-box[data-visual="pourCompare"] .pour-illustration{width:100%;height:auto;max-height:none;max-width:820px}
+.numeric-content:has([data-visual="pourCompare"]) .answers{display:flex;justify-content:center}
+.numeric-content:has([data-visual="pourCompare"]) .answer-row{justify-content:center}
+@media(max-width:700px){.numeric-content:has([data-visual="pourCompare"]) .answer-label{width:100%;text-align:center}}

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node scripts/build-free.mjs",
     "preview": "node scripts/preview-free.mjs",
-    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs tests/restoration.test.mjs",
+    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs tests/restoration.test.mjs tests/pour.test.mjs",
     "rules": "node scripts/make-rules.mjs"
   },
   "dependencies": {
