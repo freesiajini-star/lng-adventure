@@ -1,3 +1,4 @@
+import {artImage,objectArtwork} from './art-catalog.js';
 import {renderLimit} from './limit-illustrations.js';
 import {renderBalances,renderEqualTanks} from './balance-illustrations.js';
 import {renderLifeTable,renderReference} from './life-illustrations.js';
@@ -10,7 +11,7 @@ function vessel(x,value,max,label,step){const y=35,h=150,w=94,bottom=y+h,level=b
  if(step){for(let n=0;n<=max;n+=step){const ty=bottom-h*n/max,major=n%(step*2)===0;content+=`<line x1="${x+w-23}" x2="${x+w-3}" y1="${ty}" y2="${ty}" stroke="#325a5a" stroke-width="${major?1.5:1}"/>`;if(major)content+=text(x+w+26,ty+4,n,12);}content+=text(x+w+30,y-12,'mL',13);}
  return content+text(x+w/2,bottom+30,label,19);
 }
-function object(x,y,label){const restored=restoredObject(x,y,label);if(restored)return restored;let shape='';
+function object(x,y,label){const painted=objectArtwork(label,x,y);if(painted)return painted;const restored=restoredObject(x,y,label);if(restored)return restored;let shape='';
  if(label==='우유'||label==='주스'){shape='<path d="M3 6l7-6h10v23H3z" fill="'+(label==='우유'?'#cae4f4':'#f5c58f')+'" stroke="#6a8d94"/><path d="M3 6h17m-10-6v6" stroke="#6a8d94"/><text x="12" y="18" text-anchor="middle" font-size="9">'+(label==='우유'?'우':'주')+'</text>';return '<g transform="translate('+x+' '+y+')">'+shape+'</g>';}
  if(['사과','귤','배','레몬','토마토','방울토마토','양배추'].includes(label)){const colors={사과:'#e87d6e',귤:'#f1b84e',배:'#e6d38b',레몬:'#e9d15f',토마토:'#e87d6e',방울토마토:'#e87d6e',양배추:'#a4c37d'};shape='<ellipse cx="11" cy="12" rx="10" ry="9" fill="'+colors[label]+'" stroke="#617b58"/><path d="M11 5v-5m0 2q8-5 9 0q-4 4-9 0" stroke="#537c46" fill="#7eaa61"/>';}
  else if(label==='가위')shape='<circle cx="5" cy="17" r="4" fill="#c0d8df" stroke="#557a83"/><circle cx="17" cy="17" r="4" fill="#c0d8df" stroke="#557a83"/><path d="M8 14L20 0M14 14L2 0" stroke="#718588" stroke-width="3"/>';

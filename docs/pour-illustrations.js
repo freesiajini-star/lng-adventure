@@ -1,5 +1,6 @@
-import {transferArrow} from './source-vessels.js?v=b4485d52e7f2';
-import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js?v=b4485d52e7f2';
+import {renderPaintedPour} from './painted-pour.js?v=94340eb7f4c3';
+import {transferArrow} from './source-vessels.js?v=94340eb7f4c3';
+import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js?v=94340eb7f4c3';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18,color='#3e5d61')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-family="Malgun Gothic,sans-serif" font-size="${size}">${esc(s)}</text>`;
 const outline=p=>'M'+p.map(([y,r])=>`${r},${y}`).join('L')+'L'+[...p].reverse().map(([y,r])=>`${-r},${y}`).join('L')+'Z';
@@ -43,17 +44,4 @@ export function receiverCenterX(v,g,camera){
  }
  return 595-(left+right)/2;
 }
-export function renderPourComparison(v){
- const a=vesselGeometry(v.from.id,v.source,v.source),b=vesselGeometry(v.to.id,v.target,v.filled);
- const extent=(v,g)=>(g.profile.at(-1)[0]-(v.id==='pitcher'?-12:v.id.endsWith('Bottle')?g.profile[0][0]-12:g.profile[0][0]))*g.scale;
- const camera=Math.min(1.15,182/Math.max(extent(v.from,a),extent(v.to,b)));
- const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,receiverCenterX({to:v.from,outcome:'space'},a,camera)-430,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,receiverCenterX(v,b,camera),232,camera,uid+'-b',true);
- let effect='';if(v.outcome==='overflow'){
- const flow=wallOverflow(to.geometry.profile,to.scale,to.originX,to.originY),pool=flow.pool;
- const path='M'+flow.points.map(p=>p.join(',')).join('L')+'L'+pool.cx+','+pool.cy;
- effect=`<g class="wall-overflow"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="${v.liquid==='우유'?'#eee0c3':v.liquid==='주스'?'#efc77d':'#a3d9e2'}"/><path d="${path}" stroke="${v.liquid==='우유'?'#e8d5b1':v.liquid==='주스'?'#e7ae55':'#68bdcf'}" stroke-width="3.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="${pool.cx}" cy="${pool.cy-1}" rx="16" ry="1.5" fill="#fff" opacity=".5"/></g>`;
-
- }
- const situation=v.outcome==='overflow'?'가득 차고 넘쳤어요':v.outcome==='space'?'빈 공간이 남았어요':'넘치지 않고 가득 찼어요';
- return `<svg class="pour-illustration" viewBox="0 0 760 305" role="img" aria-label="${esc(v.from.name+'에 가득 든 '+v.liquid+(v.liquid==='물'?'을 ':'를 ')+v.to.name+'에 모두 부은 뒤, '+situation)}"><defs><linearGradient id="${uid}-paper" x2="0" y2="1"><stop stop-color="#fffefa"/><stop offset="1" stop-color="#f3f7f0"/></linearGradient></defs><rect x="15" y="6" width="300" height="286" rx="22" fill="url(#${uid}-paper)" stroke="#dbe8e0"/><rect x="445" y="6" width="300" height="286" rx="22" fill="url(#${uid}-paper)" stroke="#dbe8e0"/>${text(165,32,'붓기 전',16,'#6d8888')}${text(595,32,'모두 부은 뒤',16,'#6d8888')}${from.markup}${to.markup}${effect}${'<g transform="translate(344 142) scale(2 1.15)">'+transferArrow(0,0)+'</g>'}${text(378,177,'모두 붓기',14,'#7c9690')}${text(165,268,v.from.name+'에 가득',19)}${text(595,268,v.to.name,19)}${text(595,286,situation,14)}</svg>`;
-}
+export function renderPourComparison(v){return renderPaintedPour(v);}

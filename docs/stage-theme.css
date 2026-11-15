@@ -68,12 +68,12 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 @media(max-width:420px){.column-grid{--cell:36px}.column-cell{font-size:23px}.paper .paper-head{min-height:210px}}
 /* Give the large grading mark room only after an attempt. */
 .paper .paper-head{min-height:100px}
-.paper .paper-head:has(.grading-mark){min-height:202px}
+
 .numeric-work:not(:has(.numeric-pad)) .numeric-content:has(.visual-box){display:block!important}
 .numeric-work:not(:has(.numeric-pad)) .answers{margin-top:18px}
 .paper .numeric-pad .pad-clear{white-space:nowrap;font-size:11px;letter-spacing:-.5px}
-@media(max-width:700px){.paper .paper-head{min-height:100px}.paper .paper-head:has(.grading-mark){min-height:202px}}
-@media(max-width:410px){.paper .paper-head{min-height:125px}.paper .paper-head:has(.grading-mark){min-height:240px}}
+@media(max-width:700px){.paper .paper-head{min-height:100px}}
+@media(max-width:410px){.paper .paper-head{min-height:125px}}
 /* Keep the mobile stage strip scrollable without widening the worksheet. */
 .stage-panel,.main-column,.numeric-content,.rank-sidebar{min-width:0}
 @media(max-width:700px){.workspace{grid-template-columns:minmax(0,1fr);width:100%;max-width:100%}.stage-panel{max-width:100%;overflow:hidden}.stage-list{max-width:100%;width:100%;overflow-x:auto}.main-column{width:100%;max-width:100%}}
@@ -81,8 +81,8 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 .paper .paper-head{flex-wrap:nowrap}
 .paper .paper-head .question-count{flex-basis:86px;min-height:56px}
 .paper .paper-head>div{width:auto;text-align:left}
-.paper .paper-head:has(.grading-mark) .question-count{flex-basis:200px;min-height:80px}
-@media(max-width:410px){.paper .paper-head{min-height:96px}.paper .paper-head:has(.grading-mark){flex-wrap:wrap;justify-content:center}.paper .paper-head:has(.grading-mark)>div{text-align:center}.actions{gap:7px;flex-wrap:wrap}.paper .actions button{white-space:nowrap;flex:1 1 92px;padding:9px 10px}.paper .actions #next{margin-left:0}}
+
+@media(max-width:410px){.paper .paper-head{min-height:96px}.actions{gap:7px;flex-wrap:wrap}.paper .actions button{white-space:nowrap;flex:1 1 92px;padding:9px 10px}.paper .actions #next{margin-left:0}}
 .visual-box[data-visual="balances"] svg,.visual-box[data-visual="equalizeTanks"] svg{max-height:360px}
 .other-ranks-panel{grid-column:2/-1;min-width:0}.stage-panel{grid-row:1/3}
 @media(max-width:1100px){.workspace>.main-column{grid-column:2;grid-row:1}.workspace>.rank-sidebar{grid-column:2;grid-row:2}.workspace>.other-ranks-panel{grid-column:2;grid-row:3}.stage-panel{grid-row:1/4}}
@@ -95,3 +95,20 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 @media(max-width:420px){.practice-grid{--pcell:34px}.practice-cell,.paper button.given-digit{font-size:24px}.practice-unit{font-size:16px}.column-work{padding:12px 5px}.column-step-input{width:28px}}
 .limit-packing{max-width:900px;margin:auto}.limit-context{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 auto 18px}.limit-carrier{width:180px;aspect-ratio:1;background-size:200% 200%;flex:none;border-radius:14px}.limit-context h3{font-size:20px;margin:0 0 10px}.limit-context p{margin:5px 0;font-size:15px}.limit-badge{padding:10px 15px;background:var(--tint);border:1px solid var(--accent);border-radius:12px}.limit-badge strong{display:block;font-size:25px;color:var(--stage-ink)}.limit-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.limit-item{margin:0;background:white;border:1px solid color-mix(in srgb,var(--accent) 25%,white);border-radius:16px;overflow:hidden;text-align:center;padding:8px}.limit-item-art{width:100%;max-width:175px;margin:auto;aspect-ratio:1;background-size:300% 200%;background-repeat:no-repeat}.limit-item figcaption{display:grid;gap:5px;font-size:16px;padding:6px 0}.limit-item figcaption span{font-size:20px;font-weight:700}.limit-item small{font-size:12px;color:var(--stage-ink);background:var(--tint);border-radius:8px;padding:4px}.limit-item.is-loaded{border:2px solid var(--accent);padding:7px}.limit-caption{font-size:12px;line-height:1.6;color:#657c77;text-align:center}.limit-combinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:15px}.limit-combinations>div{display:flex;gap:8px;align-items:center;padding:10px;border:1px solid #dce4d6;border-radius:10px;background:#ffffffc9;font-size:14px}.limit-combinations b{white-space:nowrap;color:var(--stage-ink)}.limit-combinations span{line-height:1.6}.limit-packing + .answers{margin-top:20px}
 @media(max-width:700px){.limit-context{gap:10px}.limit-carrier{width:125px}.limit-context h3{font-size:17px}.limit-context p{font-size:13px}.limit-badge strong{font-size:21px}.limit-items{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.limit-item figcaption{font-size:14px}.limit-item-art{max-width:150px}.limit-combinations{grid-template-columns:1fr}.rank-sidebar .side-card:not(:first-of-type){display:block}}
+
+.paper .paper-head{min-height:100px;overflow:visible;flex-wrap:nowrap;justify-content:flex-start}.paper .paper-head .question-count{flex:0 0 86px;min-height:56px;margin:0;overflow:visible}.paper .paper-head>div{width:auto;text-align:left}.question-grade{z-index:5;overflow:visible}.paper{overflow:visible}
+@media(max-width:700px){.paper .paper-head{min-height:96px;flex-wrap:nowrap;gap:12px}.paper .paper-head>div{width:auto;text-align:left}.paper .paper-head .question-count{flex-basis:78px;margin:0}}
+
+.paper .paper-head{border-radius:23px 23px 0 0}.painted-art{pointer-events:none}.limit-carrier,.limit-item-art{object-fit:contain;display:block}.limit-item-art{height:auto}.visual-box:has(.painted-art){background:linear-gradient(145deg,var(--stage-soft),#fffefa)}
+
+.visual-box[data-visual="sourceVessels"] svg,.visual-box[data-visual="fillTable"] svg,.visual-box[data-visual="bottleCups"] svg{max-height:none;max-width:850px;width:100%;display:block;margin:auto}.visual-box[data-visual="balances"] svg{max-height:430px}.visual-box[data-visual="referenceEstimate"] svg{max-height:360px}
+
+/* A complete grid sits above the cells, so controls cannot erase its lines. */
+.practice-grid{position:relative;grid-template-rows:repeat(4,48px);background:white;background-image:none;isolation:isolate}.practice-grid::after{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;background-image:linear-gradient(to right,#d2dde2 1px,transparent 1px),linear-gradient(to bottom,#d2dde2 1px,transparent 1px);background-size:var(--pcell) 48px}.practice-cell{background:transparent}.practice-notes{flex-direction:column;align-items:center;justify-content:flex-end;gap:0;padding-bottom:3px}.practice-note{line-height:18px}.old-note{font-size:11px;line-height:12px;text-decoration:line-through}.paper button.note-digit{border:0!important;background:transparent!important;box-shadow:none!important;min-width:0;min-height:0;height:20px;padding:0 4px;font:700 16px 'Malgun Gothic',sans-serif;border-radius:4px;overflow:visible}.paper button.note-digit::before{display:none}.paper button.given-digit,.paper button.given-digit:hover,.paper button.given-digit:disabled{background:transparent!important;box-shadow:none!important;opacity:1!important;min-width:0;min-height:0}.paper button.given-digit:not(.student-struck)::after{display:none}.column-step-input{position:relative;z-index:2}.practice-rule{z-index:5}
+@keyframes columnPulse{0%,100%{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 28%,transparent),0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 45%,transparent),0 0 17px color-mix(in srgb,var(--accent) 58%,transparent)}}
+.paper .column-target{animation:columnPulse 1.1s ease-in-out infinite!important;border-radius:5px}.paper button.given-digit.column-target,.paper button.note-digit.column-target{background:var(--stage-soft)!important}.paper .column-target:disabled{animation:none!important}
+.column-help{width:100%;margin:16px 0;border:1px solid var(--stage-edge);border-radius:14px;background:#fffefa}.column-help>summary{cursor:pointer;padding:14px 18px;color:var(--stage-ink);font-weight:700}.column-help .column-work{border:0;margin:0}.missing-equation{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;font-size:24px;font-weight:700;padding:22px 4px}.missing-entries{display:flex;align-items:center;justify-content:center;gap:10px}.missing-entries .entry-wrap{white-space:nowrap}.missing-entries input{width:78px!important}.missing-entries .unit{font-size:22px}.missing-equation>span{white-space:normal}
+@media(max-width:700px){.missing-equation{font-size:21px;gap:10px}.missing-entries input{width:65px!important}}
+@media(prefers-reduced-motion:reduce){.paper .column-target{animation:none!important;outline:3px solid var(--accent);outline-offset:2px}}
+.paper .column-target{outline-style:solid;outline-offset:2px}
+@keyframes columnPulse{0%,100%{outline-color:color-mix(in srgb,var(--accent) 25%,transparent);outline-width:1px;box-shadow:0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}50%{outline-color:var(--accent);outline-width:3px;box-shadow:0 0 15px color-mix(in srgb,var(--accent) 58%,transparent)}}

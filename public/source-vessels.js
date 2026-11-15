@@ -1,7 +1,9 @@
+import {artImage,vesselArt,VESSEL_IDS} from './art-catalog.js';
 export const sourceDefs=()=>`<defs><linearGradient id="sv-metal"><stop stop-color="#a7bec7"/><stop offset=".3" stop-color="#f9fcfc"/><stop offset=".65" stop-color="#d0dee3"/><stop offset="1" stop-color="#96afb9"/></linearGradient><linearGradient id="sv-yellow"><stop stop-color="#ffe9a0"/><stop offset="1" stop-color="#e5ba58"/></linearGradient><linearGradient id="sv-pink"><stop stop-color="#ef9cae"/><stop offset=".4" stop-color="#ffd0d8"/><stop offset="1" stop-color="#d77d93"/></linearGradient><linearGradient id="sv-glass"><stop stop-color="#b6e0e9" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#a5d2df" stop-opacity=".4"/></linearGradient><linearGradient id="sv-water" x2="0" y2="1"><stop stop-color="#a5e4ee"/><stop offset="1" stop-color="#68bfd5"/></linearGradient></defs>`;
 export const transferArrow=(x,y,vertical=false)=>`<g transform="translate(${x} ${y})${vertical?' rotate(90)':''}"><path d="M0-4H22V-10L34 0L22 10V4H0Z" fill="#91ada5" stroke="#78998e" stroke-width=".7" stroke-linejoin="round"/></g>`;
 const text=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${s}</text>`;
 export function source(name){
+ if(VESSEL_IDS[name]||['주전자','작은 컵'].includes(name))return artImage(vesselArt(name==='주전자'?'kettle':name==='작은 컵'?'smallCup':name),-70,-72,140,125);
  if(name==='물통')return `<path d="M-27-18V-38Q0-58 27-38V-18" stroke="#78a59c" stroke-width="6" fill="none"/><path d="M-25-20H25V-5L39 7V40Q0 49-39 40V7L-25-5Z" fill="url(#sv-water)" stroke="#78aab9" stroke-width="2"/><path d="M-21-20H21V-29H-21Z" fill="#98bdb0" stroke="#78a59c"/><path d="M-27 10V35" stroke="#fff9" stroke-width="5"/><path d="M-37 7H37M-37 30H37" stroke="#90b9b1" stroke-width="5" opacity=".6"/>`;
 
  if(name==='주전자')return `<path d="M-29-13V-32Q-29-56 0-56T29-32V-13" fill="none" stroke="#586970" stroke-width="7"/><path d="M-31 2Q-44 5-49-13L-63-22L-57-28Q-43-27-37-16L-25-9" fill="url(#sv-metal)" stroke="#7c929c" stroke-width="1.8"/><path d="M-35-17Q0-29 35-17L40 24Q40 34 0 35T-40 24Z" fill="url(#sv-metal)" stroke="#7c929c" stroke-width="1.8"/><ellipse cy="-17" rx="35" ry="9" fill="#dae6e8" stroke="#7c929c"/><ellipse cy="-20" rx="24" ry="5" fill="#becdd0" stroke="#7c929c"/><rect x="-8" y="-31" width="16" height="10" rx="4" fill="#b87c53" stroke="#806448"/><path d="M-29-8L-31 20" stroke="white" stroke-width="5" opacity=".8" stroke-linecap="round"/>`;
@@ -22,7 +24,7 @@ export function renderSourceVessels(v){
  return `<svg viewBox="0 0 640 389" role="img" aria-label="세 용기의 물을 모양과 크기가 같은 투명한 원통 그릇에 각각 옮긴 모습">${out}</svg>`;
 }
 
-function cup(x,y){return `<g transform="translate(${x} ${y})"><ellipse cy="46" rx="17" ry="3" fill="#789c9e" opacity=".14"/><path d="M-17 0L-13 41Q0 47 13 41L17 0" fill="url(#sv-glass)" stroke="#78aab9" stroke-width="1.2"/><path d="M-15 2L-12 40Q0 45 12 40L15 2" fill="url(#sv-water)"/><ellipse cy="2" rx="15" ry="4" fill="#b5eaf1" stroke="#78aab9"/><path d="M-11 8L-9 37" stroke="white" stroke-width="2" opacity=".8" stroke-linecap="round"/></g>`;}
+function cup(x,y){return artImage('glass-water-full',x-27,y-8,54,63);}
 export function renderCupGroups(v){
  let out=sourceDefs();
  v.groups.forEach((g,i)=>{

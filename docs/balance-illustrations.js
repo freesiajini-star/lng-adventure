@@ -1,6 +1,7 @@
-import {sourceDefs} from './source-vessels.js?v=b4485d52e7f2';
+import {artImage,objectArtwork} from './art-catalog.js?v=94340eb7f4c3';
+import {sourceDefs} from './source-vessels.js?v=94340eb7f4c3';
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${s}</text>`;
-function produce(label){
+function produce(label){const painted=objectArtwork(label,0,0);if(painted)return painted;
  if(label==='볼펜')return '<path d="M5 23 22 3" stroke="#698da6" stroke-width="6" stroke-linecap="round"/><path d="M5 23 1 28 8 25" fill="#7b858d"/><path d="M15 3 24 10" stroke="#b3cbd5" stroke-width="6"/><path d="M10 15 18 6" stroke="#e7f3f7" stroke-width="1.5"/><path d="M19 1 25 6" stroke="#52778d" stroke-width="3"/>';
  if(label==='필통')return '<rect x="-2" y="3" width="32" height="24" rx="7" fill="#9ab8d0" stroke="#6f92ad" stroke-width="1.3"/><path d="M1 9H27" stroke="#dcebf0" stroke-width="2"/><path d="M5 9V14" stroke="#708da3" stroke-width="2"/><circle cx="5" cy="15" r="2" fill="#dcebf0"/><path d="M2 19h25" stroke="#8cacc2"/>';
  if(label==='지우개')return '<path d="M0 6 8 0H29V20L21 27H0Z" fill="#e7a9b8" stroke="#ae8091"/><path d="M0 6H21L29 0M21 6V27" fill="none" stroke="#f9d7dd"/><path d="M0 13H21V25H0Z" fill="#f5e9dc"/><path d="M4 18H15" stroke="#d6c4b8"/>';
@@ -12,7 +13,7 @@ function produce(label){
 export function renderBalances(v,object){
  let out=sourceDefs();v.items.forEach((item,index)=>{
   const x=index*360,delta=Math.sign(item.rightMass-item.leftMass)*15,left=70-delta,right=70+delta;
-  out+=`<g transform="translate(${x} 0)"><ellipse cx="180" cy="238" rx="75" ry="8" fill="#758f8c" opacity=".13"/><path d="M172 56H188V219H172Z" fill="url(#sv-metal)" stroke="#7e969b"/><path d="M126 230Q180 205 234 230V236H126Z" fill="url(#sv-metal)" stroke="#7e969b" stroke-width="2"/><path d="M65 ${left}L295 ${right}" stroke="#91a9ad" stroke-width="10" stroke-linecap="round"/><path d="M65 ${left-2}L295 ${right-2}" stroke="#dce8e9" stroke-width="2"/><circle cx="180" cy="70" r="9" fill="#b8c8cb" stroke="#7b949a"/><circle cx="180" cy="70" r="3" fill="#738e96"/>`;
+  out+=`<g transform="translate(${x} 0)"><ellipse cx="180" cy="238" rx="75" ry="8" fill="#758f8c" opacity=".13"/>${artImage('balanceBase',105,38,150,216).replace('xMidYMid meet','none')}<path d="M65 ${left}L295 ${right}" stroke="#91a9ad" stroke-width="10" stroke-linecap="round"/><path d="M65 ${left-2}L295 ${right-2}" stroke="#dce8e9" stroke-width="2"/><circle cx="180" cy="70" r="9" fill="#b8c8cb" stroke="#7b949a"/><circle cx="180" cy="70" r="3" fill="#738e96"/>`;
   for(const[cx,cy,label,count]of[[65,left,item.left,item.leftCount],[295,right,item.right,item.rightCount]]){
    out+=`<path d="M${cx} ${cy}L${cx-47} ${cy+83}M${cx} ${cy}L${cx+47} ${cy+83}" stroke="#8da5a7" stroke-width="2" fill="none"/><path d="M${cx-50} ${cy+83}Q${cx} ${cy+108} ${cx+50} ${cy+83}Z" fill="#dac9a1" stroke="#a49778" stroke-width="2"/><path d="M${cx-47} ${cy+84}Q${cx} ${cy+91} ${cx+47} ${cy+84}" fill="none" stroke="#fff9" stroke-width="2"/>`;
    const cols=count<=3?count:4,scale=count>4?.62:.85,spacing=count>4?20:27;

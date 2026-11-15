@@ -1,9 +1,11 @@
-import {renderFillTable} from './fill-table-illustration.js?v=b4485d52e7f2';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=b4485d52e7f2';
+import {paintedDetails} from './painted-details.js?v=94340eb7f4c3';
+import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=94340eb7f4c3';
+import {renderFillTable} from './fill-table-illustration.js?v=94340eb7f4c3';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=94340eb7f4c3';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
-export function restoredObject(x,y,label){let c='';
+export function restoredObject(x,y,label){const painted=objectArtwork(label,x,y);if(painted)return painted;let c='';
  if(['고구마','감자','당근','무'].includes(label)){const color={고구마:'#af6881',감자:'#d6b77e',당근:'#eea256',무:'#eff0cf'}[label];c=`<ellipse cx="12" cy="13" rx="${label==='당근'||label==='무'?6:11}" ry="10" transform="rotate(35 12 13)" fill="${color}" stroke="#7b8061"/><path d="M16 5l4-6m-4 6 7-2" stroke="#73935d" stroke-width="3"/>`;}
  if(['호박','감','딸기','키위','배추','두부','열매'].includes(label)){c=label==='두부'?'<path d="M1 8l7-6h15v16l-7 6H1z" fill="#f6ecd9" stroke="#a29c8a"/><path d="M1 8h15l7-6M16 8v16" fill="none" stroke="#a29c8a"/>':`<ellipse cx="12" cy="13" rx="11" ry="10" fill="${{호박:'#e8ae57',감:'#edaa5a',딸기:'#df7d80',키위:'#a6bb6c',배추:'#b1ce85',열매:'#a6bb6c'}[label]}" stroke="#6d8b5e"/><path d="M12 3V0m-7 5 7-3 7 3M8 6q-5 9 0 16m8-16q5 9 0 16" fill="none" stroke="#6d8b5e"/>`;}
  if(label==='승용차')c='<path d="M1 12l4-8h13l5 8v9H1z" fill="#e3b95e" stroke="#81734d"/><path d="M7 6h9l3 6H4z" fill="#b5d6dc"/><circle cx="6" cy="21" r="4" fill="#64736e"/><circle cx="19" cy="21" r="4" fill="#64736e"/>';
@@ -16,7 +18,7 @@ export function restoredObject(x,y,label){let c='';
  if(label==='간장'||label==='식용유')c=`<path d="M8 1h8v5l6 5v13H2V11l6-5z" fill="${label==='간장'?'#947459':'#e4cd70'}" stroke="#8a805f"/><rect x="6" y="13" width="12" height="7" fill="#fff2ca"/>`;
  if(!c)return null;return `<g transform="translate(${x} ${y})">${c}</g>`;
 }
-function container(label){
+function container(label){const id=label==='주전자'?'kettle':label==='작은 컵'?'smallCup':label==='병'?'waterBottle-water-full':label==='원통'?'glass-water-full':VESSEL_IDS[label]?vesselArt(label):null;if(id)return artImage(id,-70,-65,140,130);
  if(label==='주전자')return '<path d="M-31 45q-5-42 31-42t31 42zM22 10l28-18-17 36M-20 4q-6-42 38-18" fill="#bed5d4" stroke="#638a8c" stroke-width="3"/><path d="M-9 2V-6h18v8" fill="#ddac82" stroke="#638a8c"/>';
  if(label==='꽃병')return '<path d="M-17-24h34q-16 24 1 43q28 42-18 43t-18-43q17-19 1-43z" fill="#b2d8e0" stroke="#638a8c" stroke-width="3"/>';
  if(label==='작은 컵'||label==='대접')return '<path d="M-31 5h62l-10 40h-42z" fill="#e8cb80" stroke="#9b8a5b" stroke-width="3"/>';
@@ -26,7 +28,7 @@ function container(label){
 }
 const cont=(x,y,label)=>`<g transform="translate(${x} ${y})">${container(label)}</g>`;
 const arrow=(x,y)=>`<path d="M${x} ${y}h55m-12-9 12 9-12 9" fill="none" stroke="#8ba59a" stroke-width="3"/>`;
-export function restoredVisual(v,render,object){
+export function restoredVisual(v,render,object){const painted=paintedDetails(v);if(painted!==null)return painted;
  if(v.kind==='bottleOverflow')return wrap(600,230,'<g transform="translate(95 60) scale(1.4)">'+container('병')+'</g>'+tx(95,155,'물병에 가득')+arrow(170,90)+cont(340,80,'꽃병')+tx(340,175,'꽃병은 가득')+'<path d="M358 60q45-8 45 77" fill="none" stroke="#5cbac8" stroke-width="5"/><ellipse cx="418" cy="151" rx="46" ry="10" fill="#9ad7df"/>'+tx(485,128,'넘친 물',16),'가득 찬 물병의 물을 모두 부어 꽃병이 가득 차고 물이 넘쳤습니다.');
  if(v.kind==='sourceVessels')return renderSourceVessels(v);
  if(v.kind==='bottleCups')return renderCupGroups(v);
@@ -40,7 +42,7 @@ export function restoredVisual(v,render,object){
  if(v.kind==='halfBox')return '<div class="restored-pair">'+v.totals.map((total,i)=>wrap(310,190,'<path d="M45 35v65h220V35" fill="#eee1c7" stroke="#a78d68" stroke-width="3"/><rect x="48" y="'+(i?68:38)+'" width="214" height="'+(i?30:60)+'" fill="#e6b16a"/>'+tx(155,80,i?'귤의 절반':'귤 전체',19)+'<path d="M45 105h220l10 53H35z" fill="#c4d6cd" stroke="#719284"/>'+tx(155,139,total+' g',22),'같은 상자와 '+(i?'귤 절반':'귤 전체')+', 전체 '+total+' g')).join('')+'</div>';
  if(v.kind==='cupChange')return wrap(580,180,cont(70,45,'원통')+tx(70,125,'처음의 물',16)+tx(160,80,'+',25)+cont(240,45,'작은 컵')+tx(240,125,'같은 컵으로 붓기',16)+arrow(325,70)+cont(475,45,'원통')+tx(475,125,'부은 뒤의 물',16),'처음 물의 양에 같은 컵으로 부은 양을 더하면 나중 물의 양입니다. 수위를 읽는 그림이 아닙니다.');
  if(v.kind==='eggTrays'){let out='';for(let tray=0;tray<2;tray++){const x=40+tray*250;out+=`<rect x="${x}" y="25" width="210" height="120" rx="12" fill="#e3ddba" stroke="#9b997a"/>`;for(let n=0;n<4;n++){const cx=x+55+(n%2)*100,cy=60+Math.floor(n/2)*55;out+=`<ellipse cx="${cx}" cy="${cy}" rx="27" ry="21" fill="#c9c4a7"/>`;if(tray*4+n<v.count)out+=`<ellipse cx="${cx}" cy="${cy-7}" rx="21" ry="28" fill="#e4b5a1" stroke="#aa8977"/>`;}}return wrap(550,180,out,'네 칸짜리 달걀판에 달걀 다섯 개를 담으면 두 판이 필요합니다.');}
- if(v.kind==='recipe')return `<div class="recipe-visual">${wrap(500,125,'<ellipse cx="250" cy="62" rx="145" ry="49" fill="#677b6c"/><ellipse cx="250" cy="58" rx="128" ry="37" fill="#bd7052"/>'+Array.from({length:15},(_,i)=>`<ellipse cx="${140+i*15}" cy="${52+(i%2)*12}" rx="14" ry="25" transform="rotate(-25 ${140+i*15} 58)" fill="${['#cd9f76','#b0bd7e','#dc9873'][i%3]}" stroke="#856f52"/>`).join(''),'채소를 겹쳐 담은 라따뚜이')}<p><b>라따뚜이 재료 · 2인분</b></p><p>가지 1개, 애호박 1개, 피망 1개, 양파 1개, 마늘 3쪽<br>올리브오일 3큰술, 소금 약간, <b>토마토소스 2컵</b></p><p>1큰술 = 15 mL · 1컵 = 200 mL</p></div>`;
+ if(v.kind==='recipe')return `<div class="recipe-visual">${wrap(500,125,artImage('ratatouille',150,-12,200,145),'채소를 겹쳐 담은 라따뚜이')}<p><b>라따뚜이 재료 · 2인분</b></p><p>가지 1개, 애호박 1개, 피망 1개, 양파 1개, 마늘 3쪽<br>올리브오일 3큰술, 소금 약간, <b>토마토소스 2컵</b></p><p>1큰술 = 15 mL · 1컵 = 200 mL</p></div>`;
  if(v.kind==='cacao')return wrap(540,240,'<path d="M200 210l12-160h20l20 160" fill="#af8c63"/><path d="M222 75L125 45m99 40 100-45m-100 75-90-20m95 15 100-15" stroke="#a18b65" stroke-width="10"/>'+[115,170,255,315].map((x,i)=>`<ellipse cx="${x}" cy="${40+(i%2)*30}" rx="62" ry="26" fill="#a6c18a"/>`).join('')+[175,245,213].map((x,i)=>`<ellipse cx="${x}" cy="${113+i*25}" rx="15" ry="29" transform="rotate(18 ${x} 135)" fill="#bb9272" stroke="#8d715b"/><path d="M${x} ${90+i*25}v45" stroke="#8d715b"/>`).join('')+tx(403,110,'약'+' '+v.count+'개 수확',20)+tx(403,151,'한 개 '+v.one+' g',19)+tx(270,230,'카카오나무와 열매 · 나무 그림은 모형입니다.',15),'카카오나무와 열매입니다. 수확량 약 30개, 열매 한 개 500 g.');
  if(v.kind==='rods')return wrap(500,210,[{l:2,m:'4 kg'},{l:1,m:'? kg'},{l:3,m:'? kg'}].map((a,i)=>`<rect x="70" y="${25+i*60}" width="${a.l*90}" height="25" rx="12" fill="#d6bd9b" stroke="#9d8a6e"/>${tx(70+a.l*45,18+i*60,a.l+' m',15)}${tx(420,45+i*60,a.m,19)}`).join(''),'같은 굵기와 재질의 막대입니다. 길이가 두 배이면 무게도 두 배입니다.');
  if(v.kind==='substitution'){const bread=(x,y)=>'<ellipse cx="'+x+'" cy="'+y+'" rx="28" ry="17" fill="#dbb678" stroke="#9b805c"/><path d="M'+(x-12)+' '+(y-12)+'v15m12-15v15m12-15v15" stroke="#aa8d65"/>';return wrap(600,210,object(90,5,'우유')+tx(160,27,'=',25)+bread(230,20)+tx(350,27,'+ 100 g',22)+bread(100,90)+tx(160,97,'+',25)+object(220,75,'우유')+tx(350,97,'= 200 g',22)+bread(100,165)+tx(160,172,'+',25)+bread(230,165)+tx(390,172,'+ 100 g = 200 g',22),'우유 그림을 빵과 100 g으로 바꾸면 빵 두 개와 100 g이 됩니다.');}

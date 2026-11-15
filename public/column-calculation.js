@@ -26,14 +26,15 @@ export function columnSteps(a,b,operation){
 
 // Tasks contain one student action each; no task is advanced by a timer.
 export function columnTasks(model){
- const tasks=[],struck=new Set();let priorNotes=Array(model.length).fill(null),priorResult=Array(model.length).fill(null);
- for(const state of model.steps){
-  for(let i=0;i<model.length;i++)if(state.notes[i]!==priorNotes[i]){
-   if(model.operation!=='+'&&!struck.has(i)){tasks.push({kind:'strike',index:i});struck.add(i);}
-   tasks.push({kind:'note',index:i,answer:String(state.notes[i])});
+ const tasks=[],current=[...model.top];let carry=0;
+ for(let i=model.length-1;i>=0;i--){
+  if(model.operation==='+'){const sum=model.top[i]+model.bottom[i]+carry;carry=Math.floor(sum/10);if(carry&&i>0)tasks.push({kind:'note',index:i-1,answer:String(carry),role:'carry'});tasks.push({kind:'result',index:i,answer:String(sum%10)});continue;}
+  if(current[i]<model.bottom[i]){
+   let donor=i-1;while(current[donor]===0)donor--;
+   tasks.push({kind:'strike',index:donor,target:'original'});current[donor]--;tasks.push({kind:'note',index:donor,answer:String(current[donor]),role:'decreased'});
+   for(let k=donor+1;k<=i;k++){current[k]+=10;tasks.push({kind:'note',index:k,answer:'10',role:'borrow'});if(k<i){tasks.push({kind:'strike',index:k,target:'note'});current[k]--;tasks.push({kind:'note',index:k,answer:'9',role:'decreased'});}}
   }
-  for(let i=model.length-1;i>=0;i--)if(state.result[i]!==priorResult[i])tasks.push({kind:'result',index:i,answer:String(state.result[i])});
-  priorNotes=[...state.notes];priorResult=[...state.result];
+  tasks.push({kind:'result',index:i,answer:String(current[i]-model.bottom[i])});
  }
  return tasks;
 }

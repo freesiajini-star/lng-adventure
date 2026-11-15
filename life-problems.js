@@ -1,7 +1,7 @@
 import {seeded} from './core-revisions.js';
 // Each table is a fictional plan, recipe, product label or a measured result.
 export const LIFE_SCENES=[
- {title:'학교 텃밭',intro:'오늘 정한 화분 물주기 계획입니다.',items:['상추','방울토마토','고추','꽃'],values:[200,300,400,500],art:'plant',unit:'화분 1개',count:'개'},
+ {title:'학교 텃밭',intro:'오늘 정한 화분 물주기 계획입니다.',items:['상추','방울토마토','피망','꽃'],values:[200,300,400,500],art:'plant',unit:'화분 1개',count:'개'},
  {title:'물총 놀이',intro:'표는 놀이용 물총의 들이입니다.',items:['작은 물총','중간 물총','큰 물총','배낭 물총'],values:[150,300,500,1000],art:'watergun',unit:'1개',count:'개'},
  {title:'운동회 음료',intro:'운동회에서 표의 용기에 물을 가득 담으려고 합니다.',items:['작은 종이컵','큰 종이컵','작은 물병','일반 물병'],values:[150,200,350,500],art:'drink',unit:'1개',count:'개'},
  {title:'관찰 수조',intro:'체험관에서 정한 수조에 넣을 물의 양입니다.',items:['A 수조','B 수조','C 수조','D 수조'],values:[1500,2000,2500,3000],art:'tank',unit:'1개',mode:'sum'},
