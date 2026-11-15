@@ -1,6 +1,6 @@
-import {dayUsage} from './learning.js?v=f5e79bb14653';
-import {api} from './firebase-client.js?v=f5e79bb14653';
-import {STAGES,NICKS} from './math.js?v=f5e79bb14653';
+import {dayUsage} from './learning.js?v=05207ba80812';
+import {api} from './firebase-client.js?v=05207ba80812';
+import {STAGES,NICKS} from './math.js?v=05207ba80812';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;

@@ -1,0 +1,33 @@
+/* Shared learning theme: every stage uses the same glossy, pressable controls. */
+:root{--stage-ink:color-mix(in srgb,var(--accent) 54%,#1b2630);--stage-edge:color-mix(in srgb,var(--accent) 42%,white);--stage-soft:color-mix(in srgb,var(--accent) 14%,#fffefa)}
+body.theme-bakery .paper,body.theme-chalk .paper,.paper{background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 5%,#fffefa),#fffefa 60%);border-color:var(--stage-edge)}
+.paper .paper-head{background:linear-gradient(115deg,var(--stage-soft),#fffefa);border-color:var(--stage-edge)}
+.paper .paper-foot{background:var(--stage-soft);border-color:var(--stage-edge);color:var(--stage-ink)}
+.paper .type-tag{background:var(--stage-soft);color:var(--stage-ink)}
+.paper .visual-box,.paper .visual-box[data-visual="pourCompare"]{background:linear-gradient(145deg,var(--stage-soft),#fffefa);border-color:var(--stage-edge)}
+.paper button{position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--stage-edge);border-radius:13px;background:linear-gradient(165deg,#ffffffac 0%,#ffffff36 45%,#00000008 100%),color-mix(in srgb,var(--accent) 28%,white);color:var(--stage-ink);box-shadow:inset 0 2px 2px #ffffffb0,inset 0 -2px 3px #00000018,0 3px 0 color-mix(in srgb,var(--accent) 25%,#afb6ad),0 5px 9px #26344818;text-shadow:none;transition:transform .15s,filter .15s,box-shadow .15s,background .15s}
+.paper button:before{content:'';position:absolute;inset:2px 10% auto;height:38%;border-radius:80%;background:linear-gradient(#ffffff85,#ffffff00);pointer-events:none}
+.paper button:not(:disabled):hover{filter:brightness(1.05);transform:translateY(-1px)}
+.paper button:not(:disabled):active{transform:translateY(2px) scale(.98);filter:brightness(.96);box-shadow:inset 0 2px 4px #0002,0 1px 0 var(--stage-edge)}
+.paper button:focus-visible{outline:3px solid var(--stage-ink);outline-offset:3px}
+.paper .choice{border-width:1px}
+.paper .choice.selected,.paper button.primary{background:linear-gradient(165deg,#ffffff80 0%,#ffffff12 38%,#0000000b 100%),var(--accent);border-color:color-mix(in srgb,var(--accent) 78%,white);color:white;text-shadow:0 1px 2px #0005;box-shadow:inset 0 2px 2px #ffffff9c,inset 0 -2px 3px #00000018,0 3px 0 color-mix(in srgb,var(--accent) 80%,#3d4b56),0 5px 9px #26344822}
+.paper .choice.selected{padding:9px 13px;transform:translateY(1px)}
+.paper .choice.selected:after{content:none}
+.paper .choice:disabled{opacity:.62;cursor:default;transform:none}
+.paper .choice.selected:disabled{opacity:1;transform:translateY(1px)}
+.paper .numeric-pad{background:var(--stage-soft);border-color:var(--stage-edge)}
+.paper .numeric-pad-title,.paper .pad-hint,.paper .answer-label{color:var(--stage-ink)}
+.paper .numeric-pad .pad-tab{color:var(--stage-ink)}
+.paper .entry-wrap input{border-color:var(--stage-edge)}
+.paper .entry-wrap input.active-entry{border-color:var(--accent);background:var(--stage-soft)}
+.paper .feedback{background:var(--stage-soft);border:1px solid var(--stage-edge)}
+.paper .feedback strong{color:var(--stage-ink)}
+.paper .feedback.bad{background:color-mix(in srgb,var(--accent) 8%,#fffefa)}
+/* Pencil red is reserved for grading and wrong-answer corrections. */
+.paper .feedback.bad strong{color:#a54135}
+body.theme-bakery .stage-button,body.theme-chalk .stage-button{background:linear-gradient(165deg,#ffffffad,#ffffff36),color-mix(in srgb,var(--stage-color) 22%,white);border-color:color-mix(in srgb,var(--stage-color) 42%,white);color:color-mix(in srgb,var(--stage-color) 48%,#263d47);box-shadow:inset 0 2px 2px #ffffffad,inset 0 -2px 3px #0001,0 3px 7px #26344822}
+body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{background:linear-gradient(165deg,#ffffff70,#ffffff08),var(--stage-color);border-color:color-mix(in srgb,var(--stage-color) 78%,white);color:white;text-shadow:0 1px 1px #0003}
+.stage-button.active:after{color:inherit}
+@media(max-width:700px){.paper .choice.selected{padding:8px}}
+@media(max-height:760px) and (min-width:961px){.paper .choice.selected{padding:6px 10px}}

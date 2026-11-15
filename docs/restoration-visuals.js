@@ -1,5 +1,5 @@
-import {renderFillTable} from './fill-table-illustration.js?v=f5e79bb14653';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=f5e79bb14653';
+import {renderFillTable} from './fill-table-illustration.js?v=05207ba80812';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=05207ba80812';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
