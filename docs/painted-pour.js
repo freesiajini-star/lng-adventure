@@ -1,6 +1,6 @@
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=94340eb7f4c3';
-import {artImage,vesselArt} from './art-catalog.js?v=94340eb7f4c3';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=94340eb7f4c3';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=740d1adefa5f';
+import {artImage,vesselArt} from './art-catalog.js?v=740d1adefa5f';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=740d1adefa5f';
 const profiles={...ART_PROFILES,milkCarton:[[150,210],[880,210]],juiceCarton:[[150,210],[880,210]]};
 export function paintedGeometry(id,capacity,amount){if(!(capacity>0)||amount<0||amount>capacity)throw Error('Invalid painted volume');const profile=profiles[id].map(p=>[...p]);if(id.endsWith('Carton'))profile.depth=420;const volume=volumeBelow(profile,profile[0][0]);return {profile,volume,scale:Math.cbrt(capacity*1000/volume),level:fillLevel(profile,amount/capacity)};}
 const center=id=>ART_AXES[id]??500;
@@ -11,7 +11,7 @@ export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,o
  if(!opaque&&amount>0){inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath></defs><g clip-path="url(#${uid})">${artImage(vesselArt(id,full),-axis,0,1000)}</g>`;if(amount<capacity)inner+=`<ellipse cx="0" cy="${g.level}" rx="${radiusAt(p,g.level)*.94}" ry="14" clip-path="url(#${uid})" fill="${color}" fill-opacity=".7" stroke="${color}" stroke-width="2"/>`;}
  let effect='';const bounds=ART_BOUNDS[id]||[0,1000],left=(bounds[0]-axis)*scale,right=(bounds[1]-axis)*scale;
  let min=left,max=right;
- if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-40,cy:bottom+6,rx:125,ry:22};min=Math.min(min,(pool.cx-pool.rx)*scale);effect=`<g class="wall-overflow"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="${color}" fill-opacity=".8"/><path d="M${points.map(a=>a.join(',')).join('L')}L${pool.cx},${pool.cy}" fill="none" stroke="${color}" stroke-width="19" stroke-linejoin="round" stroke-linecap="round"/></g>`;}
+ if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-24,cy:bottom+12,rx:170,ry:30};min=Math.min(min,(pool.cx-pool.rx)*scale);effect=`<g class="wall-overflow"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="#55bace" fill-opacity=".85" stroke="#329aad" stroke-width="5"/><path d="M${points.map(a=>a.join(',')).join('L')}L${pool.cx},${pool.cy}" fill="none" stroke="#39a9be" stroke-opacity=".9" stroke-width="32" stroke-linejoin="round" stroke-linecap="round"/></g>`;}
  return {markup:`<g class="painted-vessel" data-fill="${amount/capacity}" transform="translate(${cx} ${y}) scale(${scale})">${inner}${effect}</g>`,min,max,geometry:g};
 }
 const tx=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#36585c" font-family="Malgun Gothic,sans-serif">${s}</text>`;

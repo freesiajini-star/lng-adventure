@@ -4,7 +4,7 @@ import {join} from 'node:path';
 const configSource=readFileSync('public/firebase-config.js','utf8');if(!configSource.includes("projectId:'lng-adventure'")&&!configSource.includes('"projectId": "lng-adventure"'))throw Error('새 lng-adventure 프로젝트만 배포할 수 있습니다.');
 if(existsSync('node_modules/qrcode-generator/dist/qrcode.js')){mkdirSync('public/vendor',{recursive:true});cpSync('node_modules/qrcode-generator/dist/qrcode.js','public/vendor/qrcode.js');}
 if(!existsSync('public/vendor/qrcode.js'))throw Error('QR 라이브러리가 없습니다. npm install을 먼저 실행해 주세요.');
-for(const name of ['core-revisions.js','life-problems.js','column-calculation.js','type-groups.js','limit-problems.js'])if(existsSync(name))cpSync(name,'public/'+name);
+for(const name of ['quality-revisions.js','core-revisions.js','life-problems.js','column-calculation.js','type-groups.js','limit-problems.js'])if(existsSync(name))cpSync(name,'public/'+name);
 cpSync('fill-tables.js','public/fill-tables.js');cpSync('pour-problems.js','public/pour-problems.js');cpSync('restoration.js','public/restoration.js');cpSync('curriculum.js','public/curriculum.js');cpSync('math.js','public/math.js');mkdirSync('docs',{recursive:true});cpSync('public','docs',{recursive:true});writeFileSync('docs/.nojekyll','');
 // Content versions prevent mixing old cached generators with new UI/diagrams.
 const assets=readdirSync('public').filter(name=>/\.(?:js|css|html)$/.test(name)).sort();

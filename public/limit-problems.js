@@ -1,3 +1,4 @@
+import {subject,topic} from './quality-revisions.js';
 import {seeded} from './core-revisions.js';
 const SCENES=[
  ['소풍 가방','소풍 가방에 넣을 짐의 한도입니다.',['물병','도시락','돗자리','간식','그림책','손수건 꾸러미'],[[400,800],[500,1000],[300,800],[100,400],[250,700],[100,250]]],
@@ -39,20 +40,20 @@ export function makeLimitQuestion(q,seed){
    const totals=candidates.map(sum),boundaries=[...new Set(totals)].sort((a,b)=>a-b).slice(0,-1).filter(n=>n>=500&&n<=5000);if(!boundaries.length)continue;limit=pick(boundaries);const valid=totals.map((x,i)=>x<=limit?i:-1).filter(i=>i>=0);if(!valid.length||valid.length===candidates.length)continue;
    options=candidates.map((group,i)=>(i+1)+'. '+label(form===3?group.filter(id=>id!==required):group));
    if(form===0){fields=options.map((o,i)=>({kind:'choice',label:o,options:['가능','불가능'],answer:totals[i]<=limit?'가능':'불가능'}));question='각 조합이 한도를 지키는지 판단하세요. 후보는 각각 따로 생각하세요.';}
-   if(form===1||form===3){if(valid.length>3)continue;answer=valid.map(i=>options[i]);fields=[{kind:'multi',label:'가능한 조합 모두',options,answer}];question=form===1?'한도를 지키는 조합을 모두 고르세요. 후보는 각각 따로 생각하세요.':byId.get(required).name+'는 반드시 넣습니다. 함께 넣을 나머지 두 물건의 조합을 모두 고르세요.';}
+   if(form===1||form===3){if(valid.length>3)continue;answer=valid.map(i=>options[i]);fields=[{kind:'multi',label:'가능한 조합 모두',options,answer}];question=form===1?'한도를 지키는 조합을 모두 고르세요. 후보는 각각 따로 생각하세요.':topic(byId.get(required).name)+' 반드시 넣습니다. 함께 넣을 나머지 두 물건의 조합을 모두 고르세요.';}
    if(form===4){const best=Math.max(...valid.map(i=>totals[i]));if(totals.filter(x=>x===best).length!==1)continue;fields=[{kind:'choice',label:'한도에 가장 가까운 조합',options,answer:options[totals.indexOf(best)]}];question='한도를 넘지 않으면서 가장 무거운 조합을 고르세요.';}
    explanation=candidates.map((g,i)=>(i+1)+'번: '+g.map(id=>byId.get(id).weight).join(' + ')+(base?' + 빈 포장 '+base:'')+' = '+totals[i]+' g, '+(totals[i]<=limit?'가능':'불가능')).join('. ')+'.';
   }
   if(form===2){
    loaded=[pick(ids)];const others=items.filter(x=>x.id!==loaded[0]),weights=others.map(x=>x.weight).sort((a,b)=>a-b),room=pick(weights.slice(0,-1));limit=sum(loaded)+room;if(limit<500||limit>5000)continue;
    options=others.map(x=>x.name);answer=others.filter(x=>sum(loaded)+x.weight<=limit).map(x=>x.name);if(!answer.length||answer.length===others.length)continue;
-   fields=[{kind:'multi',label:'하나씩 추가할 수 있는 물건 모두',options,answer}];question='이미 '+label(loaded)+'가 실려 있습니다. 나머지 물건을 하나씩만 더한다면, 추가할 수 있는 물건을 모두 고르세요. 선택한 물건을 동시에 싣는 것은 아닙니다.';
+   fields=[{kind:'multi',label:'하나씩 추가할 수 있는 물건 모두',options,answer}];question='이미 '+subject(label(loaded))+' 실려 있습니다. 나머지 물건을 하나씩만 더한다면, 추가할 수 있는 물건을 모두 고르세요. 선택한 물건을 동시에 싣는 것은 아닙니다.';
    explanation='이미 실린 무게'+(base?'와 빈 포장 무게':'')+'는 '+sum(loaded)+' g입니다. '+limit+' − '+sum(loaded)+' = '+room+' g이 남습니다. '+answer.join(', ')+'는 각각 '+room+' g을 넘지 않습니다.';
   }
   if(form===5){
    loaded=shuffle(ids).slice(0,3);const total=sum(loaded),min=Math.min(...loaded.map(id=>byId.get(id).weight)),excess=r(1,Math.max(1,Math.floor(Math.max(...loaded.map(id=>byId.get(id).weight))/50)))*50;limit=total-excess;
    if(limit<500||limit>5000)continue;const eligible=loaded.map(id=>byId.get(id)).filter(x=>total-x.weight<=limit).sort((a,b)=>a.weight-b.weight);if(!eligible.length)continue;
-   options=shuffle(loaded).map(id=>byId.get(id).name);fields=[{kind:'choice',label:'뺄 물건',options,answer:eligible[0].name}];question='현재 '+label(loaded)+'가 실려 있고, 총무게는 '+fmt(total)+'입니다. 한도를 지키도록 한 가지만 뺄 때, 뺄 수 있는 물건 중 가장 가벼운 것을 고르세요.';
+   options=shuffle(loaded).map(id=>byId.get(id).name);fields=[{kind:'choice',label:'뺄 물건',options,answer:eligible[0].name}];question='현재 '+subject(label(loaded))+' 실려 있고, 총무게는 '+fmt(total)+'입니다. 한도를 지키도록 한 가지만 뺄 때, 뺄 수 있는 물건 중 가장 가벼운 것을 고르세요.';
    explanation=total+' − '+limit+' = '+excess+' g 이상을 빼야 합니다. 그중 가장 가벼운 '+eligible[0].name+' '+eligible[0].weight+' g을 빼면 '+(total-eligible[0].weight)+' g으로 한도를 지킵니다.';
   }
   if(!fields)continue;

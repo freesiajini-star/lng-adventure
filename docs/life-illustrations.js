@@ -1,8 +1,8 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=94340eb7f4c3';
-import {artImage,lifeArtwork} from './art-catalog.js?v=94340eb7f4c3';
-import {illustration} from './pour-illustrations.js?v=94340eb7f4c3';
-import {vesselGeometry} from './pour-geometry.js?v=94340eb7f4c3';
-import {source,sourceDefs,transferArrow} from './source-vessels.js?v=94340eb7f4c3';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=740d1adefa5f';
+import {artImage,lifeArtwork} from './art-catalog.js?v=740d1adefa5f';
+import {illustration} from './pour-illustrations.js?v=740d1adefa5f';
+import {vesselGeometry} from './pour-geometry.js?v=740d1adefa5f';
+import {source,sourceDefs,transferArrow} from './source-vessels.js?v=740d1adefa5f';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${esc(s)}</text>`;
 const colors=['#e78d9c','#b5b3dc','#f1c37c','#9ac8ad'];
@@ -24,10 +24,8 @@ export function renderLifeTable(v){let out=sourceDefs()+`<defs><linearGradient i
  return `<svg viewBox="0 0 720 350" role="img" aria-label="${esc(v.title)} 그림표">${out}</svg>`;
 }
 export function renderReference(v){
- const total=Math.round(v.fills.reduce((n,f)=>n+f*1000,0)),id=v.source==='물통'?'pitcher':v.source==='계량컵'?'measureJug':'waterBottle';
- const g=vesselGeometry(id,total,total),extent=(g.profile.at(-1)[0]-(id==='pitcher'?-12:g.profile[0][0]-12))*g.scale;
- const camera=Math.min(.8,160/extent),cylinderScale=Math.cbrt(1000000/(Math.PI*36*36*120))*camera,h=120*cylinderScale,radius=36*cylinderScale,baseline=190;
- const width=Math.max(650,v.fills.length*110+220);let out=sourceDefs()+artImage(id+'-water-full',10,18,170,180)+tx(95,229,v.source,18)+transferArrow(175,112);
- v.fills.forEach((f,i)=>{const x=270+i*110,top=baseline-h,level=baseline-h*f;out+=`<path d="M${x-radius} ${top}V${baseline}a${radius} 7 0 0 0 ${radius*2} 0V${top}" fill="url(#sv-glass)" stroke="#78aab9" stroke-width="1.5"/><path d="M${x-radius+2} ${level}V${baseline}a${radius-2} 6 0 0 0 ${radius*2-4} 0V${level}" fill="url(#sv-water)"/><ellipse cx="${x}" cy="${level}" rx="${radius-2}" ry="5" fill="#b2e8ee" stroke="#78b9c8"/><ellipse cx="${x}" cy="${top}" rx="${radius}" ry="6" fill="#fff8" stroke="#78aab9"/>${tx(x,28,'1 L 그릇',15)}${tx(x,229,f===1?'가득':f===.5?'약 절반':'약 3분의 1',14)}`;});
- return `<svg viewBox="0 0 ${width} 250" role="img" aria-label="같은 용기에서 옮긴 물을 1 L 그릇들의 수위로 어림합니다">${out}</svg>`;
+ const width=Math.max(650,v.fills.length*110+220),id=v.source==='물통'?'pitcher':v.source==='계량컵'?'measureJug':'waterBottle';
+ let out=artImage(id+'-water-full',10,30,170,175)+tx(95,230,v.source,16)+transferArrow(175,112);
+ v.fills.forEach((f,i)=>{const x=270+i*110,g=paintedGeometry('glass',1000,f*1000),camera=155/((g.profile.at(-1)[0]-g.profile[0][0])*g.scale);out+=paintedVessel('glass',1000,f*1000,'물',x,200,camera,'reference-'+i).markup+tx(x,25,'1 L 그릇',14)+tx(x,230,f===1?'가득':f===.5?'약 절반':'약 3분의 1',13);});
+ return `<svg viewBox="0 0 ${width} 250" role="img" aria-label="1 L 그릇에 옮겨 담은 물의 수위">${out}</svg>`;
 }

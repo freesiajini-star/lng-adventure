@@ -1,3 +1,4 @@
+import {reviseQuality} from './quality-revisions.js?v=740d1adefa5f';
 export const seeded=(seed=1)=>{let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};};
 const number=(label,value,unit='mL')=>({kind:'number',label,answer:String(value),unit});
 const choice=(label,options,answer)=>({kind:'choice',label,options:[...options],answer});
@@ -34,5 +35,5 @@ export function reviseCore(q,seed){
   }
   if(type===5){const names=shuffle([a,b,c]),light=names[0],mid=names[1],heavy=names[2];let bs=[bal(light,mid,1,1,one,one*2),bal(mid,heavy,1,1,one*2,one*3)];bs=shuffle(bs).map(x=>random()<.5?x:bal(x.right,x.left,x.rightCount,x.leftCount,x.rightMass,x.leftMass));set(['저울을 보고 가장 가벼운 것과 가장 무거운 것을 차례로 고르세요. 같은 종류의 물건은 한 개의 무게가 같습니다.'],[choice('가장 가벼운 것',items.slice(0,3),light),choice('가장 무거운 것',items.slice(0,3),heavy)],{kind:'balances',items:bs},'가벼운 순서는 '+names.join(', ')+'입니다. 가장 가벼운 것은 '+light+', 가장 무거운 것은 '+heavy+'입니다.');}
  }
- return q;
+ return reviseQuality(q,seed);
 }

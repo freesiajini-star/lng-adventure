@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node scripts/build-free.mjs",
     "preview": "node scripts/preview-free.mjs",
-    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs tests/restoration.test.mjs tests/pour.test.mjs tests/request15.test.mjs tests/request8.test.mjs tests/request6.test.mjs tests/column-interaction.test.mjs",
+    "test": "node --test tests/math.test.mjs tests/learning.test.mjs tests/firebase.test.mjs tests/curriculum.test.mjs tests/restoration.test.mjs tests/pour.test.mjs tests/request15.test.mjs tests/request8.test.mjs tests/request6.test.mjs tests/column-interaction.test.mjs tests/quality.test.mjs",
     "rules": "node scripts/make-rules.mjs"
   },
   "dependencies": {
