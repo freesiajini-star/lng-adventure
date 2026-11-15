@@ -1,17 +1,19 @@
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=526d7db74469';
-import {artImage,vesselArt} from './art-catalog.js?v=526d7db74469';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=526d7db74469';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=58cc96d8ef86';
+import {artImage,vesselArt} from './art-catalog.js?v=58cc96d8ef86';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=58cc96d8ef86';
 const profiles={...ART_PROFILES,milkCarton:[[150,210],[880,210]],juiceCarton:[[150,210],[880,210]]};
 export function paintedGeometry(id,capacity,amount){if(!(capacity>0)||amount<0||amount>capacity)throw Error('Invalid painted volume');const profile=profiles[id].map(p=>[...p]);if(id.endsWith('Carton'))profile.depth=420;const volume=volumeBelow(profile,profile[0][0]);return {profile,volume,scale:Math.cbrt(capacity*1000/volume),level:fillLevel(profile,amount/capacity)};}
 const center=id=>ART_AXES[id]??500;
 export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,overflow=false){
  const g=paintedGeometry(id,capacity,amount),scale=g.scale*camera,p=g.profile,axis=center(id),bottom=p.at(-1)[0],y=baseline-bottom*scale,opaque=id.endsWith('Carton'),full=liquid==='우유'?'milk-full':liquid==='주스'?'juice-full':'water-full',color=liquid==='우유'?'#f8edda':liquid==='주스'?'#f4b54f':'#8edce6';
  const lower=[[g.level,radiusAt(p,g.level)],...p.filter(a=>a[0]>g.level)],liquidPath='M'+lower.map(([yy,r])=>[-r,yy].join(',')).join('L')+'L'+[...lower].reverse().map(([yy,r])=>[r,yy].join(',')).join('L')+'Z';
- let inner=artImage(vesselArt(id,opaque?full:'empty'),-axis,0,1000);
- if(!opaque&&amount>0){inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath></defs><g clip-path="url(#${uid})">${artImage(vesselArt(id,full),-axis,0,1000)}</g>`;if(amount<capacity)inner+=`<ellipse cx="0" cy="${g.level}" rx="${radiusAt(p,g.level)*.94}" ry="14" clip-path="url(#${uid})" fill="${color}" fill-opacity=".7" stroke="${color}" stroke-width="2"/>`;}
+ // Independently painted empty/full assets do not share an identical silhouette.
+ // A full vessel must therefore use one complete asset, never two overlaid outlines.
+ let inner=artImage(vesselArt(id,opaque||amount===capacity?full:'empty'),-axis,0,1000);
+ if(!opaque&&amount>0&&amount<capacity){inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath></defs><g clip-path="url(#${uid})">${artImage(vesselArt(id,full),-axis,0,1000)}</g><ellipse cx="0" cy="${g.level}" rx="${radiusAt(p,g.level)*.94}" ry="14" clip-path="url(#${uid})" fill="${color}" fill-opacity=".7" stroke="${color}" stroke-width="2"/>`;}
  let effect='';const bounds=ART_BOUNDS[id]||[0,1000],left=(bounds[0]-axis)*scale,right=(bounds[1]-axis)*scale;
  let min=left,max=right;
- if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-24,cy:bottom+12,rx:170,ry:30};min=Math.min(min,(pool.cx-pool.rx)*scale);effect=`<g class="wall-overflow"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="#55bace" fill-opacity=".85" stroke="#329aad" stroke-width="5"/><path d="M${points.map(a=>a.join(',')).join('L')}L${pool.cx},${pool.cy}" fill="none" stroke="#39a9be" stroke-opacity=".9" stroke-width="32" stroke-linejoin="round" stroke-linecap="round"/></g>`;}
+ if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-24,cy:bottom+12,rx:125,ry:22},edge=liquid==='우유'?'#d9c9ad':liquid==='주스'?'#d99728':'#4aa4b5';min=Math.min(min,(pool.cx-pool.rx)*scale);let flow='M'+points[0];for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],mid=(a[1]+b[1])/2;flow+=`C${a[0]},${mid} ${b[0]},${mid} ${b[0]},${b[1]}`;}flow+=`Q${foot[0]},${pool.cy} ${pool.cx},${pool.cy}`;effect=`<g class="wall-overflow" data-liquid="${liquid}"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="${color}" fill-opacity=".9" stroke="${edge}" stroke-width="3"/><path d="${flow}" fill="none" stroke="${edge}" stroke-width="20" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/></g>`;}
  return {markup:`<g class="painted-vessel" data-fill="${amount/capacity}" transform="translate(${cx} ${y}) scale(${scale})">${inner}${effect}</g>`,min,max,geometry:g};
 }
 const tx=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#36585c" font-family="Malgun Gothic,sans-serif">${s}</text>`;

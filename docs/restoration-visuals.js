@@ -1,9 +1,10 @@
-import {renderGuess} from './guess-illustration.js?v=526d7db74469';
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=526d7db74469';
-import {paintedDetails} from './painted-details.js?v=526d7db74469';
-import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=526d7db74469';
-import {renderFillTable} from './fill-table-illustration.js?v=526d7db74469';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=526d7db74469';
+import {renderPlateDial,renderFlowScene} from './scene-refinements.js?v=58cc96d8ef86';
+import {renderGuess} from './guess-illustration.js?v=58cc96d8ef86';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=58cc96d8ef86';
+import {paintedDetails} from './painted-details.js?v=58cc96d8ef86';
+import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=58cc96d8ef86';
+import {renderFillTable} from './fill-table-illustration.js?v=58cc96d8ef86';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=58cc96d8ef86';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
@@ -40,14 +41,7 @@ export function restoredVisual(v,render,object){const painted=paintedDetails(v);
  if(v.kind==='labeledBottle')return wrap(350,230,cont(175,70,'병')+tx(175,153,v.label)+tx(175,191,v.amount,22),'병에 적힌 실제 들이 '+v.amount);
  if(v.kind==='zoomTanks'){const content=v.values.map((value,i)=>{const x=30+i*300,h=150,max=v.max,y=195-h*value/max;let c=`<rect x="${x}" y="45" width="90" height="150" fill="#eef8f3" stroke="#638a8c"/><rect x="${x+2}" y="${y}" width="86" height="${195-y-2}" fill="#91d1db"/>`;for(let n=0;n<=max;n+=v.ticks){const ty=195-h*n/max;c+=`<path d="M${x+70} ${ty}h20" stroke="#527b7c"/>`;if(n%500===0)c+=tx(x+115,ty+4,n,12);}c+=tx(x+45,224,v.labels[i],18)+tx(x+105,25,'mL',14);const lo=Math.max(0,value-200),hi=Math.min(max,value+200);c+=`<rect x="${x+163}" y="38" width="110" height="155" rx="25" fill="#f9fdf9" stroke="#c183a1" stroke-width="2"/>`+tx(x+213,25,'확대',14);for(let n=lo;n<=hi;n+=100){const ty=175-(n-lo)/(hi-lo)*115;c+=`<path d="M${x+170} ${ty}h18" stroke="#527b7c"/>`+tx(x+227,ty+4,n,15);}const sy=175-(value-lo)/(hi-lo)*115;c+=`<path d="M${x+163} ${sy}h110" stroke="#4ba8b6" stroke-width="3"/><path d="M${x+90} ${y}L${x+163} ${sy}" stroke="#c183a1" stroke-dasharray="4 4"/>`;return c;}).join('');return wrap(620,245,content,'수조와 확대 눈금입니다. 작은 한 칸은 100 mL입니다.');}
  if(v.kind==='pairedDials')return `<div class="restored-pair">${v.items.map(item=>render({kind:'illustratedDial',...item})).join('')}</div>`;
- if(v.kind==='illustratedDial'){
- const base=render({kind:'dial',value:v.value,max:v.max,step:v.step}).replace('<svg ','<svg x="0" y="105" width="250" height="210" style="width:250px;height:210px;max-height:none" '),lo=Math.max(0,v.value-2*v.step),hi=Math.min(v.max,v.value+2*v.step);
- let detail='<rect x="258" y="130" width="110" height="165" rx="24" fill="#fbfdf5" stroke="#c28da4" stroke-width="2"/>';
- for(let a=lo;a<=hi;a+=v.step){const y=275-125*(a-lo)/(hi-lo);detail+='<path d="M265 '+y+'h20" stroke="#4d7369"/>';if(a%(v.step*2)===0)detail+=tx(320,y+4,a,15);}
- const py=275-125*(v.value-lo)/(hi-lo);detail+='<path d="M253 '+py+'h37" stroke="#b65b48" stroke-width="3"/>'+tx(313,327,'확대 · g',14);
- const icon=v.label==='감 바구니'?artImage('persimmon',55,0,140,120):(objectArtwork(v.label,55,0,135)||object(85,5,v.label));
- return wrap(390,345,icon+tx(230,65,v.label,16)+base+detail,'물건 '+v.label+'의 눈금저울과 바늘 주변 확대 눈금');
- }
+ if(v.kind==='illustratedDial')return renderPlateDial(v);
  if(v.kind==='halfBox')return '<div class="restored-pair">'+v.totals.map((total,i)=>wrap(310,190,'<path d="M45 35v65h220V35" fill="#eee1c7" stroke="#a78d68" stroke-width="3"/><rect x="48" y="'+(i?68:38)+'" width="214" height="'+(i?30:60)+'" fill="#e6b16a"/>'+tx(155,80,i?'귤의 절반':'귤 전체',19)+'<path d="M45 105h220l10 53H35z" fill="#c4d6cd" stroke="#719284"/>'+tx(155,139,total+' g',22),'같은 상자와 '+(i?'귤 절반':'귤 전체')+', 전체 '+total+' g')).join('')+'</div>';
  if(v.kind==='cupChange'){
  const max=v.capacity||6000,before=v.before||0,after=v.after||0,g=paintedGeometry('pitcher',max,max),camera=150/((g.profile.at(-1)[0]-g.profile[0][0])*g.scale);
@@ -62,6 +56,6 @@ export function restoredVisual(v,render,object){const painted=paintedDetails(v);
  if(v.kind==='plateWeighings')return '<div class="restored-pair">'+v.counts.map((count,i)=>wrap(300,190,'<ellipse cx="150" cy="80" rx="100" ry="20" fill="#fff6df" stroke="#85988a"/>'+Array.from({length:count},(_,n)=>object(115+n*25,48,'열매')).join('')+'<path d="M75 100h150l15 55H60z" fill="#c4d6cd" stroke="#719284"/>'+tx(150,135,v.totals[i]+' g',22),'같은 접시 위에 열매 '+count+'개, 전체 '+v.totals[i]+' g')).join('')+'</div>';
  if(v.kind==='guessDistance')return renderGuess(v);
  if(false&&v.kind==='guessDistance')return wrap(600,185,tx(300,35,v.actual,18)+v.rows.map(([name,amount],i)=>'<circle cx="'+(100+i*200)+'" cy="90" r="25" fill="#eadac0" stroke="#aa9f84"/>'+tx(100+i*200,96,name,20)+tx(100+i*200,150,amount,20)).join(''),'같은 실제 값에 대한 세 사람의 어림값입니다.');
- if(v.kind==='bathFlow'){const entries=v.inlets||[v.inflow];return wrap(650,280,artImage('bathtub',95,60,450,210)+entries.map((a,i)=>tx(170+i*230,28,(entries.length>1?(i?'나':'가')+' 수도: ':'들어오는 양: ')+a+' mL/초',15)).join('')+(v.outflow?tx(530,257,'나가는 양 '+v.outflow+' mL/초',14):''),'욕조에 들어오고 나가는 물의 양');}
+ if(v.kind==='bathFlow')return renderFlowScene(v);
  return null;
 }

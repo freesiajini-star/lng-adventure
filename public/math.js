@@ -121,7 +121,7 @@ function makeQuestionRaw(stage,type,seed=1){
   if(type===2){lines('수도에서는 2초에 1 L 500 mL씩 물이 나옵니다.','1초에 350 mL씩 빠져나가는 빈 6 L 물통을 채웁니다. 몇 초 걸리나요?');num('초당 들어오는 양',750,'mL');num('걸리는 시간',15,'초');q.explanation='1초에 1500 ÷ 2 = 750 mL가 들어옵니다. 6000 ÷ (750 − 350) = 15초입니다.';}
   if(type===4){lines(`빈 수조에 1초에 ${inflow} mL씩 물이 들어오고 ${out} mL씩 빠져나갑니다.`,`${time}초 뒤 수조에 모인 물은 몇 mL인가요?`,'수조는 넘치지 않을 만큼 큽니다.');num('모인 물',capacity,'mL');q.explanation=`(${inflow} − ${out}) × ${time} = ${capacity} mL입니다.`;}
   if(type===5){lines(`빈 ${cap(capacity)} 수조에 1초에 ${inflow} mL씩 물을 넣었습니다.`,`동시에 일정하게 물을 빼니 ${time}초 뒤 가득 찼습니다.`,'1초에 몇 mL씩 물을 뺐나요?');num('빠져나간 양',out,'mL');q.explanation=`초당 늘어난 양은 ${capacity} ÷ ${time} = ${net} mL입니다. ${inflow} − ${net} = ${out} mL입니다.`;}
-  q.visual={kind:'flow',inflow:type===0?400:type===2?'1500 mL / 2초':inflow,outflow:type===0?0:type===2?350:type===5?'?':out};
+  q.visual={kind:'flow',container:type<4?'물통':'수조',capacity:type===0?2000:type===2?6000:type===4?null:capacity,initial:type===3?net*2:0,inflow:type===0?400:type===2?'1500 mL / 2초':inflow,outflow:type===0?0:type===2?350:type===5?'?':out};
  }
  reviewQuestion(q,{r,pick,cap,mass});restoreQuestion(q,seed);validateQuestion(q);return q;
 }

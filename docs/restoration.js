@@ -1,8 +1,8 @@
-import {makeLimitQuestion} from './limit-problems.js?v=526d7db74469';
-import {makeLifeQuestion} from './life-problems.js?v=526d7db74469';
-import {reviseCore} from './core-revisions.js?v=526d7db74469';
-import {makeFillTableQuestion} from './fill-tables.js?v=526d7db74469';
-import {makePourQuestion} from './pour-problems.js?v=526d7db74469';
+import {makeLimitQuestion} from './limit-problems.js?v=58cc96d8ef86';
+import {makeLifeQuestion} from './life-problems.js?v=58cc96d8ef86';
+import {reviseCore} from './core-revisions.js?v=58cc96d8ef86';
+import {makeFillTableQuestion} from './fill-tables.js?v=58cc96d8ef86';
+import {makePourQuestion} from './pour-problems.js?v=58cc96d8ef86';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 액체의 들이'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
@@ -53,7 +53,7 @@ export function restoreQuestion(q,seed=1){
  if(s===11&&t===0)set('심화106:1-1',['각 그릇을 가득 채워 같은 크기의 어항에 부었습니다.','어항이 가득 찰 때까지 부은 횟수를 보고, 들이가 작은 그릇부터 고르세요.','남거나 넘친 물은 없습니다.'],['다','가','나'].map((x,i)=>c((i+1)+'번째',['가','나','다'],x)),{kind:'cupTable',labels:['가','나','다'],counts:[12,9,14],shapes:['대접','원통','목 긴 병']},'같은 어항을 채우는 데 부은 횟수가 많을수록 그릇의 들이가 작습니다. 14, 12, 9번 순서이므로 다, 가, 나입니다.');
  if(s===11&&t===2)set('심화115:1-1',['세현이는 약 1 L 750 mL, 은성이는 약 1 L 300 mL로 어림했습니다.','그림에 적힌 실제 들이에 더 가깝게 어림한 사람은 누구인가요?'],[n('세현이 어림의 차이',250,'mL'),n('은성이 어림의 차이',200,'mL'),c('더 가깝게 어림한 사람',['세현','은성'],'은성')],{kind:'labeledBottle',label:'오렌지주스',amount:'1 L 500 mL'},'1750 − 1500 = 250 mL, 1500 − 1300 = 200 mL. 차이가 작은 은성이입니다.');
  if(s===12&&t===2){q.visual={kind:'cupChange',lines:q.lines.slice(0,2)};}
- if(s===12&&t===7)set('심화118:원리 그림',['같은 접시에 같은 열매를 올려 무게를 쟀습니다.','열매 한 개와 빈 접시의 무게를 각각 구하세요.'],[n('열매 두 개의 무게',20,'g'),n('열매 한 개',10,'g'),n('빈 접시',5,'g')],{kind:'plateWeighings',counts:[1,3],totals:[15,35]},'35 − 15 = 20 g이 열매 두 개의 무게입니다. 열매는 10 g, 접시는 15 − 10 = 5 g입니다.');
+ if(s===12&&t===7)set('심화118:원리 그림',['같은 접시에 같은 크기의 참외를 올려 무게를 쟀습니다.','참외 한 개와 빈 접시의 무게를 각각 구하세요.'],[n('참외 두 개의 무게',600,'g'),n('참외 한 개',300,'g'),n('빈 접시',150,'g')],{kind:'plateWeighings',counts:[1,3],totals:[450,1050]},'1050 − 450 = 600 g이 참외 두 개의 무게입니다. 참외 한 개는 600 ÷ 2 = 300 g, 접시는 450 − 300 = 150 g입니다.');
  if(s===12&&t===6)set('심화118:대표3',['귤이 가득 든 상자는 10 kg 600 g입니다.','귤의 절반을 먹은 뒤 같은 상자를 재니 5 kg 700 g입니다.','빈 상자의 무게는 몇 g인가요? 귤 한 개의 무게는 모두 같습니다.'],[n('귤 절반의 무게',4900,'g'),n('귤 전체의 무게',9800,'g'),n('빈 상자',800,'g')],{kind:'halfBox',counts:[8,4],totals:[10600,5700]},'두 무게의 차이는 먹은 귤 절반의 무게입니다. 10600 − 5700 = 4900 g. 빈 상자는 5700 − 4900 = 800 g입니다.',['귤 그림은 전체와 절반을 나타내는 모형이며, 실제 개수는 주어지지 않았습니다.']);
  if(s===14&&t===6)set('심화122:원리 그림',['달걀 5개를 한 판에 4개씩 담습니다.','달걀을 모두 담으려면 달걀판은 적어도 몇 개 필요한가요?'],[n('필요한 판',2,'개')],{kind:'eggTrays',count:5,slots:4},'한 판에 4개를 담으면 1개가 남으므로 한 판이 더 필요합니다. 모두 2판입니다.');
  if(s===15&&t===4)set('심화112:대표7',['라따뚜이 2인분의 재료입니다.','한 사람에게 필요한 양이 같도록 10인분을 만들려면 토마토소스가 몇 L 필요한가요?'],[n('2인분의 몇 배',5,'배'),n('토마토소스',10,'컵'),n('소스의 양',2000,'mL'),n('L로 바꾸면',2,'L')],{kind:'recipe'},'10 ÷ 2 = 5배, 2 × 5 = 10컵. 200 × 10 = 2000 mL = 2 L입니다.',['인분의 배수 → 컵의 수 → mL → L 순서로 구하세요.']);
@@ -62,6 +62,7 @@ export function restoreQuestion(q,seed=1){
  if(s===10&&t===2){const one=Number(q.fields[0].answer);q.lines=['레몬 1개와 방울토마토 3개의 무게가 같습니다.','방울토마토 5개와 키위 1개의 무게가 같습니다.',`레몬이 ${one*3} g일 때, 키위 한 개는 몇 g인가요?`,'같은 종류의 과일은 한 개의 무게가 같습니다.'];q.fields=[n('방울토마토 한 개',one,'g'),n('키위 한 개',one*5,'g')];q.visual.items.push(bal('방울토마토','키위',5,1,one*5));q.explanation=`${one*3} ÷ 3 = ${one} g, ${one} × 5 = ${one*5} g입니다.`;}
  if(s===16&&t===1)set('심화110:대표5',['감 7개와 사과 8개의 무게가 같습니다.','사과 4개와 배 3개의 무게가 같습니다.','감 한 개가 200 g일 때 배 6개의 무게는 몇 kg 몇 g인가요?','같은 종류의 과일은 한 개의 무게가 같습니다.'],[n('감 7개의 무게',1400,'g'),n('배 6개의 무게 kg',1,'kg'),n('나머지 g',400,'g')],{kind:'balances',items:[bal('감','사과',7,8,1400),bal('사과','배',4,3,700)]},'사과 8개는 배 6개와 같습니다. 감 7개의 무게와 같으므로 200 × 7 = 1400 g = 1 kg 400 g입니다.');
  if(s===16&&t===6)set('심화126:원리 그림',['우유의 무게는 빵의 무게보다 100 g 더 무겁습니다.','빵 한 개와 우유 한 개의 무게를 더하면 200 g입니다.','빵 한 개와 우유 한 개는 각각 몇 g인가요?'],[n('빵 두 개의 무게',100,'g'),n('빵 한 개',50,'g'),n('우유 한 개',150,'g')],{kind:'substitution'},'우유를 빵 + 100 g으로 바꾸면 빵 두 개 + 100 g = 200 g입니다. 빵은 50 g, 우유는 150 g입니다.');
+ if(s===13&&q.visual?.kind==='comparisonBars')q.visual.unit=q.fields.find(f=>f.unit)?.unit||'mL';
  if(s===17&&q.visual?.kind==='flow')q.visual={...q.visual,kind:'bathFlow'};
  if(s===4&&t===6)makeLifeQuestion(q,seed);
  if(s===9&&t===7)makeLimitQuestion(q,seed);

@@ -1,5 +1,5 @@
-import {artImage,objectArtwork} from './art-catalog.js?v=526d7db74469';
-import {sourceDefs} from './source-vessels.js?v=526d7db74469';
+import {artImage,objectArtwork} from './art-catalog.js?v=58cc96d8ef86';
+import {sourceDefs} from './source-vessels.js?v=58cc96d8ef86';
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${s}</text>`;
 function produce(label){const painted=objectArtwork(label,0,0);if(painted)return painted;
  if(label==='볼펜')return '<path d="M5 23 22 3" stroke="#698da6" stroke-width="6" stroke-linecap="round"/><path d="M5 23 1 28 8 25" fill="#7b858d"/><path d="M15 3 24 10" stroke="#b3cbd5" stroke-width="6"/><path d="M10 15 18 6" stroke="#e7f3f7" stroke-width="1.5"/><path d="M19 1 25 6" stroke="#52778d" stroke-width="3"/>';

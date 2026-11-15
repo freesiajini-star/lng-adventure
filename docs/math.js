@@ -1,7 +1,7 @@
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=526d7db74469';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=526d7db74469';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=526d7db74469';
-import {reviewQuestion} from './curriculum.js?v=526d7db74469';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=58cc96d8ef86';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=58cc96d8ef86';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=58cc96d8ef86';
+import {reviewQuestion} from './curriculum.js?v=58cc96d8ef86';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
@@ -121,7 +121,7 @@ function makeQuestionRaw(stage,type,seed=1){
   if(type===2){lines('수도에서는 2초에 1 L 500 mL씩 물이 나옵니다.','1초에 350 mL씩 빠져나가는 빈 6 L 물통을 채웁니다. 몇 초 걸리나요?');num('초당 들어오는 양',750,'mL');num('걸리는 시간',15,'초');q.explanation='1초에 1500 ÷ 2 = 750 mL가 들어옵니다. 6000 ÷ (750 − 350) = 15초입니다.';}
   if(type===4){lines(`빈 수조에 1초에 ${inflow} mL씩 물이 들어오고 ${out} mL씩 빠져나갑니다.`,`${time}초 뒤 수조에 모인 물은 몇 mL인가요?`,'수조는 넘치지 않을 만큼 큽니다.');num('모인 물',capacity,'mL');q.explanation=`(${inflow} − ${out}) × ${time} = ${capacity} mL입니다.`;}
   if(type===5){lines(`빈 ${cap(capacity)} 수조에 1초에 ${inflow} mL씩 물을 넣었습니다.`,`동시에 일정하게 물을 빼니 ${time}초 뒤 가득 찼습니다.`,'1초에 몇 mL씩 물을 뺐나요?');num('빠져나간 양',out,'mL');q.explanation=`초당 늘어난 양은 ${capacity} ÷ ${time} = ${net} mL입니다. ${inflow} − ${net} = ${out} mL입니다.`;}
-  q.visual={kind:'flow',inflow:type===0?400:type===2?'1500 mL / 2초':inflow,outflow:type===0?0:type===2?350:type===5?'?':out};
+  q.visual={kind:'flow',container:type<4?'물통':'수조',capacity:type===0?2000:type===2?6000:type===4?null:capacity,initial:type===3?net*2:0,inflow:type===0?400:type===2?'1500 mL / 2초':inflow,outflow:type===0?0:type===2?350:type===5?'?':out};
  }
  reviewQuestion(q,{r,pick,cap,mass});restoreQuestion(q,seed);validateQuestion(q);return q;
 }

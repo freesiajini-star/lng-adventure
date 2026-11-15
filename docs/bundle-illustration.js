@@ -1,4 +1,4 @@
-import {artPath,OBJECT_ART} from './art-catalog.js?v=526d7db74469';
+import {artPath,OBJECT_ART} from './art-catalog.js?v=58cc96d8ef86';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderBundleRelations(v){
  const group=(label,count)=>{const bottle=v.unit==='mL',id=label==='우유'?'waterBottle-milk-full':label==='주스'?'juiceBottle-juice-full':OBJECT_ART[label]||(label==='나'?'bowl-empty':'metalWeight'),unit=bottle?'병':'개';return `<div class="relation-object" data-count="${count}"><img src="${artPath(id)}" alt="${esc(label)}"><div class="relation-object-caption"><span>${esc(label)}${['가','나'].includes(label)?' 물건':''}</span><strong>× ${count}${unit}</strong></div></div>`;};

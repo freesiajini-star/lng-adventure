@@ -1,12 +1,13 @@
-import {artImage,objectArtwork} from './art-catalog.js?v=526d7db74469';
-import {renderCargo} from './cargo-illustration.js?v=526d7db74469';
-import {renderPackage} from './package-illustration.js?v=526d7db74469';
-import {renderBundleRelations} from './bundle-illustration.js?v=526d7db74469';
-import {renderLimit} from './limit-illustrations.js?v=526d7db74469';
-import {renderBalances,renderEqualTanks} from './balance-illustrations.js?v=526d7db74469';
-import {renderLifeTable,renderReference} from './life-illustrations.js?v=526d7db74469';
-import {renderPourComparison} from './pour-illustrations.js?v=526d7db74469';
-import {restoredVisual,restoredObject} from './restoration-visuals.js?v=526d7db74469';
+import {renderPlateDial,renderSumDifference} from './scene-refinements.js?v=58cc96d8ef86';
+import {artImage,objectArtwork} from './art-catalog.js?v=58cc96d8ef86';
+import {renderCargo} from './cargo-illustration.js?v=58cc96d8ef86';
+import {renderPackage} from './package-illustration.js?v=58cc96d8ef86';
+import {renderBundleRelations} from './bundle-illustration.js?v=58cc96d8ef86';
+import {renderLimit} from './limit-illustrations.js?v=58cc96d8ef86';
+import {renderBalances,renderEqualTanks} from './balance-illustrations.js?v=58cc96d8ef86';
+import {renderLifeTable,renderReference} from './life-illustrations.js?v=58cc96d8ef86';
+import {renderPourComparison} from './pour-illustrations.js?v=58cc96d8ef86';
+import {restoredVisual,restoredObject} from './restoration-visuals.js?v=58cc96d8ef86';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Noto Sans KR,Malgun Gothic,sans-serif">${esc(s)}</text>`;
 const svg=(width,height,content,label)=>`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}"><defs><linearGradient id="water" x2="0" y2="1"><stop stop-color="#8edbdc" stop-opacity=".7"/><stop offset="1" stop-color="#49b6c4" stop-opacity=".9"/></linearGradient><linearGradient id="glass"><stop stop-color="#e8f8f6"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#e4f2ef"/></linearGradient></defs>${content}</svg>`;
@@ -38,15 +39,12 @@ export function renderVisual(v){if(!v)return '';if(v.kind==='cargoSituation')ret
  if(v.kind==='weighings'&&v.counts)return `<div class="paired-weighings">${v.counts.map((n,i)=>renderVisual({kind:'package',items:n,label:'사과',unknownBox:true,total:v.totals[i]})).join('')}</div>`;
  if(v.kind==='package'){let items='';for(let i=0;i<v.items;i++)items+=object(70+i*37,v.box||v.unknownBox?70:77,v.label);const width=Math.max(400,v.items*40+130),boxWidth=v.items*37+40;const box=v.box||v.unknownBox?`<path d="M45 42v51h${boxWidth}V42" fill="#eee1c7" stroke="#a78d68" stroke-width="3"/>`:'';return svg(width,200,box+items+`<path d="M45 100h${boxWidth}l15 55H30z" fill="#d4dfd8" stroke="#76958a" stroke-width="2"/><rect x="100" y="119" width="160" height="28" rx="3" fill="#fffdf0" stroke="#9baea3"/>`+text(180,140,(v.total??'?')+' g',20)+text(width/2,185,v.unknownBox?'같은 상자를 사용합니다.':v.box?'빈 상자 '+v.box+' g':v.label+' '+v.items+'개',16),'무게가 같은 '+v.label+' '+v.items+'개를 저울에 올린 모습입니다. 표시된 전체 무게는 '+(v.total??'구할 양')+' g입니다.');}
  if(v.kind==='weighings'||v.kind==='relation')return `<div class="relation-visual">${(v.labels||v.rows).map((line,i)=>`<div><span>${i+1}차 측정</span><p>${esc(line)}</p></div>`).join('')}</div>`;
- if(v.kind==='comparisonBars'){const width=300,base=v.values[0],difference=v.diff,max=v.values[1],bw=width*base/max,dw=width*difference/max;return svg(520,200,`${text(70,55,v.labels[0],17)}<rect x="150" y="32" width="${bw}" height="30" rx="3" fill="#a5d0c0" stroke="#6e9688"/>${text(70,118,v.labels[1],17)}<rect x="150" y="95" width="${bw}" height="30" rx="3" fill="#a5d0c0" stroke="#6e9688"/><rect x="${150+bw}" y="95" width="${dw}" height="30" fill="#f0c591" stroke="#ad8656"/>${text(150+bw+dw/2,150,'차이 '+difference,16)}${text(280,185,'전체 '+v.total,17)}`,'두 양을 같은 부분과 차이 부분으로 나눈 막대 모형. 수치는 문제의 단위를 따릅니다.');}
+ if(v.kind==='comparisonBars')return renderSumDifference(v);
  if(v.kind==='load')return `<div class="data-cards"><div><span>다리의 전체 무게 한도</span><b>${v.limit} kg</b></div><div><span>빈 트럭</span><b>${v.empty} kg</b></div><div><span>상자 한 개</span><b>${v.item} kg</b></div></div>`;
  if(v.kind==='equation')return `<div class="equation">${esc(v.text).replace('○','<span class="comparison-slot" data-comparison-slot aria-live="polite"></span>')}</div>`;
  if(v.kind==='countTable')return `<div class="data-cards">${v.rows.map(([label,value])=>`<div><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join('')}</div>`;
  if(v.kind==='vessels'){const width=v.values.length*190+30;v.values.forEach((n,i)=>inner+=vessel(25+i*190,n,v.max,v.labels[i],v.ticks));return svg(width,235,inner,'같은 크기의 계량 용기. 수위와 눈금으로 양을 비교합니다.');}
- if(v.kind==='dial'){const cx=155,cy=145,r=100,point=(n,rad)=>{const angle=(-135+n/v.max*270)*Math.PI/180;return[cx+rad*Math.sin(angle),cy-rad*Math.cos(angle)];};inner=`<path d="M125 245H185L215 280H95Z" fill="#8ca99d" stroke="#55796b" stroke-width="2"/><rect x="85" y="275" width="140" height="12" rx="5" fill="#708f82"/><circle cx="${cx}" cy="${cy}" r="${r+8}" fill="#b3c9b6" stroke="#6a8d80" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#fffff6"/>`;
-  for(let n=0;n<=v.max;n+=v.step){const major=n%Math.max(v.step*5,v.max/8)===0,p=point(n,major?83:90),p2=point(n,97);inner+=`<path d="M${p}L${p2}" stroke="#45685e" stroke-width="${major?2:1}"/>`;if(major){const t=point(n,69);inner+=text(t[0],t[1]+4,n,12);}}
-  const tip=point(v.value,80);inner+=text(cx,cy+53,'g',17)+`<path d="M${cx} ${cy}L${tip}" stroke="#ba6753" stroke-width="3.5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="6" fill="#8b5e4e"/>`;return svg(310,300,inner,'그램 눈금 저울. 바늘의 위치를 읽으세요.');
- }
+ if(v.kind==='dial')return renderPlateDial(v);
  if(v.kind==='balances'){v.items.forEach((item,i)=>inner+=balance(item,i*330));return svg(v.items.length*330,240,inner,'같은 팔 길이의 양팔저울. 무거운 쪽이 내려갑니다.');}
  if(v.kind==='cups'){v.groups.forEach((g,i)=>{const y=35+i*90;inner+=text(65,y+32,g.label,17);for(let n=0;n<g.count;n++){const x=125+n*39;inner+=`<path d="M${x} ${y}h28l-4 48h-20z" fill="#a8dce0" stroke="#678f93" stroke-width="1.7"/><path d="M${x+2} ${y+6}h24" stroke="#fff" stroke-width="2"/>`;}});return svg(500,205,inner,'같은 크기의 컵에 가득 담은 물의 개수');}
  if(v.kind==='overflow'){inner=`<path d="M55 37h62v135q0 10-10 10H65q-10 0-10-10z" fill="#b1dedb" stroke="#668e8b" stroke-width="2"/><path d="M60 55h52v118H60Z" fill="url(#water)"/>${text(86,211,'물병')}<path d="M160 100h60m-15-12 15 12-15 12" fill="none" stroke="#a3b8ac" stroke-width="5"/>${vessel(270,v.target,v.target,'꽃병',0)}<path d="M365 40Q400 35 397 90Q393 100 389 90V57" stroke="#5db9c4" fill="none" stroke-width="5"/><ellipse cx="397" cy="185" rx="35" ry="7" fill="#82cad0"/>`;return svg(480,240,inner,'물병의 물을 꽃병에 부었더니 물이 넘친 상황. 용기의 외형 크기는 비교 기준이 아닙니다.');}

@@ -75,7 +75,7 @@ export function reviewQuestion(q,{r,pick,cap,mass}){
   if(t===0||t===1){const one=r(2,5)*4;replace(['지우개 5개와 풀 4개의 무게가 같습니다.','풀 2개와 가위 1개의 무게가 같습니다.',`지우개 한 개가 ${one} g일 때 가위 ${t===0?1:2}개의 무게는 몇 g인가요?`,'같은 종류의 물건은 한 개의 무게가 모두 같습니다.'],[num('풀 4개의 무게',one*5,'g'),num('가위 '+(t===0?1:2)+'개',one*2.5*(t===0?1:2),'g')],{kind:'balances',items:[{left:'지우개',right:'풀',leftCount:5,rightCount:4,leftMass:one*5,rightMass:one*5},{left:'풀',right:'가위',leftCount:2,rightCount:1,leftMass:one*2.5,rightMass:one*2.5}]},`풀 4개는 ${one*5} g, 가위 1개는 그 절반인 ${one*2.5} g입니다.`);}
   if(t===2||t===3||t===5){const rows=q.lines.slice(0,2);q.visual={kind:'relation',rows};q.fields=q.fields.map(f=>f.kind==='choice'?{...f,label:t===2?'같은 나 묶음을 없애는 방법':'같은 가 묶음을 없애는 방법',options:['두 양을 더한다','두 양의 차이를 구한다'],answer:t===2?'두 양을 더한다':'두 양의 차이를 구한다'}:f);}
  }
- if(s===17){q.lines.push('물은 처음부터 끝까지 같은 빠르기로 들어오고 나갑니다.');if(t===0)q.visual={kind:'flow',inlets:[250,150],outflow:0};if(t===3)q.work=['물통의 들이에서 처음 물의 양을 빼면 더 채울 양을 알 수 있습니다.'];}
+ if(s===17){q.lines.push('물은 처음부터 끝까지 같은 빠르기로 들어오고 나갑니다.');if(t===0)q.visual={...q.visual,kind:'flow',inlets:[250,150],outflow:0};if(t===3)q.work=['물통의 들이에서 처음 물의 양을 빼면 더 채울 양을 알 수 있습니다.'];}
  // Final condition and presentation checks shared across the source families.
  if(s===3&&t===0)q.lines[1]='꽃병을 처음부터 가득 채우려면 우유갑 몇 개쯤이 필요할지 생각해 보세요.';
  if(s===5&&t===3){const[high,low]=q.visual.values;q.lines=['그림의 두 수조에 들어 있는 물의 양을 눈금으로 읽으세요.','가에서 나로 물을 옮겨 두 물의 양을 같게 하려고 합니다.','읽은 양과 옮길 양을 차례로 구하세요.'];q.fields=[num('가 수조의 물',high,'mL'),num('나 수조의 물',low,'mL'),num('옮길 양',(high-low)/2,'mL')];}
