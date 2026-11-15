@@ -1,4 +1,4 @@
-import {artImage} from './art-catalog.js?v=58cc96d8ef86';
+import {artImage} from './art-catalog.js?v=674765997735';
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#36585c" font-family="Malgun Gothic,sans-serif">${s}</text>`;
 const svg=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${c}</svg>`;
 export function paintedDetails(v){

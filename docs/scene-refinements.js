@@ -1,4 +1,4 @@
-import {artImage,objectArtwork} from './art-catalog.js?v=58cc96d8ef86';
+import {artImage,objectArtwork} from './art-catalog.js?v=674765997735';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#304f4b">${esc(s)}</text>`;
 const svg=(w,h,c,label)=>`<svg class="refined-scene" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">${c}</svg>`;
@@ -27,8 +27,13 @@ export function renderSumDifference(v){
 export function renderFlowScene(v){
  const entries=v.inlets||[v.inflow],tank=v.container==='수조',rate=n=>typeof n==='number'||n==='?'?n+' mL / 초':n;
  let c=artImage(tank?'emptyAquarium':'pitcher-empty',tank?115:165,115,tank?375:275,220);
- entries.forEach((n,i)=>{const x=entries.length===2?210+i*175:305,target=tank?x-46:entries.length===2?300+i*15:310;c+=artImage('tap',x-54,30,100,85)+`<path d="M${x-46} 105Q${x-46} 142 ${target} 172V190m-6-9 6 9 6-9" fill="none" stroke="#64bacb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`+tx(x,22,(entries.length>1?(i?'나':'가')+' 수도 · ':'수도 · ')+rate(n),17);});
- if(v.outflow)c+=`<path d="M${tank?480:425} 280h90m-12-9 12 9-12 9" fill="none" stroke="#64a7b1" stroke-width="4"/>`+tx(540,319,'나가는 양',15)+tx(540,342,rate(v.outflow),16);
+ c+='<defs><linearGradient id="falling-water" x1="0" x2="1"><stop stop-color="#399eb6"/><stop offset=".4" stop-color="#c4f1f6"/><stop offset="1" stop-color="#58b8cd"/></linearGradient><linearGradient id="flow-direction" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a7dcd9"/><stop offset="1" stop-color="#4f9296"/></linearGradient></defs>';
+ // Face the two spouts inward, directly above the neck. Water falls vertically;
+ // its path must never be bent to compensate for a misplaced faucet.
+ entries.forEach((n,i)=>{const pair=entries.length===2,left=pair&&i===0,x=pair?(left?204:304):299,spout=left?293:315,end=tank?185:191,faucet=artImage('tap',x,30,100,85);
+  c+=(left?`<g transform="translate(${2*x+100} 0) scale(-1 1)">${faucet}</g>`:faucet)+`<path class="falling-water" data-x="${pair?spout:310}" d="M${pair?spout:310} 105V${end}" fill="none" stroke="#52b5cc" stroke-width="7" stroke-linecap="round"/><path d="M${(pair?spout:310)-1} 108V${end-3}" stroke="#e6fcff" stroke-opacity=".75" stroke-width="1.2"/>`+tx(pair?(i?430:190):310,22,(pair?(i?'나':'가')+' 수도 · ':'수도 · ')+rate(n),17);
+ });
+ if(v.outflow)c+=`<g class="flow-direction-arrow" transform="translate(425 270)"><path d="M0-5H61V-13L82 0L61 13V5H0Z" fill="url(#flow-direction)" stroke="#54888c" stroke-width="1" stroke-linejoin="round"/><path d="M4-3H59" stroke="#e2f6f0" stroke-width="1.4" stroke-linecap="round"/></g>`+tx(540,319,'나가는 양',15)+tx(540,342,rate(v.outflow),16);
  const capacity=v.capacity?Math.floor(v.capacity/1000)+' L'+(v.capacity%1000?' '+v.capacity%1000+' mL':''):'';
  c+=tx(310,367,(v.initial?'처음 물 '+v.initial+' mL · ':'빈 ')+v.container+(capacity?' · 들이 '+capacity:''),17);
  return svg(660,385,c,entries.length+'개의 수도와 '+v.container+'에 들어오고 나가는 물의 양');
