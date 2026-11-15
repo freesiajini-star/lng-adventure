@@ -53,3 +53,17 @@ test('same-container variants change objects, levels, winners and all ranking pe
  }
  assert.equal(objects.size,7);assert.equal(winners.size,3);assert.equal(orders.size,6);assert.ok(pictures.size>500);
 });
+
+test('cup groups vary vessels, counts and comparison questions with consistent answers',()=>{
+ const objects=new Set(),modes=new Set(),winners=new Set(),variants=new Set();
+ for(let seed=0;seed<1000;seed++){
+  const q=makeQuestion(1,2,seed),g=q.visual.groups;
+  assert.notEqual(g[0].source,g[1].source);assert.notEqual(g[0].count,g[1].count);
+  g.forEach(x=>{objects.add(x.source);assert.ok(x.count>=2&&x.count<=8);});
+  const field=q.fields[0];modes.add(field.label);variants.add(JSON.stringify(g));
+  if(field.kind==='number')assert.equal(Number(field.answer),Math.abs(g[0].count-g[1].count));
+  else{const larger=g[0].count>g[1].count?0:1,index=field.label==='더 큰 용기'?larger:1-larger;assert.equal(field.answer,g[index].label);winners.add(index);}
+  assert.match(renderVisual(q.visual),/<svg/);assert.ok(!q.lines.join(' ').includes('두 병'));
+ }
+ assert.equal(objects.size,6);assert.equal(modes.size,3);assert.equal(winners.size,2);assert.ok(variants.size>100);
+});

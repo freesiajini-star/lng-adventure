@@ -22,7 +22,16 @@ export function restoreQuestion(q,seed=1){
   q.fields=t===1?[c('가장 큰 용기',labels,order[0])]:order.map((x,i)=>c((i+1)+'번째',labels,x));
   q.explanation='같은 그릇에서는 물높이가 높을수록 들이가 큽니다. 큰 순서는 '+order.join(', ')+'입니다.';
  }
- if(s===1&&t===2){q.visual={...q.visual,kind:'bottleCups'};}
+ if(s===1&&t===2){
+  let state=seed>>>0;const random=()=>{state+=0x6D2B79F5;let z=state;z=Math.imul(z^z>>>15,z|1);z^=z+Math.imul(z^z>>>7,z|61);return((z^z>>>14)>>>0)/4294967296;};
+  const pool=[['주전자',5,8],['물병',3,8],['머그잔',2,4],['유리그릇',3,6],['계량컵',4,8],['텀블러',3,6]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const groups=pool.slice(0,2).map(([source,lo,hi],i)=>({source,label:['가','나'][i]+' '+source,count:lo+Math.floor(random()*(hi-lo+1))}));
+  if(groups[0].count===groups[1].count)return restoreQuestion(q,(seed+1)>>>0);
+  const mode=Math.floor(random()*3),larger=groups[0].count>groups[1].count?0:1;
+  set('원리116:3',['두 용기에 가득 있던 물을 모양과 크기가 같은 컵에 각각 옮겼습니다.','컵은 모두 가득 찼고, 남거나 넘친 물은 없습니다.',mode===0?'들이가 더 큰 용기를 고르세요.':mode===1?'들이가 더 작은 용기를 고르세요.':'두 용기의 들이는 컵 몇 개만큼 차이 나나요?'],mode===2?[n('차이',Math.abs(groups[0].count-groups[1].count),'개')]:[c(mode===0?'더 큰 용기':'더 작은 용기',groups.map(g=>g.label),groups[mode===0?larger:1-larger].label)],{kind:'bottleCups',groups},'같은 컵을 더 많이 채우는 용기의 들이가 더 큽니다. '+groups.map(g=>g.label+'는 '+g.count+'컵').join(', ')+'입니다.');
+ }
+
  if(s===1&&(t===4||t===5)){
   const labels=['가','나','다','라'];set('원리116:4~6',['같은 수조를 가득 채우는 데 각 컵으로 부은 횟수입니다.','매번 컵을 가득 채웠으며, 남거나 넘친 물은 없습니다.',t===4?'들이가 가장 큰 컵과 둘째로 작은 컵을 고르세요.':'나 컵의 들이는 가 컵 들이의 몇 배인가요?'],t===4?[c('가장 큰 컵',labels,'나'),c('둘째로 작은 컵',labels,'라')]:[n('몇 배',4,'배')],{kind:'cupTable',labels,counts:[12,3,4,9]},'같은 수조를 채울 때 부은 횟수가 적을수록 컵의 들이가 큽니다. 작은 순서는 가, 라, 다, 나입니다. 12 ÷ 3 = 4배입니다.');
  }
