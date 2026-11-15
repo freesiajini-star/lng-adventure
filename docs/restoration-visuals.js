@@ -1,8 +1,9 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=30a61c3aa5ff';
-import {paintedDetails} from './painted-details.js?v=30a61c3aa5ff';
-import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=30a61c3aa5ff';
-import {renderFillTable} from './fill-table-illustration.js?v=30a61c3aa5ff';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=30a61c3aa5ff';
+import {renderGuess} from './guess-illustration.js?v=526d7db74469';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=526d7db74469';
+import {paintedDetails} from './painted-details.js?v=526d7db74469';
+import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=526d7db74469';
+import {renderFillTable} from './fill-table-illustration.js?v=526d7db74469';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=526d7db74469';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
@@ -54,12 +55,13 @@ export function restoredVisual(v,render,object){const painted=paintedDetails(v);
  return wrap(650,235,vessel(before,100,'cup-before')+tx(100,220,'처음 '+before+' mL',14)+tx(218,118,'+',22)+artImage('smallCup',245,65,100,110)+tx(295,220,'가득 '+v.count+'번',14)+arrow(365,115)+vessel(after,540,'cup-after')+tx(540,220,'나중 '+after+' mL',14),'같은 수조에 물을 더 부어 높아진 수위');
  }
  if(v.kind==='eggTrays'){let out='';for(let tray=0;tray<2;tray++){const x=40+tray*250;out+=`<rect x="${x}" y="25" width="210" height="120" rx="12" fill="#e3ddba" stroke="#9b997a"/>`;for(let n=0;n<4;n++){const cx=x+55+(n%2)*100,cy=60+Math.floor(n/2)*55;out+=`<ellipse cx="${cx}" cy="${cy}" rx="27" ry="21" fill="#c9c4a7"/>`;if(tray*4+n<v.count)out+=`<ellipse cx="${cx}" cy="${cy-7}" rx="21" ry="28" fill="#e4b5a1" stroke="#aa8977"/>`;}}return wrap(550,180,out,'네 칸짜리 달걀판에 달걀 다섯 개를 담으면 두 판이 필요합니다.');}
- if(v.kind==='recipe')return '<div class="recipe-visual">'+wrap(240,230,artImage(v.art||'ratatouille',0,0,240,230),v.dish||'라따뚜이')+'<p><b>'+e(v.dish||'라따뚜이')+' · '+(v.servings||2)+'인분</b></p><p>'+e(v.liquid||'토마토소스')+' '+(v.cups||2)+'컵</p><p>1컵 = '+(v.cup||200)+' mL</p></div>';
+ if(v.kind==='recipe')return '<div class="recipe-visual">'+wrap(240,230,artImage(v.art||'ratatouille',0,0,240,230),v.dish||'라따뚜이')+'<div class="recipe-copy"><p><b>'+e(v.dish||'라따뚜이')+' · '+(v.servings||2)+'인분</b></p><p>'+e(v.liquid||'토마토소스')+' '+(v.cups||2)+'컵</p><p>1컵 = '+(v.cup||200)+' mL</p></div></div>';
  if(v.kind==='cacao')return wrap(540,240,'<path d="M200 210l12-160h20l20 160" fill="#af8c63"/><path d="M222 75L125 45m99 40 100-45m-100 75-90-20m95 15 100-15" stroke="#a18b65" stroke-width="10"/>'+[115,170,255,315].map((x,i)=>`<ellipse cx="${x}" cy="${40+(i%2)*30}" rx="62" ry="26" fill="#a6c18a"/>`).join('')+[175,245,213].map((x,i)=>`<ellipse cx="${x}" cy="${113+i*25}" rx="15" ry="29" transform="rotate(18 ${x} 135)" fill="#bb9272" stroke="#8d715b"/><path d="M${x} ${90+i*25}v45" stroke="#8d715b"/>`).join('')+tx(403,110,'약'+' '+v.count+'개 수확',20)+tx(403,151,'한 개 '+v.one+' g',19)+tx(270,230,'카카오나무와 열매 · 나무 그림은 모형입니다.',15),'카카오나무와 열매입니다. 수확량 약 30개, 열매 한 개 500 g.');
  if(v.kind==='rods')return wrap(500,210,[{l:2,m:'4 kg'},{l:1,m:'? kg'},{l:3,m:'? kg'}].map((a,i)=>`<rect x="70" y="${25+i*60}" width="${a.l*90}" height="25" rx="12" fill="#d6bd9b" stroke="#9d8a6e"/>${tx(70+a.l*45,18+i*60,a.l+' m',15)}${tx(420,45+i*60,a.m,19)}`).join(''),'같은 굵기와 재질의 막대입니다. 길이가 두 배이면 무게도 두 배입니다.');
  if(v.kind==='substitution'){const bread=(x,y)=>'<ellipse cx="'+x+'" cy="'+y+'" rx="28" ry="17" fill="#dbb678" stroke="#9b805c"/><path d="M'+(x-12)+' '+(y-12)+'v15m12-15v15m12-15v15" stroke="#aa8d65"/>';return wrap(600,210,object(90,5,'우유')+tx(160,27,'=',25)+bread(230,20)+tx(350,27,'+ 100 g',22)+bread(100,90)+tx(160,97,'+',25)+object(220,75,'우유')+tx(350,97,'= 200 g',22)+bread(100,165)+tx(160,172,'+',25)+bread(230,165)+tx(390,172,'+ 100 g = 200 g',22),'우유 그림을 빵과 100 g으로 바꾸면 빵 두 개와 100 g이 됩니다.');}
  if(v.kind==='plateWeighings')return '<div class="restored-pair">'+v.counts.map((count,i)=>wrap(300,190,'<ellipse cx="150" cy="80" rx="100" ry="20" fill="#fff6df" stroke="#85988a"/>'+Array.from({length:count},(_,n)=>object(115+n*25,48,'열매')).join('')+'<path d="M75 100h150l15 55H60z" fill="#c4d6cd" stroke="#719284"/>'+tx(150,135,v.totals[i]+' g',22),'같은 접시 위에 열매 '+count+'개, 전체 '+v.totals[i]+' g')).join('')+'</div>';
- if(v.kind==='guessDistance')return wrap(600,185,tx(300,35,v.actual,18)+v.rows.map(([name,amount],i)=>'<circle cx="'+(100+i*200)+'" cy="90" r="25" fill="#eadac0" stroke="#aa9f84"/>'+tx(100+i*200,96,name,20)+tx(100+i*200,150,amount,20)).join(''),'같은 실제 값에 대한 세 사람의 어림값입니다.');
+ if(v.kind==='guessDistance')return renderGuess(v);
+ if(false&&v.kind==='guessDistance')return wrap(600,185,tx(300,35,v.actual,18)+v.rows.map(([name,amount],i)=>'<circle cx="'+(100+i*200)+'" cy="90" r="25" fill="#eadac0" stroke="#aa9f84"/>'+tx(100+i*200,96,name,20)+tx(100+i*200,150,amount,20)).join(''),'같은 실제 값에 대한 세 사람의 어림값입니다.');
  if(v.kind==='bathFlow'){const entries=v.inlets||[v.inflow];return wrap(650,280,artImage('bathtub',95,60,450,210)+entries.map((a,i)=>tx(170+i*230,28,(entries.length>1?(i?'나':'가')+' 수도: ':'들어오는 양: ')+a+' mL/초',15)).join('')+(v.outflow?tx(530,257,'나가는 양 '+v.outflow+' mL/초',14):''),'욕조에 들어오고 나가는 물의 양');}
  return null;
 }

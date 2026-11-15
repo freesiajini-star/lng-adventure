@@ -15,17 +15,21 @@ function fruit(i){
 }
 function pot(i){return `<path d="M-30 9H30L24 42Q0 49-24 42Z" fill="url(#life-pot)" stroke="#ae8c6c" stroke-width="1.6"/><ellipse cy="9" rx="30" ry="7" fill="#806f58" stroke="#ae8c6c"/><g transform="translate(0 1)">${leaf}${i===1?'<circle cx="-12" cy="-11" r="9" fill="#e38e74"/><circle cx="15" cy="-5" r="7" fill="#e38e74"/>':i===2?'<path d="M7-18Q28-13 10 4Q22-13 7-18" fill="#e88b70"/>':i===3?'<g fill="#e5a0b8"><circle cy="-32" r="10"/><circle cx="-11" cy="-22" r="10"/><circle cx="11" cy="-22" r="10"/><circle cy="-12" r="10"/><circle cy="-22" r="7" fill="#f0d28f"/></g>':''}</g>`;}
 function bottle(i,art){return `<g transform="scale(${.65+i*.07})">${source('물병')}</g>${art==='camp'?'<path d="M-19-22Q-25-55 18-43" fill="none" stroke="#567e7d" stroke-width="4"/><path d="M-17 5h34v20h-34" fill="#c5d9b3"/><path d="M-10 18 0 8 10 18Z" fill="#688e72"/>':''}${art==='fruit'?`<g transform="translate(0 4) scale(.55)">${fruit(i)}</g>`:''}`;}
-function art(row,scene){if(row.art==='measure'){const g=paintedGeometry('measureJug',1000,row.value);return paintedVessel('measureJug',1000,row.value,'물',0,50,.14/g.scale,'measure-table-'+row.index).markup;}const scale=['bottle','camp','tank','drink','ice'].includes(row.art)?.76+(row.index||0)*.08:1;return artImage(lifeArtwork(row),-70*scale,-70*scale,140*scale,130*scale);}
+function art(row,scene,rows){
+ if(row.art==='measure'){const g=paintedGeometry('measureJug',1000,row.value);return paintedVessel('measureJug',1000,row.value,'물',0,50,.14/g.scale,'measure-table-'+row.index).markup;}
+ if(['juice','snack','drink'].includes(row.art)){const id=row.art==='drink'&&row.index>=2?'waterBottle':'glass',max=Math.max(...rows.map(r=>r.value)),geometries=rows.map(r=>paintedGeometry(row.art==='drink'&&r.index>=2?'waterBottle':'glass',r.value/.8,r.value)),camera=120/Math.max(...geometries.map(g=>(g.profile.at(-1)[0]-g.profile[0][0])*g.scale)),liquid=row.art==='snack'?(rows.indexOf(row)===0?'우유':rows.indexOf(row)===1?'주스':'물'):row.art==='juice'?'주스':'물';return paintedVessel(id,row.value/.8,row.value,liquid,0,55,camera,'life-'+scene+'-'+row.index).markup;}
+ if(row.art==='rain'){const max=Math.max(...rows.map(r=>r.value)),scale=Math.cbrt(row.value/max);return artImage('rainBucket',-70*scale,55-135*scale,140*scale,135*scale);}
+ const scale=['bottle','camp','tank','ice'].includes(row.art)?.76+(row.index||0)*.08:1;return artImage(lifeArtwork(row),-70*scale,-70*scale,140*scale,130*scale);
+}
+
 export function renderLifeTable(v){let out=sourceDefs()+`<defs><linearGradient id="life-pot"><stop stop-color="#ecd2b7"/><stop offset="1" stop-color="#c49a75"/></linearGradient></defs>${tx(360,27,v.title,21)}`;
  const head=v.recipe?'섞는 물':v.scene===9||v.scene===14?'측정한 양':'물 또는 음료의 양';
  out+=`<rect x="15" y="46" width="690" height="258" rx="12" fill="#fffdf8" stroke="#a6b9ae"/><path d="M15 237H705M15 269H705" stroke="#a6b9ae"/>`;
- v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)"><ellipse cy="51" rx="53" ry="5" fill="#7b9996" opacity=".12"/>${art(row,v.scene)}</g>${tx(x,214,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="#a6b9ae"/>`;});
+ v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)"><ellipse cy="51" rx="53" ry="5" fill="#7b9996" opacity=".12"/>${art(row,v.scene,v.rows)}</g>${tx(x,214,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="#a6b9ae"/>`;});
  if(v.recipe)out+=tx(360,332,'표의 수치는 '+v.basis+'에 '+head+'입니다.',15);
  return `<svg viewBox="0 0 720 350" role="img" aria-label="${esc(v.title)} 그림표">${out}</svg>`;
 }
-export function renderReference(v){
- const width=Math.max(650,v.fills.length*110+220),id=v.source==='물통'?'pitcher':v.source==='계량컵'?'measureJug':'waterBottle';
- let out=artImage(id+'-water-full',10,30,170,175)+tx(95,230,v.source,16)+transferArrow(175,112);
- v.fills.forEach((f,i)=>{const x=270+i*110,g=paintedGeometry('glass',1000,f*1000),camera=155/((g.profile.at(-1)[0]-g.profile[0][0])*g.scale);out+=paintedVessel('glass',1000,f*1000,'물',x,200,camera,'reference-'+i).markup+tx(x,25,'1 L 그릇',14)+tx(x,230,f===1?'가득':f===.5?'약 절반':'약 3분의 1',13);});
- return `<svg viewBox="0 0 ${width} 250" role="img" aria-label="1 L 그릇에 옮겨 담은 물의 수위">${out}</svg>`;
+export function referenceLayout(v){
+ const total=Math.round(v.fills.reduce((n,f)=>n+f*1000,0)),id=v.source==='물통'?'pitcher':v.source==='계량컵'?'measureJug':'waterBottle',a=paintedGeometry(id,total,total),b=paintedGeometry('glass',1000,1000),height=g=>(g.profile.at(-1)[0]-g.profile[0][0])*g.scale,camera=155/Math.max(height(a),height(b));return{total,id,camera,width:Math.max(650,280+v.fills.length*128)};
 }
+export function renderReference(v){const {total,id,camera,width}=referenceLayout(v);let out=paintedVessel(id,total,total,'물',120,210,camera,'reference-source').markup+tx(120,245,v.source,16)+transferArrow(200,125);v.fills.forEach((f,i)=>{const x=300+i*128;out+=paintedVessel('glass',1000,f*1000,'물',x,210,camera,'reference-'+i).markup+tx(x,28,'1 L 그릇',14)+tx(x,245,f===1?'가득':f===.5?'약 절반':'약 3분의 1',13);});return '<svg viewBox="0 0 '+width+' 265" role="img" aria-label="같은 축척으로 그린 물통과 그릇의 물의 양">'+out+'</svg>';}
