@@ -24,10 +24,10 @@ export function makePourQuestion(q,seed){
  const outcome=remainder?'overflow':space?'space':'equal';
  const liquid=from.liquid,objectParticle=liquid==='물'?'을':'를',subjectParticle=liquid==='물'?'이':'가';
  q.title='옮겨 담기';q.source='원리116:1 생활 용기 변형';
- q.lines=[`${from.name}에 가득 든 ${liquid}${objectParticle} 빈 ${to.name}에 모두 부었습니다.`,outcome==='overflow'?`${to.name}에 ${liquid}${subjectParticle} 가득 차고 넘쳤습니다.`:outcome==='space'?`${to.name}에 ${liquid}${subjectParticle} 더 들어갈 공간이 남았습니다.`:`${to.name}에 ${liquid}${subjectParticle} 넘치지 않고 가득 찼습니다.`, '두 용기의 들이를 비교하세요.'];
+ q.lines=[`${from.name}에 가득 든 ${liquid}${objectParticle} 빈 ${to.name}에 모두 부었습니다.`,outcome==='overflow'?`${to.name}에 ${liquid}${subjectParticle} 가득 차고 넘쳤습니다.`:outcome==='space'?`${to.name}에 ${liquid}${subjectParticle} 더 들어갈 공간이 남았습니다.`:`${to.name}에 ${liquid}${subjectParticle} 넘치지 않고 가득 찼습니다.`, '들이가 더 많은 것은 어느 것일까요?'];
  const answer=source>target?from.name:source<target?to.name:'같아요';
  const choices=[from.name,to.name,'같아요'];if((seed>>>0)%2)choices.reverse();
- q.fields=[{label:'들이 비교',kind:'choice',options:choices,answer}];
+ q.fields=[{label:'들이가 더 많은 용기',hideLabel:true,kind:'choice',options:choices,answer}];
  q.visual={kind:'pourCompare',variant:index,from:{...from},to:{...to},source,target,filled,remainder,space,outcome,liquid};
  q.explanation=outcome==='overflow'?`${from.name}에 있던 ${liquid}${subjectParticle} ${to.name}에 가득 차고도 남으므로 ${from.name}의 들이가 더 큽니다.`:outcome==='space'?`${from.name}에 있던 ${liquid}를 모두 부어도 빈 공간이 남으므로 ${to.name}의 들이가 더 큽니다.`:'가득 든 양을 모두 옮겼을 때 넘치지 않고 가득 찼으므로 두 용기의 들이가 같습니다.';
  q.work=[];q.facts=[{label:'옮긴 물의 보존',left:filled+remainder,right:source},{label:'받는 용기의 빈 공간',left:filled+space,right:target}];

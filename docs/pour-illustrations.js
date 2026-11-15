@@ -1,4 +1,4 @@
-import {vesselGeometry,radiusAt,fillLevel} from './pour-geometry.js?v=1e3075f97de4';
+import {vesselGeometry,radiusAt,fillLevel} from './pour-geometry.js?v=32d573e58fb9';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18,color='#3e5d61')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-family="Malgun Gothic,sans-serif" font-size="${size}">${esc(s)}</text>`;
 const outline=p=>'M'+p.map(([y,r])=>`${r},${y}`).join('L')+'L'+[...p].reverse().map(([y,r])=>`${-r},${y}`).join('L')+'Z';
