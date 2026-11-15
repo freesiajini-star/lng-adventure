@@ -1,6 +1,6 @@
-import {api} from './firebase-client.js?v=5c73fe728f00';
-import {STAGES,COLORS,TYPE_NAMES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=5c73fe728f00';
-import {renderVisual} from './visuals.js?v=5c73fe728f00';
+import {api} from './firebase-client.js?v=f5e79bb14653';
+import {STAGES,COLORS,TYPE_NAMES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=f5e79bb14653';
+import {renderVisual} from './visuals.js?v=f5e79bb14653';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let student=null,preview=false,course=0,stage=1,selected=new Set([1]),q=null,fullQ=null,answers=[],activeField=0,questionCount=0,correctCount=0,previewScore=0,rows=[],submitting=false,correctRecorded=false,wrongRecorded=false,usage=null,forcedType=-1,lastActive=Date.now(),busy=false;
 const bags=new Map(),pouringDeck=createPourDeck();

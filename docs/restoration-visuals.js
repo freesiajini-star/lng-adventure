@@ -1,4 +1,5 @@
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=5c73fe728f00';
+import {renderFillTable} from './fill-table-illustration.js?v=f5e79bb14653';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=f5e79bb14653';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
@@ -29,7 +30,7 @@ export function restoredVisual(v,render,object){
  if(v.kind==='bottleOverflow')return wrap(600,230,'<g transform="translate(95 60) scale(1.4)">'+container('병')+'</g>'+tx(95,155,'물병에 가득')+arrow(170,90)+cont(340,80,'꽃병')+tx(340,175,'꽃병은 가득')+'<path d="M358 60q45-8 45 77" fill="none" stroke="#5cbac8" stroke-width="5"/><ellipse cx="418" cy="151" rx="46" ry="10" fill="#9ad7df"/>'+tx(485,128,'넘친 물',16),'가득 찬 물병의 물을 모두 부어 꽃병이 가득 차고 물이 넘쳤습니다.');
  if(v.kind==='sourceVessels')return renderSourceVessels(v);
  if(v.kind==='bottleCups')return renderCupGroups(v);
- if(v.kind==='cupTable'){let out='<rect x="235" y="7" width="110" height="48" fill="#d2eaed" stroke="#638a8c"/>'+tx(290,78,'같은 수조를 가득 채우기',16);v.labels.forEach((a,i)=>{const x=70+i*145;out+=cont(x,121,v.shapes?.[i]||['작은 컵','원통','머그잔','대접'][i])+tx(x,191,a,18)+tx(x,220,v.counts[i]+'번',20);});return wrap(600,245,out,'각 그릇을 가득 채워 같은 수조를 채울 때 필요한 횟수. 외형은 비교 기준이 아닙니다.');}
+ if(v.kind==='cupTable'||v.kind==='fillTable')return renderFillTable(v);
  if(v.kind==='kettleEstimate')return wrap(600,245,cont(75,95,'주전자')+tx(75,178,'가득')+arrow(150,108)+[300,465].map(x=>`<rect x="${x-40}" y="35" width="80" height="150" fill="#eff7f2" stroke="#638a8c"/><rect x="${x-38}" y="110" width="76" height="73" fill="#91d1db"/>${tx(x,25,'1 L 그릇',17)}${tx(x,215,'약 절반',16)}`).join(''),'가득 찬 주전자의 물을 1 L 그릇 두 개에 옮겼더니 각각 약 절반 찼습니다.');
  if(v.kind==='objectCards')return wrap(Math.max(460,v.cards.length*160),170,v.cards.map(([label,amount],i)=>`<g transform="translate(${80+i*160} 22) scale(2)">${object(-12,0,label)}</g>${tx(80+i*160,96,label)}${tx(80+i*160,132,amount,14)}`).join(''),'그림의 물건과 각각 주어진 양: '+v.cards.map(x=>x.join(' ')).join(', '));
  if(v.kind==='labeledBottle')return wrap(350,230,cont(175,70,'병')+tx(175,153,v.label)+tx(175,191,v.amount,22),'병에 적힌 실제 들이 '+v.amount);

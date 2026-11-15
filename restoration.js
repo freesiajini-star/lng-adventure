@@ -1,3 +1,4 @@
+import {makeFillTableQuestion} from './fill-tables.js';
 import {makePourQuestion} from './pour-problems.js';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 물의 양'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
@@ -8,7 +9,7 @@ export function restoreQuestion(q,seed=1){
  const set=(source,lines,fields,visual,explanation,work=[])=>Object.assign(q,{source,lines,fields,visual,explanation,work,facts:[]});
  const bal=(left,right,leftCount,rightCount,leftMass,rightMass=leftMass)=>({left,right,leftCount,rightCount,leftMass,rightMass});
  if(s===1&&t===0)makePourQuestion(q,seed);
- if(s===1&&(t===1||t===3)){
+ if(s===1&&t===1){
   let state=seed>>>0;const random=()=>{state+=0x6D2B79F5;let z=state;z=Math.imul(z^z>>>15,z|1);z^=z+Math.imul(z^z>>>7,z|61);return((z^z>>>14)>>>0)/4294967296;};
   const pool=[['주전자',650,950],['작은 컵',150,250],['머그잔',300,450],['물병',400,800],['유리그릇',350,650],['계량컵',450,850],['텀블러',300,600]];
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
@@ -32,9 +33,7 @@ export function restoreQuestion(q,seed=1){
   set('원리116:3',['두 용기에 가득 있던 물을 모양과 크기가 같은 컵에 각각 옮겼습니다.','컵은 모두 가득 찼고, 남거나 넘친 물은 없습니다.',mode===0?'들이가 더 큰 용기를 고르세요.':mode===1?'들이가 더 작은 용기를 고르세요.':'두 용기의 들이는 컵 몇 개만큼 차이 나나요?'],mode===2?[n('차이',Math.abs(groups[0].count-groups[1].count),'개')]:[c(mode===0?'더 큰 용기':'더 작은 용기',groups.map(g=>g.label),groups[mode===0?larger:1-larger].label)],{kind:'bottleCups',groups},'같은 컵을 더 많이 채우는 용기의 들이가 더 큽니다. '+groups.map(g=>g.label+'는 '+g.count+'컵').join(', ')+'입니다.');
  }
 
- if(s===1&&(t===4||t===5)){
-  const labels=['가','나','다','라'];set('원리116:4~6',['같은 수조를 가득 채우는 데 각 컵으로 부은 횟수입니다.','매번 컵을 가득 채웠으며, 남거나 넘친 물은 없습니다.',t===4?'들이가 가장 큰 컵과 둘째로 작은 컵을 고르세요.':'나 컵의 들이는 가 컵 들이의 몇 배인가요?'],t===4?[c('가장 큰 컵',labels,'나'),c('둘째로 작은 컵',labels,'라')]:[n('몇 배',4,'배')],{kind:'cupTable',labels,counts:[12,3,4,9]},'같은 수조를 채울 때 부은 횟수가 적을수록 컵의 들이가 큽니다. 작은 순서는 가, 라, 다, 나입니다. 12 ÷ 3 = 4배입니다.');
- }
+ if(s===1&&[3,4,5].includes(t))makeFillTableQuestion(q,seed);
  if(s===3&&t===6)set('원리117:원리3',['200 mL 우유갑의 우유를 꽃병에 한 번 옮겨 담았습니다.','꽃병을 처음부터 가득 채우려면 우유갑 몇 개쯤 필요할까요?'],[c('필요한 우유갑',['약 2개','약 3개','약 4개'],'약 2개'),n('꽃병의 들이는 약',400,'mL')],{kind:'estimate',base:200,value:400,count:2,unit:'mL',label:'꽃병'},'약 2개가 필요하므로 200 × 2 = 약 400 mL입니다.');
  if(s===3&&t===0)set('원리117:11',['물로 가득 찬 주전자를 같은 1 L 그릇 두 개에 남김없이 옮겼습니다.','주전자의 들이는 약 몇 L인가요?'],[c('주전자의 들이',['약 1 L','약 2 L','약 3 L'],'약 1 L')],{kind:'kettleEstimate'},'두 그릇 모두 약 절반씩 찼으므로 약 500 + 500 = 1000 mL, 약 1 L입니다.');
  if(s===5&&(t===1||t===3)){q.visual={kind:'zoomTanks',values:[1700,500],max:2000,ticks:100,labels:['가','나']};q.lines=['그림의 두 수조에 담긴 물의 양을 눈금으로 읽으세요.','가에서 나로 물을 옮겨 두 수조의 물의 양을 같게 하려 합니다.'];q.fields=[n('가 수조',1700,'mL'),n('나 수조',500,'mL'),n('옮길 양',600,'mL')];q.explanation='1700 − 500 = 1200 mL. 차이의 절반인 600 mL를 가에서 나로 옮기면 각각 1100 mL입니다.';q.work=['두 양의 차이를 구한 다음, 차이의 절반을 옮기세요.'];}
