@@ -1,4 +1,4 @@
-import {makePourQuestion} from './pour-problems.js?v=dfa2b38c4bce';
+import {makePourQuestion} from './pour-problems.js?v=2cdd23560456';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 물의 양'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
@@ -8,7 +8,20 @@ export function restoreQuestion(q,seed=1){
  const set=(source,lines,fields,visual,explanation,work=[])=>Object.assign(q,{source,lines,fields,visual,explanation,work,facts:[]});
  const bal=(left,right,leftCount,rightCount,leftMass,rightMass=leftMass)=>({left,right,leftCount,rightCount,leftMass,rightMass});
  if(s===1&&t===0)makePourQuestion(q,seed);
- if(s===1&&(t===1||t===3)){q.visual={...q.visual,kind:'sourceVessels',sources:['주전자','작은 컵','머그잔']};q.lines[0]='주전자·작은 컵·머그잔에 가득 있던 물을 같은 모양과 크기의 그릇에 각각 옮겼습니다.';q.visual.values=[900,300,600];const order=['가','다','나'];q.fields=t===1?[c('가장 큰 용기',['가','나','다'],'가')]:order.map((x,i)=>c((i+1)+'번째',['가','나','다'],x));}
+ if(s===1&&(t===1||t===3)){
+  let state=seed>>>0;const random=()=>{state+=0x6D2B79F5;let z=state;z=Math.imul(z^z>>>15,z|1);z^=z+Math.imul(z^z>>>7,z|61);return((z^z>>>14)>>>0)/4294967296;};
+  const pool=[['주전자',650,950],['작은 컵',150,250],['머그잔',300,450],['물병',400,800],['유리그릇',350,650],['계량컵',450,850],['텀블러',300,600]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const chosen=pool.slice(0,3),values=[];
+  for(const [,lo,hi]of chosen){const options=[];for(let n=lo;n<=hi;n+=50)if(values.every(x=>Math.abs(n-x)>=100))options.push(n);values.push(options[Math.floor(random()*options.length)]??lo);}
+  // Retry any rare crowded range with distinct, plausible amounts.
+  if(new Set(values).size<3||values.some((x,i)=>values.some((y,j)=>i!==j&&Math.abs(x-y)<100)))return restoreQuestion(q,(seed+1)>>>0);
+  const labels=['가','나','다'],sources=chosen.map(x=>x[0]);q.visual={kind:'sourceVessels',sources,values,max:1000,labels,ticks:0};
+  q.lines=[sources.join('·')+'에 가득 있던 물을 같은 모양과 크기의 그릇에 각각 옮겼습니다.','남거나 넘친 물은 없습니다.',t===1?'들이가 가장 큰 용기를 고르세요.':'들이가 큰 것부터 차례로 고르세요.'];
+  const order=values.map((value,i)=>({value,label:labels[i]})).sort((a,b)=>b.value-a.value).map(x=>x.label);
+  q.fields=t===1?[c('가장 큰 용기',labels,order[0])]:order.map((x,i)=>c((i+1)+'번째',labels,x));
+  q.explanation='같은 그릇에서는 물높이가 높을수록 들이가 큽니다. 큰 순서는 '+order.join(', ')+'입니다.';
+ }
  if(s===1&&t===2){q.visual={...q.visual,kind:'bottleCups'};}
  if(s===1&&(t===4||t===5)){
   const labels=['가','나','다','라'];set('원리116:4~6',['같은 수조를 가득 채우는 데 각 컵으로 부은 횟수입니다.','매번 컵을 가득 채웠으며, 남거나 넘친 물은 없습니다.',t===4?'들이가 가장 큰 컵과 둘째로 작은 컵을 고르세요.':'나 컵의 들이는 가 컵 들이의 몇 배인가요?'],t===4?[c('가장 큰 컵',labels,'나'),c('둘째로 작은 컵',labels,'라')]:[n('몇 배',4,'배')],{kind:'cupTable',labels,counts:[12,3,4,9]},'같은 수조를 채울 때 부은 횟수가 적을수록 컵의 들이가 큽니다. 작은 순서는 가, 라, 다, 나입니다. 12 ÷ 3 = 4배입니다.');

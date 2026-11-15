@@ -39,3 +39,17 @@ test('recipe, cacao, clean-water table, half box and connected balance keep orig
  const box=makeQuestion(12,6);assert.equal(box.visual.totals[0]-box.visual.totals[1],4900);assert.equal(5700-4900,Number(box.fields.at(-1).answer));
  const balance=makeQuestion(16,1).visual.items;assert.equal(balance[0].rightMass/8,balance[1].leftMass/4);assert.equal(balance[0].leftMass/7,200);assert.equal(balance[1].rightMass*2,1400);
 });
+
+test('same-container variants change objects, levels, winners and all ranking permutations',()=>{
+ const objects=new Set(),winners=new Set(),orders=new Set(),pictures=new Set();
+ for(let seed=0;seed<1000;seed++)for(const type of [1,3]){
+  const q=makeQuestion(1,type,seed),v=q.visual;
+  assert.equal(new Set(v.sources).size,3);assert.equal(new Set(v.values).size,3);
+  v.sources.forEach(x=>objects.add(x));v.values.forEach((x,i)=>{assert.ok(x>0&&x<v.max);v.values.forEach((y,j)=>{if(i!==j)assert.ok(Math.abs(x-y)>=100);});});
+  const expected=v.values.map((x,i)=>[x,v.labels[i]]).sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
+  assert.deepEqual(q.fields.map(f=>f.answer),type===1?expected.slice(0,1):expected);
+  winners.add(expected[0]);orders.add(expected.join(''));pictures.add(JSON.stringify([v.sources,v.values]));
+  assert.ok(renderVisual(v).includes('<svg'));
+ }
+ assert.equal(objects.size,7);assert.equal(winners.size,3);assert.equal(orders.size,6);assert.ok(pictures.size>500);
+});
