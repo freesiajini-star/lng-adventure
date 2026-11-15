@@ -4,7 +4,7 @@ const controls={
  waterBottle:[[18,16],[43,16],[61,33],[70,36],[158,36],[172,29]],
  juiceBottle:[[18,20],[37,20],[56,38],[155,38],[170,30]],
  milkCarton:[[10,1],[34,34],[170,34]],juiceCarton:[[10,1],[34,34],[170,34]],
- pitcher:[[22,43],[42,38],[145,34],[170,29]],
+ pitcher:[[28,26],[44,26],[62,52],[145,52],[166,44]],
  glass:[[35,38],[167,29]],mug:[[35,36],[160,36],[170,31]],
  tumbler:[[20,32],[158,28],[171,25]],
  bowl:[[85,61],[111,53],[151,33],[169,18]],
@@ -17,3 +17,10 @@ export function radiusAt(profile,y){for(let i=1;i<profile.length;i++){const a=pr
 export function volumeBelow(profile,y){let volume=0;for(let i=1;i<profile.length;i++){const a=profile[i-1],b=profile[i];if(y>=b[0])continue;volume+=slice(y>a[0]?[y,radiusAt(profile,y)]:a,b,profile);}return volume;}
 export function fillLevel(profile,fraction){if(fraction<0||fraction>1)throw Error('Fill fraction outside vessel');const top=profile[0][0],bottom=profile.at(-1)[0],total=volumeBelow(profile,top);if(!fraction)return bottom;if(fraction===1)return top;let lo=top,hi=bottom;for(let i=0;i<45;i++){const mid=(lo+hi)/2;if(volumeBelow(profile,mid)>total*fraction)lo=mid;else hi=mid;}return(lo+hi)/2;}
 export function vesselGeometry(id,capacity,amount){if(!Number.isFinite(capacity)||capacity<=0||amount<0||amount>capacity)throw Error('Invalid vessel volume');const profile=vesselProfile(id),volume=volumeBelow(profile,profile[0][0]);return {profile,scale:Math.cbrt(capacity*1000/volume),level:fillLevel(profile,amount/capacity),volume};}
+
+// Surface flow follows the outer wall instead of projecting away from the rim.
+export function wallOverflow(profile,scale,originX,originY){
+ const points=profile.map(([y,r])=>[originX-(r+1)*scale,originY+y*scale]);
+ const foot=points.at(-1),pool={cx:foot[0]-4,cy:foot[1]+3,rx:33,ry:6};
+ return {points,pool};
+}

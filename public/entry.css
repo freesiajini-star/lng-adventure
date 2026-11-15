@@ -16,3 +16,5 @@
 .numeric-content:has([data-visual="pourCompare"]) .answers{display:flex;justify-content:center}
 .numeric-content:has([data-visual="pourCompare"]) .answer-row{justify-content:center}
 @media(max-width:700px){.numeric-content:has([data-visual="pourCompare"]) .answer-label{width:100%;text-align:center}}
+/* Worksheet convention: the number and its pencil mark start at the upper left. */
+.paper-head{justify-content:flex-start;gap:16px}.paper-head .question-count{flex:0 0 68px;min-height:50px;font-size:16px}.paper-head>div{min-width:0}

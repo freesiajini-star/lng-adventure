@@ -15,7 +15,7 @@ test('every pouring variant conserves volume and chooses the correct comparison'
   const drawing=renderVisual(v);assert.ok(!/NaN|undefined|Infinity/.test(drawing));
   variants.add(v.variant);outcomes.add(v.outcome);pairs.add(v.from.id+'/'+v.to.id);
  }
- assert.equal(variants.size,POUR_VARIANT_COUNT);assert.deepEqual([...outcomes].sort(),['equal','overflow','space']);assert.ok(pairs.size>=60);assert.ok(POUR_VARIANT_COUNT>=1000);
+ assert.equal(variants.size,POUR_VARIANT_COUNT);assert.deepEqual([...outcomes].sort(),['equal','overflow','space']);assert.ok(pairs.size>=60);assert.ok(POUR_VARIANT_COUNT>=500);
 });
 test('200 mL milk in a 2 L bottle cannot overflow',()=>{
  const index=POUR_SCENARIOS.findIndex(v=>v.from.id==='milkCarton'&&v.source===200&&v.to.id==='waterBottle'&&v.target===2000);
@@ -45,4 +45,18 @@ test('the session deck changes container pairs and does not repeat variants befo
 test('cartons use rectangular cross sections rather than a circular bottle volume',()=>{
  const p=vesselProfile('milkCarton');const expected=68*68*(170-34)+68*(1+34)*(34-10);
  assert.ok(Math.abs(volumeBelow(p,10)-expected)<1e-6);assert.equal(p.depth,68);
+});
+
+test('similar vessel silhouettes are not paired for comparison',()=>{
+ const cupShapes=new Set(['glass','mug','tumbler','measureJug']);
+ for(const v of POUR_SCENARIOS){assert.ok(!(cupShapes.has(v.from.id)&&cupShapes.has(v.to.id)));assert.ok(!(['waterBottle','juiceBottle'].includes(v.from.id)&&['waterBottle','juiceBottle'].includes(v.to.id)));assert.notEqual(v.from.family,v.to.family);}
+});
+test('overflow touches and follows the vessel wall and ends in an attached puddle',async()=>{
+ const {wallOverflow}=await import('../public/pour-geometry.js');
+ for(const vessel of POUR_CONTAINERS.filter(x=>x.target)){
+  const g=vesselGeometry(vessel.id,vessel.capacities[0],vessel.capacities[0]),scale=g.scale,flow=wallOverflow(g.profile,scale,570,20);
+  for(let i=0;i<flow.points.length;i++){const[x,y]=flow.points[i],[py,r]=g.profile[i];assert.ok(Math.abs(x-(570-r*scale))+1e-8>=scale);assert.ok(Math.abs(x-(570-r*scale))<=scale+1e-8);assert.equal(y,20+py*scale);if(i)assert.ok(y>flow.points[i-1][1]);}
+  const end=flow.points.at(-1),p=flow.pool;assert.ok(Math.abs(end[0]-p.cx)<p.rx);assert.ok(Math.abs(end[1]-p.cy)<p.ry);
+ }
+ for(const seed of [0,50,500]){const v=makeQuestion(1,0,seed).visual;assert.equal(renderVisual(v).includes('class="wall-overflow"'),v.remainder>0);}
 });

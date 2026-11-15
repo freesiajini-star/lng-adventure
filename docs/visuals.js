@@ -1,5 +1,5 @@
-import {renderPourComparison} from './pour-illustrations.js?v=32d573e58fb9';
-import {restoredVisual,restoredObject} from './restoration-visuals.js?v=32d573e58fb9';
+import {renderPourComparison} from './pour-illustrations.js?v=a9e9adbcf3f5';
+import {restoredVisual,restoredObject} from './restoration-visuals.js?v=a9e9adbcf3f5';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Noto Sans KR,Malgun Gothic,sans-serif">${esc(s)}</text>`;
 const svg=(width,height,content,label)=>`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}"><defs><linearGradient id="water" x2="0" y2="1"><stop stop-color="#8edbdc" stop-opacity=".7"/><stop offset="1" stop-color="#49b6c4" stop-opacity=".9"/></linearGradient><linearGradient id="glass"><stop stop-color="#e8f8f6"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#e4f2ef"/></linearGradient></defs>${content}</svg>`;

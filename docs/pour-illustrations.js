@@ -1,4 +1,4 @@
-import {vesselGeometry,radiusAt,fillLevel} from './pour-geometry.js?v=32d573e58fb9';
+import {vesselGeometry,radiusAt,fillLevel,wallOverflow} from './pour-geometry.js?v=a9e9adbcf3f5';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18,color='#3e5d61')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-family="Malgun Gothic,sans-serif" font-size="${size}">${esc(s)}</text>`;
 const outline=p=>'M'+p.map(([y,r])=>`${r},${y}`).join('L')+'L'+[...p].reverse().map(([y,r])=>`${-r},${y}`).join('L')+'Z';
@@ -7,11 +7,13 @@ function illustration(v,capacity,amount,liquid,cx,baseline,camera,id,receiving){
  const liquidColors=liquid==='우유'?['#fffcef','#f1dfb9']:liquid==='주스'?['#ffce78','#e9a348']:['#9de1eb','#55b7d1'];
  const maxRadius=Math.max(...p.map(x=>x[1]));
  let defs=`<linearGradient id="${id}-glass" x1="0" y1="0" x2="1" y2="0"><stop stop-color="${v.color}" stop-opacity=".38"/><stop offset=".22" stop-color="#fff" stop-opacity=".92"/><stop offset=".65" stop-color="#eefbff" stop-opacity=".68"/><stop offset="1" stop-color="${v.color}" stop-opacity=".62"/></linearGradient><linearGradient id="${id}-drink" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${liquidColors[0]}"/><stop offset="1" stop-color="${liquidColors[1]}"/></linearGradient><linearGradient id="${id}-carton"><stop stop-color="#fffdfa"/><stop offset=".7" stop-color="#f5f2e7"/><stop offset="1" stop-color="#d9e1df"/></linearGradient><clipPath id="${id}-clip"><path d="${d}"/></clipPath>`;
- let handles='';if(['mug','pitcher','measureJug'].includes(v.id)){const r=radiusAt(p,65);handles=`<path d="M${r-3} 62C${r+55} 47 ${r+55} 123 ${r-4} 121" stroke="${v.color}" stroke-width="15" fill="none"/><path d="M${r-3} 62C${r+55} 47 ${r+55} 123 ${r-4} 121" stroke="#fffaf0" stroke-width="8" fill="none" opacity=".8"/>`;}
+ let handles='';if(['mug','measureJug'].includes(v.id)){const r=radiusAt(p,65);handles=`<path d="M${r-3} 62C${r+55} 47 ${r+55} 123 ${r-4} 121" stroke="${v.color}" stroke-width="15" fill="none"/><path d="M${r-3} 62C${r+55} 47 ${r+55} 123 ${r-4} 121" stroke="#fffaf0" stroke-width="8" fill="none" opacity=".8"/>`;}
+ if(v.id==='pitcher')handles=`<path d="M-38 59V17Q-38-8 0-8T38 17V59" fill="none" stroke="${v.color}" stroke-width="9"/><path d="M-38 59V17Q-38-8 0-8T38 17V59" fill="none" stroke="#fffaf0" stroke-width="3" opacity=".7"/>`;
  const opaque=v.id.endsWith('Carton');let art=handles+`<path d="${d}" fill="${opaque?'url(#'+id+'-carton)':'url(#'+id+'-glass)'}" stroke="#6f979c" stroke-width="1.7" stroke-linejoin="round"/>`;
  if(!opaque&&amount>0){const r=radiusAt(p,g.level);art+=`<g clip-path="url(#${id}-clip)"><rect x="${-maxRadius-2}" y="${g.level}" width="${2*maxRadius+4}" height="${bottom-g.level+2}" fill="url(#${id}-drink)" opacity=".84"/><ellipse cx="0" cy="${g.level}" rx="${r}" ry="3.5" fill="${liquidColors[0]}" stroke="${liquidColors[1]}" stroke-width=".8"/></g>`;}
  // Recognizable product details sit on the vessel, never change the liquid boundary.
- if(v.id==='waterBottle'){
+ if(v.id==='pitcher'){art+=`<g clip-path="url(#${id}-clip)"><path d="M-50 80h100m-100 57h100" stroke="${v.color}" stroke-width="6" opacity=".55"/><path d="M-38 85v44m76-44v44" stroke="#fff" stroke-width="4" opacity=".45"/></g>`;if(!receiving)art+=`<rect x="-29" y="17" width="58" height="12" rx="4" fill="${v.color}" stroke="#6f979c" stroke-width="1.3"/>`;}
+ else if(v.id==='waterBottle'){
   art+=`<g clip-path="url(#${id}-clip)">`+[80,94,108,122,143,154].map(a=>`<path d="M-40 ${a}Q0 ${a+4} 40 ${a}" fill="none" stroke="#5d99aa" stroke-width="1" opacity=".36"/>`).join('')+`<rect x="-40" y="103" width="80" height="32" fill="#b7dce6" opacity=".8"/><path d="M0 109C-18 126-2 133 0 133C17 131 15 121 0 109Z" fill="#fff" opacity=".85"/></g>`;
  }else if(v.id==='juiceBottle')art+=`<g clip-path="url(#${id}-clip)"><rect x="-40" y="87" width="80" height="51" fill="#fff2cf" opacity=".9"/><circle cy="110" r="15" fill="#edab53" stroke="#cf9147"/><path d="M0 95Q15 78 20 93Q10 102 0 95" fill="#8eae6e"/></g>`;
  else if(opaque){art+=`<path d="M-34 35H34M0 10V35L34 52" fill="none" stroke="#99a6a3" stroke-width="1.1"/><path d="M-33 66H33V159H-33Z" fill="${v.color}" opacity=".82"/><path d="M-33 140Q-5 121 18 140T34 140V161H-33Z" fill="#fff8e5" opacity=".85"/>${text(0,99,v.id==='milkCarton'?'우유':'주스',17,'#fffef1')}<circle cy="120" r="10" fill="${v.id==='milkCarton'?'#fbf5e5':'#f2c064'}"/><path d="M-7 117Q0 109 7 117" stroke="${v.id==='milkCarton'?'#92acc3':'#d8a04b'}" stroke-width="3" fill="none"/>`;
@@ -21,15 +23,18 @@ function illustration(v,capacity,amount,liquid,cx,baseline,camera,id,receiving){
  if(!opaque){const highlight=p.filter(([a])=>a>top+10&&a<bottom-14).map(([a,r])=>`${-r*.72},${a}`);if(highlight.length)art+=`<path d="M${highlight.join('L')}" fill="none" stroke="#fff" stroke-width="4.5" opacity=".65" stroke-linecap="round"/>`;art+=`<ellipse cy="${top}" rx="${p[0][1]}" ry="3.5" fill="#f9feff" fill-opacity=".7" stroke="#7da2a7" stroke-width="1.3"/>`;}
  if(v.id.endsWith('Bottle')&&!receiving)art+=`<rect x="${-p[0][1]-2}" y="${top-11}" width="${2*p[0][1]+4}" height="11" rx="3" fill="${v.color}" stroke="#66939d" stroke-width="1.2"/><path d="M-9 ${top-9}v7m6-7v7m6-7v7m6-7v7" stroke="#fff" stroke-opacity=".55"/>`;
  const shadow=`<ellipse cx="${cx}" cy="${baseline+6}" rx="${Math.max(25,maxRadius*scale)}" ry="6" fill="#8da7a1" opacity=".15"/>`;
- return {markup:`<defs>${defs}</defs>${shadow}<g transform="translate(${cx} ${y}) scale(${scale})">${art}</g>`,geometry:g,topY:y+top*scale,rightX:cx+p[0][1]*scale,base:baseline,scale};
+ return {markup:`<defs>${defs}</defs>${shadow}<g transform="translate(${cx} ${y}) scale(${scale})">${art}</g>`,geometry:g,topY:y+top*scale,rightX:cx+p[0][1]*scale,base:baseline,scale,originX:cx,originY:y};
 }
 export function renderPourComparison(v){
  const a=vesselGeometry(v.from.id,v.source,v.source),b=vesselGeometry(v.to.id,v.target,v.filled);
- const camera=Math.min(1.15,182/Math.max((a.profile.at(-1)[0]-a.profile[0][0])*a.scale,(b.profile.at(-1)[0]-b.profile[0][0])*b.scale));
+ const extent=(v,g)=>(g.profile.at(-1)[0]-(v.id==='pitcher'?-12:v.id.endsWith('Bottle')?g.profile[0][0]-12:g.profile[0][0]))*g.scale;
+ const camera=Math.min(1.15,182/Math.max(extent(v.from,a),extent(v.to,b)));
  const uid='pour-'+v.variant,from=illustration(v.from,v.source,v.source,v.liquid,190,232,camera,uid+'-a',false),to=illustration(v.to,v.target,v.filled,v.liquid,570,232,camera,uid+'-b',true);
  let effect='';if(v.outcome==='overflow'){
- const x=to.rightX,y=to.topY;
- effect=`<path d="M${x} ${y+2}C${x+31} ${y-5} ${x+39} ${y+29} ${x+43} 230" stroke="${v.liquid==='우유'?'#e8d5b1':v.liquid==='주스'?'#e7ae55':'#68bdcf'}" stroke-width="4.2" fill="none" stroke-linecap="round"/><ellipse cx="${x+53}" cy="239" rx="44" ry="7" fill="${v.liquid==='우유'?'#eee0c3':v.liquid==='주스'?'#efc77d':'#a3d9e2'}"/><ellipse cx="${x+47}" cy="236" rx="18" ry="2" fill="#fff" opacity=".55"/>`;
+ const flow=wallOverflow(to.geometry.profile,to.scale,to.originX,to.originY),pool=flow.pool;
+ const path='M'+flow.points.map(p=>p.join(',')).join('L')+'L'+pool.cx+','+pool.cy;
+ effect=`<g class="wall-overflow"><ellipse cx="${pool.cx}" cy="${pool.cy}" rx="${pool.rx}" ry="${pool.ry}" fill="${v.liquid==='우유'?'#eee0c3':v.liquid==='주스'?'#efc77d':'#a3d9e2'}"/><path d="${path}" stroke="${v.liquid==='우유'?'#e8d5b1':v.liquid==='주스'?'#e7ae55':'#68bdcf'}" stroke-width="3.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="${pool.cx}" cy="${pool.cy-1}" rx="16" ry="1.5" fill="#fff" opacity=".5"/></g>`;
+
  }
  const situation=v.outcome==='overflow'?'가득 차고 넘쳤어요':v.outcome==='space'?'빈 공간이 남았어요':'넘치지 않고 가득 찼어요';
  return `<svg class="pour-illustration" viewBox="0 0 760 305" role="img" aria-label="${esc(v.from.name+'에 가득 든 '+v.liquid+(v.liquid==='물'?'을 ':'를 ')+v.to.name+'에 모두 부은 뒤, '+situation)}"><defs><linearGradient id="${uid}-paper" x2="0" y2="1"><stop stop-color="#fffefa"/><stop offset="1" stop-color="#f3f7f0"/></linearGradient></defs><rect x="15" y="6" width="300" height="286" rx="22" fill="url(#${uid}-paper)" stroke="#dbe8e0"/><rect x="445" y="6" width="300" height="286" rx="22" fill="url(#${uid}-paper)" stroke="#dbe8e0"/>${text(165,32,'붓기 전',16,'#6d8888')}${text(595,32,'모두 부은 뒤',16,'#6d8888')}${from.markup}${to.markup}${effect}<path d="M338 142H416M403 130L417 142L403 154" fill="none" stroke="#99b7ae" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${text(378,177,'모두 붓기',14,'#7c9690')}${text(165,268,v.from.name+'에 가득',19)}${text(595,268,v.to.name,19)}${text(595,286,situation,14)}</svg>`;

@@ -1,6 +1,6 @@
-import {FIREBASE_CONFIG} from './firebase-config.js?v=32d573e58fb9';
-import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=32d573e58fb9';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=32d573e58fb9';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=a9e9adbcf3f5';
+import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=a9e9adbcf3f5';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=a9e9adbcf3f5';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);

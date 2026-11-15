@@ -12,9 +12,11 @@ export const POUR_CONTAINERS=[
  {id:'measureJug',name:'계량컵',capacities:[250,500,1000],liquid:'물',color:'#b2c5a4',target:true},
  {id:'vase',name:'꽃병',capacities:[300,500,750,1000],liquid:'물',color:'#d4a7c7',target:true}
 ];
+const families={waterBottle:'bottle',juiceBottle:'bottle',milkCarton:'carton',juiceCarton:'carton',glass:'cup',mug:'cup',tumbler:'cup',measureJug:'cup',pitcher:'tank',bowl:'bowl',vase:'vase'};
+for(const vessel of POUR_CONTAINERS)vessel.family=families[vessel.id];
 export const POUR_SCENARIOS=[];
 for(const from of POUR_CONTAINERS)for(const to of POUR_CONTAINERS){
- if(!to.target||from.id===to.id||(from.liquid!=='물'&&to.id==='vase'))continue;
+ if(!to.target||from.family===to.family||(from.liquid!=='물'&&to.id==='vase'))continue;
  for(const source of from.capacities)for(const target of to.capacities)POUR_SCENARIOS.push({from,to,source,target});
 }
 export const POUR_VARIANT_COUNT=POUR_SCENARIOS.length;
