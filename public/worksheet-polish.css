@@ -51,3 +51,20 @@
 .equation-items{--equation-image-size:120px;width:calc(var(--object-columns)*var(--asset-width)*var(--equation-image-size) + (var(--object-columns) - 1)*4px);column-gap:4px;row-gap:6px}.equation-items .equation-asset{display:block;width:calc(var(--asset-width)*var(--equation-image-size));height:calc(var(--asset-height)*var(--equation-image-size));max-width:none;max-height:none;margin:0;overflow:hidden}.equation-objects figcaption{line-height:1.4}@media(max-width:700px){.equation-items{--equation-image-size:90px;width:calc(var(--mobile-columns)*var(--asset-width)*var(--equation-image-size) + (var(--mobile-columns) - 1)*3px);column-gap:3px;row-gap:5px}}
 
 @media(min-width:701px) and (max-height:820px){.paper:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"])>.paper-head{min-height:68px;padding-block:10px}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .problem-meta{margin-bottom:8px}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .scoring-notice{margin-bottom:8px}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .question-text{margin:0 0 8px;line-height:1.55}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .question-text p{margin:0}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .scratchpad{margin-top:10px}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .scratchpad summary{padding:8px 12px;font-size:14px}.problem-body:has([data-worksheet-stage="1"][data-visual="fillTable"],[data-worksheet-stage="1"][data-visual="bottleCups"]) .actions{margin-top:8px}}
+
+/* Round 3: keep pictures and keypad in their original side-by-side columns. */
+.paper .numeric-work>.numeric-content{display:block!important;grid-column:1;grid-row:1}.paper .numeric-work>.numeric-pad{grid-column:2;grid-row:1}
+.object-equations .equation-objects{max-width:none;flex:none}.object-equations .equation-items{max-width:none}.object-equations .object-equation{justify-content:center;gap:6px}
+.paper .visual-box[data-visual="equation"]{min-height:0;padding:6px 10px;margin-block:7px}.paper .visual-box[data-visual="equation"] .equation{padding:6px 4px;line-height:1.35;min-height:0}
+.paper .visual-box[data-visual="illustratedDial"]>svg,.paper .visual-box[data-visual="pairedDials"] svg{max-height:560px;width:100%;height:auto}
+@media(max-width:420px){.paper .numeric-work>.numeric-content{grid-column:1;grid-row:auto}.paper .numeric-work>.numeric-pad{grid-column:1;grid-row:auto}}
+
+.cargo-heading{align-items:center;gap:16px}.cargo-heading .cargo-hero{display:block;flex:none;max-width:52%;max-height:270px;overflow:hidden}.paper [data-worksheet-stage="14"] .cargo-heading{padding-block:5px}.paper [data-worksheet-stage="14"] .cargo-hero{height:auto!important;max-height:260px}@media(max-width:700px){.cargo-heading .cargo-hero{max-width:49%;max-height:210px}}
+
+.paper .visual-box[data-visual="equation"] .missing-equation{padding:6px 4px;gap:10px;min-height:0}
+
+.cargo-heading .cargo-hero{max-width:none;max-height:none}.cargo-heading>div{flex:1;min-width:0}.paper [data-worksheet-stage="14"] .cargo-hero{max-height:none}
+
+.cargo-visual{width:100%;max-width:none}.cargo-heading{width:100%}@media(max-width:700px){.cargo-heading{flex-direction:column;gap:8px}.cargo-heading>div{width:100%;text-align:center}}
+
+.paper .visual-box[data-visual="comparisonBars"]>svg{max-height:310px;width:100%;height:auto}

@@ -5,6 +5,12 @@ import {makeScaleQuestion,SCALE_SCENES} from '../scale-problems.js';
 import {renderVisual} from '../public/visuals.js';import {GUESS_VESSELS} from '../quality-revisions.js';
 import {attendedOn,teacherOverview} from '../public/teacher-overview.js';
 import {createAdvancedDeck} from '../public/advanced-deck.js';
+test('stage 3 closest estimate varies real capacities and retains a unique independently nearest answer',()=>{
+ const contexts=new Set(),vessels=new Set();
+ const amount=s=>{const l=String(s).match(/(\d+) L/),ml=String(s).match(/(\d+) mL/);return Number(l?.[1]||0)*1000+Number(ml?.[1]||0);};
+ for(let seed=1;seed<=1000;seed++){const q=makeQuestion(3,4,seed),v=q.visual,rows=v.rows.map(([name,n])=>({name,value:amount(n)})),ranked=rows.map(r=>({...r,d:Math.abs(r.value-v.actualValue)})).sort((a,b)=>a.d-b.d);assert.ok(ranked[0].d<ranked[1].d);assert.equal(q.fields[0].answer,ranked[0].name);const spec=GUESS_VESSELS.find(x=>x[0]===v.reference.name);assert.ok(v.actualValue>=spec[2]&&v.actualValue<=spec[3]);contexts.add(q.lines.join(' ')+JSON.stringify(v.rows));vessels.add(v.reference.name);}
+ assert.equal(vessels.size,10);assert.ok(contexts.size>500);
+});
 const amount=s=>Number(s.match(/(\d+)\s*L/)?.[1]||0)*1000+Number(s.match(/(\d+)\s*mL/)?.[1]||0);
 const solve=rows=>{const coeff=r=>[r.a,r.op==='='?-1:r.op==='−'?-r.b:r.b,r.total];const [a,b]=rows.map(coeff),det=a[0]*b[1]-b[0]*a[1];assert.notEqual(det,0);return[(a[2]*b[1]-b[2]*a[1])/det,(a[0]*b[2]-b[0]*a[2])/det];};
 test('stage 11 references and estimates vary names, matching artwork, capacities and independently solved answers',()=>{

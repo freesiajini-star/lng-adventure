@@ -17,7 +17,7 @@ test('every pouring scene depicts the actual filled quantity using one consisten
 test('overflow uses one fixed vessel silhouette and calculated liquid up to the rim',()=>{
  for(const liquid of ['물','우유','주스'])for(const id of ['waterBottle','juiceBottle','mug','measureJug','tumbler']){
   const html=paintedVessel(id,1000,1000,liquid,0,240,1,'test',true).markup;
-  assert.equal(new Set([...html.matchAll(/href="([^"]+)"/g)].map(m=>m[1])).size,1);assert.ok(html.includes('-empty-v1.webp'));assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
+  assert.ok(html.includes('clip-path="url(#test-interior)"'));assert.match(html,/-empty-v(?:1\.webp|3\.png)/);assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
   assert.ok(!html.includes('class="wall-overflow"'));assert.ok(html.includes('class="ground-pool"'));assert.ok(html.includes('class="pool-depth"'));
  }
 });

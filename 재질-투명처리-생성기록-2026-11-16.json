@@ -1,0 +1,37 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "milkTexture",
+      "prompt": "Wide horizontal macro material illustration, a continuous volume of fresh ivory MILK filling the entire rectangular image edge to edge. A gently irregular flowing milk surface along the upper 15%, subtle few tiny bubbles, soft translucent creamy depth, natural soft caustic shading and silky white highlights, smooth dimensional liquid body beneath. Premium polished 3D educational illustration, soft cream whites with very subtle cool blue reflections. No container, no border, no lettering, no symbols, no cows, no icons, no repeated pattern, not packaging. Actual milk material is the subject. Keep most of the body calm and softly shaded, not foamy all over. Landscape 4:1 composition.",
+      "output": "public/assets/art/milkTexture-v3.png"
+    },
+    {
+      "id": "flourTexture",
+      "prompt": "Wide horizontal macro material illustration of REAL FINE WHEAT FLOUR filling the entire rectangular image edge to edge, not an icon or label. Pale warm ivory flour with subtle natural fine powder particles, softly uneven powder ridges, a few small fluffy clumps and realistic soft occlusion shadows, slightly wavy powder surface near top. Beautiful premium 3D educational illustration, delicate fluffy tactile fine-grained material. No wheat stalk illustrations, no logos, no bag, no text, no border, no repetition, no golden sand. Landscape 4:1 composition.",
+      "output": "public/assets/art/flourTexture-v3.png"
+    },
+    {
+      "id": "juiceTexture",
+      "prompt": "Wide horizontal continuous material study of fresh orange juice, orange golden cloudy JUICE volume filling image edge to edge. Natural translucent depth, subtle suspended fine pulp, softly glowing light passing through liquid, nuanced orange and warm amber variations and soft broad specular caustics. A gently curving liquid meniscus band at the upper edge, calmer dimensional liquid beneath. Premium photoreal storybook 3D material. No container, no fruit icons, no oranges, no text, no border, no artificial stripes or repeating patterns. Landscape 4:1.",
+      "output": "public/assets/art/juiceTexture-v3.png"
+    },
+    {
+      "id": "waterTexture",
+      "prompt": "Wide horizontal seamless-looking continuous material study of pure pale aqua clear WATER filling image edge to edge, soft volumetric light and elegant natural caustics, very subtle ripples and layered transparent liquid depth, airy pale blue and clear white broad highlights. Premium dimensional 3D educational material texture. Calm water, no dramatic waves, no bubbles pattern, no container, no text, no symbols, no border. Landscape 4:1.",
+      "output": "public/assets/art/waterTexture-v3.png"
+    },
+    {
+      "id": "measureJug-water-full",
+      "prompt": "Edit target: preserve this exact full water measuring jug illustration including shape, liquid, handle, reflections, position and proportions. Remove ALL white or pale gray exterior background and halo, replacing it with real transparent alpha. Preserve transparent glass and a very small close contact shadow. No redesign, no lettering, no extra objects. The entire outer area around the jug must be truly transparent, not checkerboard.",
+      "reference": "C:/Users/User/Documents/ChatGPT/들이와무게/lng-adventure/public/assets/art/measureJug-water-full-v1.webp",
+      "output": "public/assets/art/measureJug-water-full-v3.png"
+    },
+    {
+      "id": "measureJug-empty",
+      "prompt": "Edit target: preserve this exact EMPTY measuring jug illustration including shape, handle, reflections, position and proportions. Remove ALL white or pale gray exterior background and halo, replacing it with real transparent alpha. Preserve transparent glass and a very small close contact shadow. No liquid, no redesign, no lettering, no extra objects. All exterior surroundings truly transparent.",
+      "reference": "C:/Users/User/Documents/ChatGPT/들이와무게/lng-adventure/public/assets/art/measureJug-empty-v1.webp",
+      "output": "public/assets/art/measureJug-empty-v3.png"
+    }
+  ]
+}
