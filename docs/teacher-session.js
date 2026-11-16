@@ -1,6 +1,6 @@
 // Keep teacher access across tabs and browser restarts, separately from student
 // sessions. Store the Firebase session, never the shortcut/password in the URL.
-import {FIREBASE_CONFIG} from './firebase-config.js?v=5688c6f8cd4f';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=e451e9f15934';
 export function isTeacherClaims(claims,email){return claims.lngRole==='teacher'||Boolean(email&&claims.email_verified===true&&claims.firebase?.sign_in_provider==='google.com'&&claims.email?.toLowerCase()===email.toLowerCase());}
 export function createTeacherStorage({persistent=globalThis.localStorage,temporary=globalThis.sessionStorage,teacherGoogleEmail=FIREBASE_CONFIG.teacherGoogleEmail}={}){
  const teacher=value=>{try{const token=JSON.parse(value).idToken.split('.')[1];return isTeacherClaims(JSON.parse(atob(token.replace(/-/g,'+').replace(/_/g,'/'))),teacherGoogleEmail);}catch{return false;}};

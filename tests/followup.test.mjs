@@ -21,8 +21,8 @@ test('overflow uses one fixed vessel silhouette and calculated liquid up to the 
   const effect=html.split('class="wall-overflow"')[1];assert.ok(effect.includes(liquid==='우유'?'#f8edda':liquid==='주스'?'#f4b54f':'#8edce6'));assert.ok(effect.includes('C'));
  }
 });
-test('melon plate problem uses familiar produce, realistic masses and independently correct differences',()=>{
- const questions=Array.from({length:16},(_,i)=>makeQuestion(12,4,i+1)),q=questions.find(q=>q.visual.kind==='plateWeighings');assert.ok(q);assert.match(q.lines.join(' '),/참외/);assert.ok(!q.lines.join(' ').includes('열매'));const v=q.visual,one=(v.totals[1]-v.totals[0])/(v.counts[1]-v.counts[0]);assert.equal(one,300);assert.equal(v.totals[0]-one*v.counts[0],150);assert.match(renderVisual(v),/koreanMelon-v1.webp/);
+test('container weighing pictures retain the selected produce and independently correct mass differences',()=>{
+ for(let seed=1;seed<=160;seed++){const q=makeQuestion(12,4,seed),v=q.visual,one=(v.totals[1]-v.totals[0])/(v.counts[1]-v.counts[0]);assert.equal(one,v.one);if(v.mode!==4)assert.equal(v.totals[0]-one*v.counts[0],Number(q.fields.at(-1).answer));if(v.mode===4)assert.equal(one,Number(q.fields[0].answer));assert.ok(renderVisual(v).includes(v.objectArt+'-v'));}
 });
 test('flow scenes preserve tap counts, named containers and the original rates',()=>{
  for(let seed=1;seed<=80;seed++)for(const type of [0,4]){const q=makeQuestion(17,type,seed),v=q.visual,html=renderVisual(v);assert.equal((html.match(/tap-v[12]\.webp/g)||[]).length,(v.inlets||[v.inflow]).length);assert.ok(!html.includes('bathtub'));assert.match(q.lines.join(' '),new RegExp(v.container));assert.ok(!html.includes('undefined'));const streams=[...html.matchAll(/class="falling-water" data-x="([\d.]+)" d="M([\d.]+) 105V([\d.]+)"/g)];assert.equal(streams.length,(v.inlets||[v.inflow]).length);for(const stream of streams){assert.equal(stream[1],stream[2]);assert.ok(+stream[1]>=285&&+stream[1]<=335);assert.ok(+stream[3]>105);}}

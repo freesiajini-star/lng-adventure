@@ -1,3 +1,4 @@
+import {makeContainerWeightQuestion} from './container-weight-problems.js';
 import {makeLimitQuestion} from './limit-problems.js';
 import {makeLifeQuestion} from './life-problems.js';
 import {reviseCore} from './core-revisions.js';
@@ -67,5 +68,6 @@ export function restoreQuestion(q,seed=1){
  if(s===4&&t===6)makeLifeQuestion(q,seed);
  if(s===9&&t===7)makeLimitQuestion(q,seed);
  if(s===9&&t===6)q.column={a:q.visual.items[0].value,b:q.visual.items[1].value,operation:'+',large:'kg',small:'g'};
+ if(s===12&&[4,5,6,7].includes(t))makeContainerWeightQuestion(q,seed);
  return reviseCore(q,seed);
 }

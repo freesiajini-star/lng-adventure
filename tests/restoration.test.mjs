@@ -33,7 +33,7 @@ test('all valid 2 kg combinations are accepted; all fields still form one outcom
 test('recipe, cacao, clean-water table, half box and connected balance keep original arithmetic',()=>{
  const recipe=makeQuestion(15,4),v=recipe.visual;const people=Number(recipe.lines[0].match(/(\d+)인분을 만들/)[1]);assert.equal(Number(recipe.fields[0].answer),v.cups*v.cup*people/v.servings);
  assert.deepEqual(makeQuestion(15,5).fields.map(f=>Number(f.answer)),[500*30,500*30/1000]);
- const box=makeQuestion(12,6);assert.equal(box.visual.totals[0]-box.visual.totals[1],4900);assert.equal(5700-4900,Number(box.fields.at(-1).answer));
+ const box=makeQuestion(12,6),bv=box.visual;assert.equal(bv.totals[0]-bv.totals[1],bv.one*(bv.counts[0]-bv.counts[1]));assert.equal(bv.totals[1]-bv.one*bv.counts[1],Number(box.fields.at(-1).answer));
  const balance=makeQuestion(16,1).visual.items;assert.equal(balance[0].rightMass/8,balance[1].leftMass/4);assert.equal(balance[0].leftMass/7,200);assert.equal(balance[1].rightMass*2,1400);
 });
 

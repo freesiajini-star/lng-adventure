@@ -173,3 +173,12 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 @media(max-width:700px){.paper [data-worksheet-stage="14"][data-type="4"] .cargo-heading>img.small-carrier-enlarged{max-width:48%}}
 
 @media(min-width:701px) and (max-width:1000px){.paper .recipe-visual>svg{left:20px}}
+/* Lesson diagrams share the selected stage's palette, including embedded SVG tables. */
+:root{--stage-panel:color-mix(in srgb,var(--accent) 4%,#fffefa);--diagram-main-top:color-mix(in srgb,var(--accent) 18%,white);--diagram-main-mid:color-mix(in srgb,var(--accent) 48%,white);--diagram-main-bottom:color-mix(in srgb,var(--accent) 68%,white);--diagram-extra-top:color-mix(in srgb,var(--accent) 38%,white);--diagram-extra-mid:var(--accent);--diagram-extra-bottom:color-mix(in srgb,var(--accent) 80%,#273540)}
+.paper .visual-box table{color:var(--stage-ink);border:1px solid var(--stage-edge);background:var(--stage-panel)}
+.paper .visual-box th{background:var(--stage-soft);color:var(--stage-ink);border:1px solid var(--stage-edge)}
+.paper .visual-box td{background:var(--stage-panel);color:var(--stage-ink);border:1px solid var(--stage-edge)}
+.paper .visual-box thead th{background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 24%,white),var(--stage-soft))}
+.paper .visual-box .data-cards>div,.paper .visual-box .relation-visual>div,.paper .visual-box .limit-combinations>div,.paper .visual-box .cargo-data>div,.paper .visual-box .cargo-bins>div{background:linear-gradient(145deg,var(--stage-panel),#fffefa);border-color:var(--stage-edge);color:var(--stage-ink)}
+.paper .visual-box .data-cards span,.paper .visual-box .reference-card span:not(.reference-icon),.paper .visual-box .relation-visual span,.paper .visual-box .limit-caption,.paper .visual-box .recipe-copy,.paper .visual-box .cargo-heading,.paper .visual-box .limit-context,.paper .visual-box .equation{color:var(--stage-ink)}
+.paper .visual-box .limit-item,.paper .visual-box .bundle-relations,.paper .visual-box .relation-total,.paper .visual-box .relation-sign,.paper .visual-box .substitution-equations,.paper .visual-box .weighing-visual{color:var(--stage-ink)}

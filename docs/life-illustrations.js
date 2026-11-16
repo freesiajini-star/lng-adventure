@@ -1,10 +1,10 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=5688c6f8cd4f';
-import {artImage,lifeArtwork} from './art-catalog.js?v=5688c6f8cd4f';
-import {illustration} from './pour-illustrations.js?v=5688c6f8cd4f';
-import {vesselGeometry} from './pour-geometry.js?v=5688c6f8cd4f';
-import {source,sourceDefs,transferArrow} from './source-vessels.js?v=5688c6f8cd4f';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=e451e9f15934';
+import {artImage,lifeArtwork} from './art-catalog.js?v=e451e9f15934';
+import {illustration} from './pour-illustrations.js?v=e451e9f15934';
+import {vesselGeometry} from './pour-geometry.js?v=e451e9f15934';
+import {source,sourceDefs,transferArrow} from './source-vessels.js?v=e451e9f15934';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="#36585c">${esc(s)}</text>`;
+const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${esc(s)}</text>`;
 const colors=['#e78d9c','#b5b3dc','#f1c37c','#9ac8ad'];
 const leaf='<path d="M0 10Q-23-10-21-24Q-4-28 0-4Q6-36 24-26Q21-6 0 10" fill="#8fba71" stroke="#628e59" stroke-width="1.5"/>';
 function fruit(i){
@@ -24,8 +24,8 @@ function art(row,scene,rows){
 
 export function renderLifeTable(v){let out=sourceDefs()+`<defs><linearGradient id="life-pot"><stop stop-color="#ecd2b7"/><stop offset="1" stop-color="#c49a75"/></linearGradient></defs>${tx(360,27,v.title,21)}`;
  const head=v.recipe?'섞는 물':v.scene===9||v.scene===14?'측정한 양':'물 또는 음료의 양';
- out+=`<rect x="15" y="46" width="690" height="258" rx="12" fill="#fffdf8" stroke="#a6b9ae"/><path d="M15 237H705M15 269H705" stroke="#a6b9ae"/>`;
- v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)"><ellipse cy="51" rx="53" ry="5" fill="#7b9996" opacity=".12"/>${art(row,v.scene,v.rows)}</g>${tx(x,214,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="#a6b9ae"/>`;});
+ out+=`<rect x="15" y="46" width="690" height="258" rx="12" fill="var(--stage-panel,#fffdf8)" stroke="var(--stage-edge,#a6b9ae)"/><path d="M15 237H705V269H15Z" fill="var(--stage-soft,#e8eee4)"/><path d="M15 237H705M15 269H705" stroke="var(--stage-edge,#a6b9ae)"/>`;
+ v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)"><ellipse cy="51" rx="53" ry="5" fill="#7b9996" opacity=".12"/>${art(row,v.scene,v.rows)}</g>${tx(x,214,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="var(--stage-edge,#a6b9ae)"/>`;});
  if(v.recipe)out+=tx(360,332,'표의 수치는 '+v.basis+'에 '+head+'입니다.',15);
  return `<svg viewBox="0 0 720 350" role="img" aria-label="${esc(v.title)} 그림표">${out}</svg>`;
 }

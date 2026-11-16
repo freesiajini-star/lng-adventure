@@ -1,7 +1,7 @@
-import {spillPool} from './spill-pool.js?v=5688c6f8cd4f';
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=5688c6f8cd4f';
-import {artImage,vesselArt} from './art-catalog.js?v=5688c6f8cd4f';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=5688c6f8cd4f';
+import {spillPool} from './spill-pool.js?v=e451e9f15934';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=e451e9f15934';
+import {artImage,vesselArt} from './art-catalog.js?v=e451e9f15934';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=e451e9f15934';
 // Interior coordinates of the EMPTY artwork. Rim ellipses, sleeves, labels and
 // reflections are not changes in the vessel's internal radius.
 const profiles={...ART_PROFILES,
@@ -32,7 +32,7 @@ export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,o
  if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-25,cy:bottom+18,rx:3*Math.max(150,18/scale),ry:3*Math.max(30,4/scale)},streamWidth=Math.max(22,3/scale),edge=liquid==='우유'?'#b5a184':liquid==='주스'?'#d99728':'#4aa4b5';max=Math.max(max,(pool.cx+pool.rx)*scale);min=Math.min(min,(pool.cx-pool.rx)*scale,...points.map(([x])=>x*scale-streamWidth*scale));let flow='M'+points[0];for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],mid=(a[1]+b[1])/2;flow+=`C${a[0]},${mid} ${b[0]},${mid} ${b[0]},${b[1]}`;}flow+=`Q${foot[0]},${pool.cy} ${pool.cx},${pool.cy}`;ground=spillPool(pool,liquid,scale,uid);effect=`<g class="wall-overflow" data-liquid="${liquid}"><path d="${flow}" fill="none" stroke="${edge}" stroke-width="${streamWidth+Math.max(5,.7/scale)}" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="${color}" stroke-width="${streamWidth}" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="${Math.max(4,.7/scale)}" stroke-linecap="round"/></g>`;}
  return {markup:`<g class="painted-vessel" data-fill="${amount/capacity}" transform="translate(${cx} ${y}) scale(${scale})">${ground}${inner}${effect}</g>`,min,max,geometry:g};
 }
-const tx=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#36585c" font-family="Malgun Gothic,sans-serif">${s}</text>`;
+const tx=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="var(--stage-ink,#304f4b)" font-family="Malgun Gothic,sans-serif">${s}</text>`;
 export function renderPaintedPour(v){
  const ga=paintedGeometry(v.from.id,v.source,v.source),gb=paintedGeometry(v.to.id,v.target,v.filled),extent=(id,g)=>(g.profile.at(-1)[0]-(id==='pitcher'?40:g.profile[0][0]))*g.scale,base=238;
  let camera=180/Math.max(extent(v.from.id,ga),extent(v.to.id,gb));
@@ -41,5 +41,5 @@ export function renderPaintedPour(v){
  const build=(id,capacity,amount,cx,uid,overflow)=>{let a=paintedVessel(id,capacity,amount,v.liquid,0,base,camera,uid,overflow);return paintedVessel(id,capacity,amount,v.liquid,cx-(a.min+a.max)/2,base,camera,uid,overflow).markup;};
  const a=build(v.from.id,v.source,v.source,165,'painted-a-'+v.variant,false),b=build(v.to.id,v.target,v.filled,595,'painted-b-'+v.variant,v.outcome==='overflow'),situation=v.outcome==='overflow'?'가득 차고 넘쳤어요':v.outcome==='space'?'빈 공간이 남았어요':'넘치지 않고 가득 찼어요';
  const labelY=v.outcome==='overflow'?298:278,height=labelY+37;
- return `<svg class="pour-illustration" viewBox="0 0 760 ${height}" role="img" aria-label="${v.from.name}의 ${v.liquid}를 ${v.to.name}에 모두 부은 뒤 ${situation}"><rect x="15" y="6" width="300" height="${height-15}" rx="22" fill="#fff" stroke="#dbe8e0"/><rect x="445" y="6" width="300" height="${height-15}" rx="22" fill="#fff" stroke="#dbe8e0"/>${tx(165,32,'붓기 전',16)}${tx(595,32,'모두 부은 뒤',16)}${a}${b}<defs><linearGradient id="pour-direction" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b5d7ca"/><stop offset="1" stop-color="#6b9c91"/></linearGradient></defs><path d="M345 140H386V132L406 145L386 158V150H345Z" fill="url(#pour-direction)" stroke="#719b8e" stroke-width=".9" stroke-linejoin="round"/><path d="M349 142H384" stroke="#e6f2eb" stroke-width="1.2" stroke-linecap="round"/>${tx(375,180,'모두 붓기',14)}${tx(165,labelY,v.from.name+'에 가득',19)}${tx(595,labelY,v.to.name,19)}${tx(595,labelY+21,situation,14)}</svg>`;
+ return `<svg class="pour-illustration" viewBox="0 0 760 ${height}" role="img" aria-label="${v.from.name}의 ${v.liquid}를 ${v.to.name}에 모두 부은 뒤 ${situation}"><rect x="15" y="6" width="300" height="${height-15}" rx="22" fill="var(--stage-panel,#fff)" stroke="var(--stage-edge,#dbe8e0)"/><rect x="445" y="6" width="300" height="${height-15}" rx="22" fill="var(--stage-panel,#fff)" stroke="var(--stage-edge,#dbe8e0)"/>${tx(165,32,'붓기 전',16)}${tx(595,32,'모두 부은 뒤',16)}${a}${b}<defs><linearGradient id="pour-direction" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--diagram-main-top,#b5d7ca)"/><stop offset="1" stop-color="var(--diagram-main-bottom,#6b9c91)"/></linearGradient></defs><path d="M345 140H386V132L406 145L386 158V150H345Z" fill="url(#pour-direction)" stroke="var(--stage-ink,#719b8e)" stroke-width=".9" stroke-linejoin="round"/><path d="M349 142H384" stroke="#e6f2eb" stroke-width="1.2" stroke-linecap="round"/>${tx(375,180,'모두 붓기',14)}${tx(165,labelY,v.from.name+'에 가득',19)}${tx(595,labelY,v.to.name,19)}${tx(595,labelY+21,situation,14)}</svg>`;
 }
