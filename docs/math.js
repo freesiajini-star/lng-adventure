@@ -1,7 +1,7 @@
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=a7cf9ea93477';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=a7cf9ea93477';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=a7cf9ea93477';
-import {reviewQuestion} from './curriculum.js?v=a7cf9ea93477';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=622233be1c3b';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=622233be1c3b';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=622233be1c3b';
+import {reviewQuestion} from './curriculum.js?v=622233be1c3b';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
