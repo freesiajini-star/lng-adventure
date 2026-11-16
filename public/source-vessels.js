@@ -24,13 +24,16 @@ export function renderSourceVessels(v){
  return `<svg viewBox="0 0 640 389" role="img" aria-label="세 용기의 물을 모양과 크기가 같은 투명한 원통 그릇에 각각 옮긴 모습">${out}</svg>`;
 }
 
-function cup(x,y){return artImage('glass-water-full',x-27,y-8,54,63);}
+function cup(x,y){return artImage('glass-water-full',x-29.7,y-8.8,59.4,69.3);}
 export function renderCupGroups(v){
  let out=sourceDefs();
  v.groups.forEach((g,i)=>{
   const y=16+i*185;
-  out+=`<rect x="14" y="${y}" width="612" height="171" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(103 ${y+73})"><ellipse cy="42" rx="52" ry="5" fill="#7b9996" opacity=".12"/>${source(g.source)}</g>${text(103,y+145,g.label,16)}${transferArrow(186,y+84)}`;
-  for(let n=0;n<g.count;n++)out+=cup(280+(n%4)*76,y+28+Math.floor(n/4)*66);
+  out+=`<rect x="14" y="${y}" width="612" height="171" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+73})"><ellipse cy="42" rx="52" ry="5" fill="#7b9996" opacity=".12"/>${source(g.source)}</g>${text(90,y+145,g.label,16)}${transferArrow(164,y+84)}`;
+  // The artwork has transparent side margins; a 52-unit pitch keeps the
+  // visible glasses separate while fitting all eight in the existing panel.
+  const pitch=52,start=226+(8-g.count)*pitch/2;
+  for(let n=0;n<g.count;n++)out+=cup(start+n*pitch,y+56);
  });
  return `<svg viewBox="0 0 640 397" role="img" aria-label="두 용기에 가득 있던 물을 같은 컵에 남김없이 옮긴 모습">${out}</svg>`;
 }

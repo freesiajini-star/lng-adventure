@@ -1,4 +1,4 @@
-import {artImage,objectArtwork} from './art-catalog.js?v=5e5dab72b33e';
+import {artImage,objectArtwork} from './art-catalog.js?v=3a9eb86cd05c';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderPackage(v){
  const width=560,boxed=Boolean(v.box||v.unknownBox),count=v.items||1,cols=Math.min(4,count),size=count<=3?85:65;

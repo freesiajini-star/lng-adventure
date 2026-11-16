@@ -1,8 +1,8 @@
-import {enlargeWorksheet} from './visual-sizing.js?v=5e5dab72b33e';
-import {columnMarkup,mountColumn} from './column-work.js?v=5e5dab72b33e';
-import {api} from './firebase-client.js?v=5e5dab72b33e';
-import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=5e5dab72b33e';
-import {renderVisual} from './visuals.js?v=5e5dab72b33e';
+import {enlargeWorksheet} from './visual-sizing.js?v=3a9eb86cd05c';
+import {columnMarkup,mountColumn} from './column-work.js?v=3a9eb86cd05c';
+import {api} from './firebase-client.js?v=3a9eb86cd05c';
+import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=3a9eb86cd05c';
+import {renderVisual} from './visuals.js?v=3a9eb86cd05c';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let columnController=null;
 let student=null,preview=false,course=0,stage=1,selected=new Set([1]),q=null,fullQ=null,answers=[],activeField=0,correctCount=0,previewScore=0,rows=[],submitting=false,correctRecorded=false,wrongRecorded=false,usage=null,forcedType=-1,lastActive=Date.now(),busy=false;

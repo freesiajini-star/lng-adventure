@@ -1,8 +1,8 @@
-import {isTeacherClaims} from './teacher-session.js?v=5e5dab72b33e';
-import {publicOverviewSnapshot} from './public-overview.js?v=5e5dab72b33e';
-import {FIREBASE_CONFIG} from './firebase-config.js?v=5e5dab72b33e';
-import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=5e5dab72b33e';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=5e5dab72b33e';
+import {isTeacherClaims} from './teacher-session.js?v=3a9eb86cd05c';
+import {publicOverviewSnapshot} from './public-overview.js?v=3a9eb86cd05c';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=3a9eb86cd05c';
+import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=3a9eb86cd05c';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=3a9eb86cd05c';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);
