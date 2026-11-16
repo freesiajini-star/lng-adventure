@@ -17,6 +17,15 @@
  outline-offset:2px;
 }
 
+body.theme-bakery .student-entry #rerollNick,
+body.theme-bakery .student-entry #confirmNick{
+ background:linear-gradient(165deg,#fff4da,#f5dbad 65%,#dfb77f);
+ border-color:#ffe8bd;
+ color:#65401f;
+ text-shadow:0 1px 0 #fff6e0;
+ box-shadow:inset 0 2px 2px #fff9e8,0 2px 5px #58301d45;
+}
+
 /* Reversible glow trial: set body data-problem-glow="off" to restore the
    original worksheet shadow while leaving the glass entry fields in place. */
 body.theme-bakery[data-problem-glow="on"] .workspace{isolation:isolate}

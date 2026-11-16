@@ -1,5 +1,5 @@
-import {artImage} from './art-catalog.js?v=144680e2030b';
-import {source,sourceDefs} from './source-vessels.js?v=144680e2030b';
+import {artImage} from './art-catalog.js?v=9f1d82e7eb3a';
+import {source,sourceDefs} from './source-vessels.js?v=9f1d82e7eb3a';
 const text=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${s}</text>`;
 export function renderFillTable(v){
  const names=v.sources||v.shapes?.map(n=>({'대접':'유리그릇','원통':'텀블러','목 긴 병':'물병'}[n]||n))||['작은 컵','텀블러','머그잔','유리그릇'];
