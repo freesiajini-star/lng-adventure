@@ -1,11 +1,11 @@
-import {prepareTeacherGoogle,signInTeacherGoogle} from './teacher-google.js?v=0e0afdf041a9';
-import {publicOverviewMarkup} from './public-overview.js?v=0e0afdf041a9';
-import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=0e0afdf041a9';
-import {dayUsage} from './learning.js?v=0e0afdf041a9';
-import {createFirebaseAPI} from './firebase-client.js?v=0e0afdf041a9';
-import {createTeacherStorage} from './teacher-session.js?v=0e0afdf041a9';
+import {prepareTeacherGoogle,signInTeacherGoogle} from './teacher-google.js?v=6847332b44dd';
+import {publicOverviewMarkup} from './public-overview.js?v=6847332b44dd';
+import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=6847332b44dd';
+import {dayUsage} from './learning.js?v=6847332b44dd';
+import {createFirebaseAPI} from './firebase-client.js?v=6847332b44dd';
+import {createTeacherStorage} from './teacher-session.js?v=6847332b44dd';
 const api=createFirebaseAPI({storage:createTeacherStorage()});
-import {STAGES,NICKS} from './math.js?v=0e0afdf041a9';
+import {STAGES,NICKS} from './math.js?v=6847332b44dd';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;

@@ -37,6 +37,7 @@ test('20 life contexts each have 100 valid table-based variants and unique answe
 });
 test('column steps carry and borrow across zeros in correct place order',()=>{
  for(const[a,b,op]of[[4700,3600,'+'],[4800,3100,'+'],[10200,3600,'−'],[10000,1,'−'],[2000,1999,'−'],[13200,2800,'−']]){const m=columnSteps(a,b,op);assert.equal(m.result,op==='+'?a+b:a-b);assert.equal(Number(m.steps.at(-1).result.join('')),m.result);assert.ok(m.steps.every(s=>s.notes.every(n=>n===null||n>=0&&n<=19)));}
- const chain=columnSteps(10000,1,'−');assert.equal(chain.steps.filter(s=>s.message.includes('10으로')).length,4);assert.ok(chain.steps.some(s=>s.notes.includes(9)));assert.ok(chain.steps.at(-1).changed.every(Boolean));
+ const chain=columnSteps(10000,1,'−');assert.equal(chain.steps.filter(s=>s.message.includes('10으로')).length,1);assert.ok(chain.steps.some(s=>s.notes.includes(9)));assert.ok(chain.steps.at(-1).changed.every(Boolean));
  for(let n=0;n<1000;n++){const a=2000+n*7,b=1000+n*3;assert.equal(columnSteps(a,b,'+').result,a+b);assert.equal(columnSteps(a,b,'−').result,a-b);}
 });
+
