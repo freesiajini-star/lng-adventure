@@ -167,3 +167,9 @@ body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{bac
 .paper .visual-box[data-visual="bathFlow"]>svg{max-height:240px}.paper .visual-box[data-visual="comparisonBars"]>svg{max-height:210px}.paper .numeric-content:has([data-visual="limitPacking"]) .answers{gap:5px;margin-top:7px}.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row{margin-block:2px}
 
 .paper .numeric-content:has([data-visual="limitPacking"]) .answers{row-gap:0}.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row{margin-block:0}.paper .visual-box[data-visual="comparisonBars"]{padding-block:5px}
+/* Requested food offset leaves recipe text and its grid column in place. */
+@media(min-width:701px){.paper .recipe-visual>svg{position:relative;left:80px}}
+.paper [data-worksheet-stage="14"][data-type="4"] .cargo-heading>img.small-carrier-enlarged{width:260px;height:104px;max-width:52%}
+@media(max-width:700px){.paper [data-worksheet-stage="14"][data-type="4"] .cargo-heading>img.small-carrier-enlarged{max-width:48%}}
+
+@media(min-width:701px) and (max-width:1000px){.paper .recipe-visual>svg{left:20px}}

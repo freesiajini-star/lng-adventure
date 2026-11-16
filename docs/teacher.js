@@ -1,7 +1,7 @@
-import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=674765997735';
-import {dayUsage} from './learning.js?v=674765997735';
-import {api} from './firebase-client.js?v=674765997735';
-import {STAGES,NICKS} from './math.js?v=674765997735';
+import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=4cdc0b8c11e0';
+import {dayUsage} from './learning.js?v=4cdc0b8c11e0';
+import {api} from './firebase-client.js?v=4cdc0b8c11e0';
+import {STAGES,NICKS} from './math.js?v=4cdc0b8c11e0';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;

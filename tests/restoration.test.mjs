@@ -4,16 +4,21 @@ import {makeQuestion,TYPE_NAMES,grade,publicQuestion} from '../math.js';
 import {renderVisual} from '../public/visuals.js';
 
 test('source picture groups remain illustrated, including newly restored families',()=>{
- const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'limitPacking'],[4,6,'lifeTable'],[11,0,'cupTable'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
+ const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'limitPacking'],[4,6,'lifeTable'],[11,0,'guessDistance'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
  assert.equal(cases.length,20);
- for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),kind==='limitPacking'?/limit-item-art/:/<svg/);assert.ok(q.source);}
+ for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),kind==='limitPacking'?/limit-item-art/:kind==='guessDistance'?/<img/:/<svg/);assert.ok(q.source);}
  assert.equal(TYPE_NAMES.flat().length,113);
 });
-test('advanced inverse filling keeps its original independent order',()=>{
- const q=makeQuestion(11,0),v=q.visual;
- const expected=v.counts.map((count,i)=>({count,label:v.labels[i]})).sort((a,b)=>b.count-a.count).map(x=>x.label);
- assert.deepEqual(q.fields.map(f=>f.answer),expected);
+test('stage 11 excludes duplicated tank filling while retaining cup-count comparison',()=>{
+ for(let seed=1;seed<=200;seed++){
+  const q=makeQuestion(11,0,seed),values=q.fields.map(f=>f.answer);
+  assert.ok(!q.lines.join(' ').includes('어항'));
+  assert.ok(!['cupTable','fillTable'].includes(q.visual.kind));
+  const kettle=Number(q.visual.rows[0][1].replace('컵',''));
+  assert.deepEqual(values,[String(kettle-2),String(kettle+1),'냄비']);
+ }
 });
+
 test('dial, transfer, scale-pan counts and capacities satisfy independent numeric references',()=>{
  for(const[s,t]of[[8,6],[9,6]])for(const v of makeQuestion(s,t).visual.items){assert.ok(v.value<=v.max);assert.equal(v.value%v.step,0);assert.ok(renderVisual({kind:'illustratedDial',...v}).includes('확대'));}
  const sum=makeQuestion(9,6);assert.equal(sum.visual.items.reduce((n,v)=>n+v.value,0),Number(sum.fields[0].answer)*1000+Number(sum.fields[1].answer));

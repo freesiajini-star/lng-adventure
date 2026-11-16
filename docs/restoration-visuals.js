@@ -1,10 +1,10 @@
-import {renderPlateDial,renderFlowScene} from './scene-refinements.js?v=674765997735';
-import {renderGuess} from './guess-illustration.js?v=674765997735';
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=674765997735';
-import {paintedDetails} from './painted-details.js?v=674765997735';
-import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=674765997735';
-import {renderFillTable} from './fill-table-illustration.js?v=674765997735';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=674765997735';
+import {renderPlateDial,renderFlowScene} from './scene-refinements.js?v=4cdc0b8c11e0';
+import {renderGuess} from './guess-illustration.js?v=4cdc0b8c11e0';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=4cdc0b8c11e0';
+import {paintedDetails} from './painted-details.js?v=4cdc0b8c11e0';
+import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=4cdc0b8c11e0';
+import {renderFillTable} from './fill-table-illustration.js?v=4cdc0b8c11e0';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=4cdc0b8c11e0';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="#304f4b" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;
@@ -38,7 +38,7 @@ export function restoredVisual(v,render,object){const painted=paintedDetails(v);
  if(v.kind==='cupTable'||v.kind==='fillTable')return renderFillTable(v);
  if(v.kind==='kettleEstimate')return wrap(600,245,cont(75,95,'주전자')+tx(75,178,'가득')+arrow(150,108)+[300,465].map(x=>`<rect x="${x-40}" y="35" width="80" height="150" fill="#eff7f2" stroke="#638a8c"/><rect x="${x-38}" y="110" width="76" height="73" fill="#91d1db"/>${tx(x,25,'1 L 그릇',17)}${tx(x,215,'약 절반',16)}`).join(''),'가득 찬 주전자의 물을 1 L 그릇 두 개에 옮겼더니 각각 약 절반 찼습니다.');
  if(v.kind==='objectCards')return wrap(Math.max(460,v.cards.length*160),195,v.cards.map(([label,amount],i)=>(objectArtwork(label,20+i*160,0,120)||object(50+i*160,20,label))+tx(80+i*160,151,label,16)+tx(80+i*160,180,amount,14)).join(''),'그림의 물건과 주어진 양: '+v.cards.map(x=>x.join(' ')).join(', '));
- if(v.kind==='labeledBottle')return wrap(350,230,cont(175,70,'병')+tx(175,153,v.label)+tx(175,191,v.amount,22),'병에 적힌 실제 들이 '+v.amount);
+ if(v.kind==='labeledBottle')return wrap(350,230,cont(175,70,'병')+tx(175,191,v.amount,22),'병에 적힌 실제 들이 '+v.amount);
  if(v.kind==='zoomTanks'){const content=v.values.map((value,i)=>{const x=30+i*300,h=150,max=v.max,y=195-h*value/max;let c=`<rect x="${x}" y="45" width="90" height="150" fill="#eef8f3" stroke="#638a8c"/><rect x="${x+2}" y="${y}" width="86" height="${195-y-2}" fill="#91d1db"/>`;for(let n=0;n<=max;n+=v.ticks){const ty=195-h*n/max;c+=`<path d="M${x+70} ${ty}h20" stroke="#527b7c"/>`;if(n%500===0)c+=tx(x+115,ty+4,n,12);}c+=tx(x+45,224,v.labels[i],18)+tx(x+105,25,'mL',14);const lo=Math.max(0,value-200),hi=Math.min(max,value+200);c+=`<rect x="${x+163}" y="38" width="110" height="155" rx="25" fill="#f9fdf9" stroke="#c183a1" stroke-width="2"/>`+tx(x+213,25,'확대',14);for(let n=lo;n<=hi;n+=100){const ty=175-(n-lo)/(hi-lo)*115;c+=`<path d="M${x+170} ${ty}h18" stroke="#527b7c"/>`+tx(x+227,ty+4,n,15);}const sy=175-(value-lo)/(hi-lo)*115;c+=`<path d="M${x+163} ${sy}h110" stroke="#4ba8b6" stroke-width="3"/><path d="M${x+90} ${y}L${x+163} ${sy}" stroke="#c183a1" stroke-dasharray="4 4"/>`;return c;}).join('');return wrap(620,245,content,'수조와 확대 눈금입니다. 작은 한 칸은 100 mL입니다.');}
  if(v.kind==='pairedDials')return `<div class="restored-pair">${v.items.map(item=>render({kind:'illustratedDial',...item})).join('')}</div>`;
  if(v.kind==='illustratedDial')return renderPlateDial(v);

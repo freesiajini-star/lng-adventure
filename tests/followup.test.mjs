@@ -1,10 +1,23 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
 import {makeQuestion} from '../math.js';import {paintedGeometry} from '../public/painted-pour.js';import {renderReference,referenceLayout,renderLifeTable} from '../public/life-illustrations.js';import {teacherOverview} from '../public/teacher-overview.js';
 import {paintedVessel} from '../public/painted-pour.js';import {renderVisual} from '../public/visuals.js';
-test('overflow uses one full vessel and the same liquid palette, without an empty outline underneath',()=>{
+import {POUR_SCENARIOS,makePourQuestion} from '../pour-problems.js';
+import {volumeBelow} from '../public/pour-geometry.js';
+test('every pouring scene depicts the actual filled quantity using one consistent empty silhouette',()=>{
+ for(let seed=0;seed<POUR_SCENARIOS.length;seed++){
+  const v=makePourQuestion({},seed).visual,g=paintedGeometry(v.to.id,v.target,v.filled),html=renderVisual(v);
+  assert.ok(Math.abs(volumeBelow(g.profile,g.level)/g.volume-v.filled/v.target)<1e-10);
+  assert.equal((html.match(/<image /g)||[]).length,2);
+  assert.equal(html.includes('class="wall-overflow"'),v.source>v.target);
+  assert.ok(html.includes('data-level="'+g.level+'"'));
+  if(v.outcome==='space')assert.ok(g.level>g.profile[0][0]);
+  else assert.equal(g.level,g.profile[0][0]);
+ }
+});
+test('overflow uses one fixed vessel silhouette and calculated liquid up to the rim',()=>{
  for(const liquid of ['물','우유','주스'])for(const id of ['waterBottle','juiceBottle','mug','measureJug','tumbler']){
   const html=paintedVessel(id,1000,1000,liquid,0,240,1,'test',true).markup;
-  assert.equal((html.match(/<image /g)||[]).length,1);assert.ok(!html.includes('-empty.webp'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
+  assert.equal((html.match(/<image /g)||[]).length,1);assert.ok(html.includes('-empty-v1.webp'));assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
   const effect=html.split('class="wall-overflow"')[1];assert.ok(effect.includes(liquid==='우유'?'#f8edda':liquid==='주스'?'#f4b54f':'#8edce6'));assert.ok(effect.includes('C'));
  }
 });
@@ -21,7 +34,7 @@ test('reference illustrations use a shared physical scale and conserve the depic
 test('drink cups are 80 percent full and apparent capacities change with the stated quantity',()=>{
  for(const seed of[11,19,31,39]){const v=makeQuestion(4,6,seed).visual,html=renderLifeTable(v),levels=[...html.matchAll(/class="painted-vessel" data-fill="([\d.]+)"/g)].map(m=>+m[1]);assert.equal(levels.length,4);assert.ok(levels.every(n=>Math.abs(n-.8)<1e-9));const shown=scales(html);for(let i=1;i<4;i++)assert.ok(Math.abs((shown[i]/shown[0])**3-v.rows[i].value/v.rows[0].value)<1e-9);}
 });
-test('separate milk and juice quantities use matching liquids in the first two table pictures',()=>{const v=makeQuestion(4,6,19).visual,colors=[...renderLifeTable(v).matchAll(/glass-(milk|juice|water)-full/g)].map(m=>m[1]);assert.deepEqual(colors.slice(0,2),['milk','juice']);});
+test('separate milk and juice quantities use matching liquids in the first two table pictures',()=>{const v=makeQuestion(4,6,19).visual,colors=[...renderLifeTable(v).matchAll(/class="calculated-liquid" data-liquid="([^"]+)"/g)].map(m=>m[1]);assert.deepEqual(colors.slice(0,2),['우유','주스']);});
 test('teacher overview computes real summary counts and retains reference dashboard sections',()=>{
  const students=[{id:'a',class_no:1,student_no:1,visible:true,at:Date.now()},{id:'b',class_no:2,student_no:2}],stages=['첫 단계','둘째 단계'],data={students,monthly:[{student_id:'a',stage:1,correct:3,total:4,points:2}],daily:{a:{stages:{1:{correct:2,total:3,score:1}}}},histories:{'2026-11-16':{a:{stages:{1:{total:3}}}}},points:{}};
  const html=teacherOverview({data,students,stages,label:s=>s.id,status:()=>'',risk:()=>0,sessionsFor:()=>[],date:'2026-11-16',month:'2026-11'});for(const section of['현재 접속자 수','학생별 활동','전체·단계별·학급별 순위표','최근 14일','학급별 · 단계별 정답률','단계별 정답 점수 설정'])assert.ok(html.includes(section));assert.ok(html.includes('3문제'));assert.ok(html.includes('75%'));
@@ -29,3 +42,11 @@ test('teacher overview computes real summary counts and retains reference dashbo
 test('student page has no teacher link and teacher page has no password entry form',()=>{
  const page=fs.readFileSync('public/index.html','utf8'),code=fs.readFileSync('public/teacher.js','utf8');assert.ok(!page.includes('teacher.html'));assert.ok(!code.includes('type="password"'));assert.ok(code.includes("params.get('access')"));assert.ok(code.includes('history.replaceState'));
 });
+
+ test('falling water reaches collected water without changing the initial amount',()=>{
+ for(let type of[0,4])for(let seed=1;seed<=12;seed++){
+  const v=makeQuestion(17,type,seed).visual,html=renderVisual(v),surface=Number(html.match(/class="collected-water" data-surface="(\d+)"/)[1]);
+  for(const end of html.matchAll(/class="falling-water"[^>]*d="M[\d.]+ 105V([\d.]+)"/g))assert.equal(Number(end[1]),surface);
+  assert.ok(html.includes(v.initial?'처음 물 '+v.initial:'처음 빈 '));
+ }
+ });
