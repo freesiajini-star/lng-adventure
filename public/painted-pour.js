@@ -1,3 +1,4 @@
+import {VESSEL_PHOTO_BOUNDS} from './vessel-photo-bounds.js';
 import {spillPool} from './spill-pool.js';
 import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js';
 import {artImage,vesselArt} from './art-catalog.js';
@@ -20,6 +21,7 @@ export function paintedGeometry(id,capacity,amount){if(!(capacity>0)||amount<0||
 // rather than the independently painted full-bottle assets in ART_AXES.
 export const EMPTY_BOTTLE_AXES={waterBottle:566.40625,juiceBottle:550,tumbler:550};
 const center=id=>EMPTY_BOTTLE_AXES[id]??ART_AXES[id]??500;
+export function vesselPhotoLayout(id,state,axis=center(id)){const e=VESSEL_PHOTO_BOUNDS[id+':empty'],f=VESSEL_PHOTO_BOUNDS[id+':'+state];if(!e||!f)return{x:-axis,y:0,w:1000,h:1000};const sx=(e[2]-e[0])/(f[2]-f[0]),sy=(e[3]-e[1])/(f[3]-f[1]);return{x:e[0]-axis-f[0]*sx,y:e[1]-f[1]*sy,w:1000*sx,h:1000*sy};}
 export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,overflow=false){
  const g=paintedGeometry(id,capacity,amount),scale=g.scale*camera,p=g.profile,axis=center(id),bottom=p.at(-1)[0],y=baseline-bottom*scale,opaque=id.endsWith('Carton'),full=liquid==='우유'?'milk-full':liquid==='주스'?'juice-full':'water-full',color=liquid==='우유'?'#fff9e9':liquid==='주스'?'#ffa30e':'#8edce6';
  const lower=[[g.level,radiusAt(p,g.level)],...p.filter(a=>a[0]>g.level)],liquidPath='M'+lower.map(([yy,r])=>[-r,yy].join(',')).join('L')+'L'+[...lower].reverse().map(([yy,r])=>[r,yy].join(',')).join('L')+'Z';
@@ -27,10 +29,12 @@ export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,o
  // contain arbitrary headspace and cannot represent a calculated fill level.
  let inner=artImage(vesselArt(id,opaque?full:'empty'),-axis,0,1000);
  if(!opaque&&amount>0){
-  const milk=liquid==='우유',juice=liquid==='주스',r=radiusAt(p,g.level),material=uid+'-drink',decor=uid+'-decor',all=uid+'-interior',surface=uid+'-surface',opacity=milk?.91:juice?.88:.45,texture=milk?'milkTexture':juice?'juiceTexture':'waterTexture',radius=Math.max(...p.map(t=>t[1]));
-  const silhouette='M'+p.map(([yy,rr])=>[-rr,yy].join(',')).join('L')+'L'+[...p].reverse().map(([yy,rr])=>[rr,yy].join(',')).join('L')+'Z';
+  const placement=vesselPhotoLayout(id,full,axis),photo=artImage(vesselArt(id,full),placement.x,placement.y,placement.w,placement.h).replace('xMidYMid meet','none'),r=radiusAt(p,g.level),depth=Math.min(65,r*.18),all=uid+'-interior',silhouette='M'+p.map(([yy,rr])=>[-rr,yy].join(',')).join('L')+'L'+[...p].reverse().map(([yy,rr])=>[rr,yy].join(',')).join('L')+'Z';
   const front=id==='tumbler'?'<rect x="-230" y="410" width="460" height="220"/>':id==='juiceBottle'?'<ellipse cx="0" cy="645" rx="156" ry="112"/>':id==='waterBottle'?'<rect x="-160" y="155" width="320" height="65"/>':'';
-  inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath><clipPath id="${all}"><path d="${silhouette}"/></clipPath><radialGradient id="${surface}" cx=".4" cy=".3" r=".7"><stop stop-color="${milk?'#fffdf7':juice?'#ffd57d':'#d9f5fa'}" stop-opacity=".7"/><stop offset="1" stop-color="${milk?'#e4d9c4':juice?'#eaaa3c':'#83cbdc'}" stop-opacity=".35"/></radialGradient><clipPath id="${decor}">${front}<rect x="-350" y="${p[0][0]-35}" width="700" height="38"/></clipPath></defs><g clip-path="url(#${all})"><g clip-path="url(#${uid})" opacity="${opacity}"><path class="calculated-liquid" data-liquid="${liquid}" data-level="${g.level}" d="${liquidPath}" fill="${milk?'#fff7e7':juice?'#f5b52c':'#a0deed'}" fill-opacity="1"/><g opacity="${milk?.72:juice?.65:.32}">${id==='tumbler'?artImage(vesselArt(id,full),-(ART_AXES[id]??axis),0,1000):artImage(texture,-radius,g.level,2*radius,Math.max(1,bottom-g.level)).replace('xMidYMid meet','none')}</g></g><ellipse class="liquid-meniscus" cx="0" cy="${g.level}" rx="${r*.985}" ry="${Math.min(52,r*.17)}" fill="url(#${surface})"/></g><g opacity="${milk?.09:juice?.1:.13}" clip-path="url(#${all})">${artImage(vesselArt(id,'empty'),-axis,0,1000)}</g><g class="vessel-front-details" clip-path="url(#${decor})">${artImage(vesselArt(id,'empty'),-axis,0,1000)}</g>`;
+  const curved='M'+[-r,g.level].join(',')+'L'+lower.slice(1).map(([yy,rr])=>[-rr,yy].join(',')).join('L')+'L'+[...lower].reverse().map(([yy,rr])=>[rr,yy].join(',')).join('L')+'Q0,'+(g.level+2*depth)+' '+[-r,g.level].join(',')+'Z';
+  const metadata=`<path class="calculated-liquid" data-liquid="${liquid}" data-level="${g.level}" d="${liquidPath}" fill="none"/>`;
+  if(amount===capacity)inner=`<g class="full-painted-liquid">${photo}</g>${metadata}`;
+  else inner+=`<defs><clipPath id="${all}"><path d="${silhouette}"/></clipPath><clipPath id="${uid}"><path d="${curved}"/><ellipse cx="0" cy="${g.level}" rx="${r}" ry="${depth}"/></clipPath><clipPath id="${uid}-front">${front}</clipPath></defs><g clip-path="url(#${all})"><g clip-path="url(#${uid})">${photo}</g></g><g clip-path="url(#${uid}-front)">${artImage(vesselArt(id,'empty'),-axis,0,1000)}</g>${metadata}`;
  }
  let effect='',ground='';const bounds=ART_BOUNDS[id]||[0,1000],left=(bounds[0]-axis)*scale,right=(bounds[1]-axis)*scale;
  let min=left,max=right;

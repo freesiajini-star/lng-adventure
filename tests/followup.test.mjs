@@ -3,7 +3,7 @@ import {makeQuestion} from '../math.js';import {paintedGeometry} from '../public
 import {paintedVessel} from '../public/painted-pour.js';import {renderVisual} from '../public/visuals.js';
 import {POUR_SCENARIOS,makePourQuestion} from '../pour-problems.js';
 import {volumeBelow} from '../public/pour-geometry.js';
-test('every pouring scene depicts the actual filled quantity using one consistent empty silhouette',()=>{
+test('every pouring scene preserves calculated quantities with registered painted vessel artwork',()=>{
  for(let seed=0;seed<POUR_SCENARIOS.length;seed++){
   const v=makePourQuestion({},seed).visual,g=paintedGeometry(v.to.id,v.target,v.filled),html=renderVisual(v);
   assert.ok(Math.abs(volumeBelow(g.profile,g.level)/g.volume-v.filled/v.target)<1e-10);
@@ -14,10 +14,10 @@ test('every pouring scene depicts the actual filled quantity using one consisten
   else assert.equal(g.level,g.profile[0][0]);
  }
 });
-test('overflow uses one fixed vessel silhouette and calculated liquid up to the rim',()=>{
+test('overflow keeps painted full liquid aligned to the reference vessel',()=>{
  for(const liquid of ['물','우유','주스'])for(const id of ['waterBottle','juiceBottle','mug','measureJug','tumbler']){
   const html=paintedVessel(id,1000,1000,liquid,0,240,1,'test',true).markup;
-  assert.ok(html.includes('clip-path="url(#test-interior)"'));assert.match(html,/-empty-v(?:1\.webp|3\.png)/);assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
+  assert.ok(html.includes('class="full-painted-liquid"'));assert.match(html,/-(?:water|milk|juice)-full-v(?:1\.webp|3\.png)/);assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
   assert.ok(!html.includes('class="wall-overflow"'));assert.ok(html.includes('class="ground-pool"'));assert.ok(html.includes('class="pool-depth"'));
  }
 });

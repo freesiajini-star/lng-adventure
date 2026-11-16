@@ -5,6 +5,12 @@ import {makeScaleQuestion,SCALE_SCENES} from '../scale-problems.js';
 import {renderVisual} from '../public/visuals.js';import {GUESS_VESSELS} from '../quality-revisions.js';
 import {attendedOn,teacherOverview} from '../public/teacher-overview.js';
 import {createAdvancedDeck} from '../public/advanced-deck.js';
+import {vesselPhotoLayout,EMPTY_BOTTLE_AXES} from '../public/painted-pour.js';
+import {VESSEL_PHOTO_BOUNDS} from '../public/vessel-photo-bounds.js';
+import {ART_AXES} from '../public/art-vessel-profiles.js';
+test('filled painted vessels align to the reference glass bounds without a clipped rim surface',()=>{
+ for(const key of Object.keys(VESSEL_PHOTO_BOUNDS)){const[id,state]=key.split(':');if(state==='empty')continue;const e=VESSEL_PHOTO_BOUNDS[id+':empty'],f=VESSEL_PHOTO_BOUNDS[key],axis=EMPTY_BOTTLE_AXES[id]??ART_AXES[id]??500,p=vesselPhotoLayout(id,state);assert.ok(Math.abs(p.x+f[0]*p.w/1000-(e[0]-axis))<1e-8);assert.ok(Math.abs(p.x+f[2]*p.w/1000-(e[2]-axis))<1e-8);assert.ok(Math.abs(p.y+f[1]*p.h/1000-e[1])<1e-8);assert.ok(Math.abs(p.y+f[3]*p.h/1000-e[3])<1e-8);}
+});
 test('stage 3 closest estimate varies real capacities and retains a unique independently nearest answer',()=>{
  const contexts=new Set(),vessels=new Set();
  const amount=s=>{const l=String(s).match(/(\d+) L/),ml=String(s).match(/(\d+) mL/);return Number(l?.[1]||0)*1000+Number(ml?.[1]||0);};

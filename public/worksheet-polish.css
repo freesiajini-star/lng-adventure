@@ -68,3 +68,18 @@
 .cargo-visual{width:100%;max-width:none}.cargo-heading{width:100%}@media(max-width:700px){.cargo-heading{flex-direction:column;gap:8px}.cargo-heading>div{width:100%;text-align:center}}
 
 .paper .visual-box[data-visual="comparisonBars"]>svg{max-height:310px;width:100%;height:auto}
+
+/* Final alignment and containment corrections. */
+.cargo-heading{flex-direction:column;align-items:center;justify-content:center;gap:8px}.cargo-heading>div{flex:none;width:100%;text-align:center}.cargo-heading h3,.cargo-heading p{text-align:center}
+.paper .visual-box .refined-scene{overflow:hidden}.paper .visual-box:has(.refined-scene){overflow:hidden}
+.paper .numeric-content:has([data-visual="limitPacking"]) .answers:has(>.answer-row:only-child){display:flex;justify-content:center;width:100%}
+.paper .numeric-content:has([data-visual="limitPacking"]) .answers>.answer-row:only-child{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;gap:10px}
+.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row:only-child>.answer-label{width:auto;white-space:normal;text-align:center;min-width:0}
+.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row:only-child .choice-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,760px);gap:10px}
+.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row:only-child .choice{width:100%;white-space:normal;word-break:keep-all;min-height:44px;line-height:1.4}
+.relation-sign{position:relative;z-index:1;font-weight:850;line-height:1;flex:none;padding-inline:3px;color:var(--stage-ink)}
+@media(max-width:500px){.paper .numeric-content:has([data-visual="limitPacking"]) .answer-row:only-child .choice-group{grid-template-columns:1fr}}
+
+.object-equations .equation-objects figcaption{white-space:normal;overflow-wrap:anywhere}.equation-items{align-items:center}
+
+.object-equations .equation-objects figcaption{font-size:12px;white-space:nowrap;width:max-content;min-width:100%;overflow-wrap:normal}
