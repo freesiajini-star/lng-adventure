@@ -29,6 +29,8 @@ body.theme-bakery .paper,body.theme-chalk .paper,.paper{background:linear-gradie
 body.theme-bakery .stage-button,body.theme-chalk .stage-button{background:linear-gradient(165deg,#ffffffad,#ffffff36),color-mix(in srgb,var(--stage-color) 22%,white);border-color:color-mix(in srgb,var(--stage-color) 42%,white);color:color-mix(in srgb,var(--stage-color) 48%,#263d47);box-shadow:inset 0 2px 2px #ffffffad,inset 0 -2px 3px #0001,0 3px 7px #26344822}
 body.theme-bakery .stage-button.active,body.theme-chalk .stage-button.active{background:linear-gradient(165deg,#ffffff70,#ffffff08),var(--stage-color);border-color:color-mix(in srgb,var(--stage-color) 78%,white);color:white;text-shadow:0 1px 1px #0003}
 .stage-button.active:after{color:inherit}
+.practice-notes.prefix-note{flex-direction:row;align-items:flex-end;justify-content:center;gap:0}
+.practice-notes.prefix-note .column-step-input{order:-1;width:18px;font-size:16px;height:28px}
 @media(max-width:700px){.paper .choice.selected{padding:8px}}
 @media(max-height:760px) and (min-width:961px){.paper .choice.selected{padding:6px 10px}}
 /* Worksheet layout shared by all stages. */
