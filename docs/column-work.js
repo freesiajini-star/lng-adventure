@@ -1,4 +1,4 @@
-import {columnSteps,columnTasks} from './column-calculation.js?v=3f567d69f234';
+import {columnSteps,columnTasks} from './column-calculation.js?v=852a8fa87cf3';
 export function columnMarkup({optional=false}={}){const content='<section class="column-work" aria-label="직접 푸는 격자 세로셈"><h2>세로셈</h2><div class="column-grid-host"></div><p class="column-message" aria-live="polite"></p><div class="column-controls"><button data-column="check" type="button">이 칸 확인</button><button data-column="reset" type="button">처음부터</button></div></section>';return optional?'<details class="column-help"><summary>세로셈으로 풀어보기</summary>'+content+'</details>':content;}
 export function mountColumn(root,data,{onComplete=()=>{},onWrong=()=>{}}={}){
  if(!root)return null;const model=columnSteps(data.a,data.b,data.operation),tasks=columnTasks(model),large=data.large||'L',small=data.small||'mL';
@@ -18,7 +18,7 @@ export function mountColumn(root,data,{onComplete=()=>{},onWrong=()=>{}}={}){
   for(const row of [2,3,4])html+=cell(largeColumn,row,large,'practice-unit')+cell(smallColumn,row,small,'practice-unit');
   html+=cell(1,3,model.operation)+`<div class="practice-rule" style="grid-column:1/${columns+1};grid-row:4"></div>`;
   root.querySelector('.column-grid-host').innerHTML=`<div class="practice-grid" style="--practice-columns:${columns}">${html}</div>`;
-  root.querySelector('.column-message').textContent=task?guide(task):data.optional?'세로셈을 완성했어요. 문제의 빈칸에 답을 써 주세요.':'세로셈을 완성했어요. 정답 확인을 누르세요.';
+  root.querySelector('.column-message').textContent=task?guide(task):'세로셈을 완성했어요. 정답 확인을 누르세요.';
   root.querySelector('[data-column="check"]').disabled=locked||!task||task.kind==='strike';root.querySelector('[data-column="reset"]').disabled=locked;
   root.querySelectorAll('[data-strike],[data-strike-note]').forEach(el=>el.onclick=()=>{if(locked||!task)return;active=true;if(task.kind!=='strike'){root.querySelector('.column-step-input')?.focus({preventScroll:true});return;}const note=el.hasAttribute('data-strike-note'),index=Number(note?el.dataset.strikeNote:el.dataset.strike);if(index===task.index&&note===(task.target==='note')){if(note)noteHistory[index].at(-1).struck=true;else struck.add(index);advance();}else{el.classList.add('column-error');onWrong();}});
   const input=root.querySelector('.column-step-input');if(input){active=true;input.onfocus=()=>{active=true;};input.oninput=()=>{value=input.value.replace(/\D/g,'').slice(0,task.kind==='note'&&task.role!=='prefix'?2:1);input.value=value;input.classList.remove('column-error');needsCorrection=false;cue();};input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();check();}if(e.key==='Tab'){e.preventDefault();check();}};}cue();

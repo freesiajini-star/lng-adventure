@@ -7,7 +7,7 @@ export function columnSteps(a,b,operation){
   const label='이 자리';
   if(operation==='+'){
    const sum=top[i]+bottom[i]+carry;result[i]=sum%10;
-   const prev=carry;carry=Math.floor(sum/10);if(carry&&i>0)notes[i-1]=carry;
+   const prev=carry;carry=Math.floor(sum/10);if(carry&&i>0&&!(i===1&&top[0]===0&&bottom[0]===0))notes[i-1]=carry;
    save(label+': '+top[i]+' + '+bottom[i]+(prev?' + '+prev:'')+' = '+sum+(carry?'. '+carry+'을 윗자리로 올립니다.':'.'),i);
   }else{
    if(current[i]<bottom[i]){
@@ -28,7 +28,7 @@ export function columnSteps(a,b,operation){
 export function columnTasks(model){
  const tasks=[],current=[...model.top],noted=Array(model.length).fill(false);let carry=0;
  for(let i=model.length-1;i>=0;i--){
-  if(model.operation==='+'){const sum=model.top[i]+model.bottom[i]+carry;carry=Math.floor(sum/10);if(carry&&i>0)tasks.push({kind:'note',index:i-1,answer:String(carry),role:'carry'});tasks.push({kind:'result',index:i,answer:String(sum%10)});continue;}
+  if(model.operation==='+'){const sum=model.top[i]+model.bottom[i]+carry;carry=Math.floor(sum/10);if(carry&&i>0&&!(i===1&&model.top[0]===0&&model.bottom[0]===0))tasks.push({kind:'note',index:i-1,answer:String(carry),role:'carry'});tasks.push({kind:'result',index:i,answer:String(sum%10)});continue;}
   if(current[i]<model.bottom[i]){
    let donor=i-1;while(current[donor]===0)donor--;
    tasks.push({kind:'strike',index:donor,target:'original'});current[donor]--;tasks.push({kind:'note',index:donor,answer:String(current[donor]),role:'decreased'});noted[donor]=true;
