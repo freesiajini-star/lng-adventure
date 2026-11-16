@@ -31,3 +31,15 @@ test('application credit is always 2 even with legacy 10-point settings',async()
 test('multiple selection and column intermediate mistakes count once and corrections earn no credit',async()=>{for(const [stage,type,seed]of[[9,7,21],[4,2,2]]){const f=fixture({seed});await f.api('/api/register',{classNo:1,studentNo:1,nickname:'토끼'});const q=await f.api('/api/question',{stage,type}),full=makeQuestion(stage,type,seed),answers=full.fields.map(f=>f.answer),bad=full.fields.map(()=> '');if(full.fields[0].kind==='multi')bad[0]=[];await f.api('/api/answer',{questionId:q.id,answers:bad});await f.api('/api/answer',{questionId:q.id,answers:bad});const result=await f.api('/api/answer',{questionId:q.id,answers});assert.equal(result.ok,true);assert.equal(result.corrected,true);assert.deepEqual(f.data.studentDays['2026-11-15'].c1s01.total,{correct:0,wrong:1,score:-1,total:1});}});
 
 test('nickname picker reads actual class reservations and only confirmation registers the nickname',async()=>{const f=fixture();f.data.nicknames={1:{고양이:'c1s02'}};const x=await f.api('/api/nickname-options',{classNo:1,studentNo:1});assert.ok(!x.names.includes('고양이'));assert.ok(x.names.includes('토끼'));assert.equal(f.data.students[1].c1s01.initialized,false);assert.equal((await f.api('/api/me')).role,null);await assert.rejects(()=>f.api('/api/register',{classNo:1,studentNo:1,nickname:'고양이'}),/우리 반/);const registered=await f.api('/api/register',{classNo:1,studentNo:1,nickname:'토끼'});assert.equal(registered.password,'123456');assert.equal(f.data.students[1].c1s01.nickname,'토끼');assert.equal(f.data.nicknames[1].토끼,'c1s01');await assert.rejects(()=>f.api('/api/nickname-options',{classNo:1,studentNo:1}),/이미/);});
+
+import {createTeacherStorage} from '../public/teacher-session.js';
+test('teacher access persists across tabs and stays separate from student sessions',()=>{
+ const persistent=memory(),temporary=memory(),key='lng-auth:lng-adventure';
+ const session=role=>JSON.stringify({idToken:'e30.'+Buffer.from(JSON.stringify({lngRole:role})).toString('base64url')+'.signature',refreshToken:'test-refresh'});
+ const teacher=session('teacher'),student=session('student');temporary.setItem(key,teacher);
+ const first=createTeacherStorage({persistent,temporary});assert.equal(first.getItem(key),teacher);
+ temporary.removeItem(key);const nextTab=createTeacherStorage({persistent,temporary});assert.equal(nextTab.getItem(key),teacher);
+ temporary.setItem(key,student);assert.equal(nextTab.getItem(key),teacher);nextTab.removeItem(key);
+ assert.equal(nextTab.getItem(key),null);assert.equal(temporary.getItem(key),student);
+ nextTab.setItem(key,student);assert.equal(nextTab.getItem(key),null);
+});
