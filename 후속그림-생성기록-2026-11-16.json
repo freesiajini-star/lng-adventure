@@ -1,0 +1,26 @@
+{
+  "mode": "built-in image_gen",
+  "transparent_background": true,
+  "assets": [
+    {
+      "id": "readingJug",
+      "prompt": "Create one polished 3D storybook educational illustration of an EMPTY transparent measuring jug, isolated on real transparent background. Straight cylindrical clear glass body, level elliptical open rim, small pouring spout on left and rounded clear handle on right. Front elevation with slight top-down perspective. Body must have straight vertical parallel sides, horizontal flat bottom with small elliptical thickness. Beautiful subtle cool blue glass edges and white reflections, premium smooth glossy material, soft tight contact shadow directly touching base. No liquid, NO ticks, NO numerals, NO letters, no decoration: exact graduation and liquid are added by software. Jug takes 80% image height, centered, no ground plane, no checkerboard. Square composition.",
+      "output": "public/assets/art/readingJug-v3.png"
+    },
+    {
+      "id": "kraftCushion",
+      "prompt": "One isolated premium 3D storybook illustration of brown kraft PAPER HONEYCOMB protective packing material for wrapping fragile glassware, expanded die-cut slits forming many airy diamond cells. Loose softly curled sheet folded into a low airy cushion, clearly thin cut paper, not a cardboard box. Warm natural kraft color, finely visible paper fibers, attractive clean detailed illustration, subtle tight contact shadow, fully transparent background. No box, no cup, no text, no border.",
+      "output": "public/assets/art/kraftCushion-v3.png"
+    },
+    {
+      "id": "purpleGrapes",
+      "prompt": "One isolated bunch of PURPLE grapes matching a purple-fruited grapevine, ripe round glossy deep violet and purple grapes, subtle natural bloom, a small green leaf and brown curling stem. Premium storybook 3D educational food illustration, realistic coherent fruit proportions, softly modeled smooth shading, fine highlights, tiny close contact shadow. Centered and large on true transparent background. No plate, no bowl, no text, no border, no green grapes.",
+      "output": "public/assets/art/purpleGrapes-v3.png"
+    },
+    {
+      "id": "calibratedTank",
+      "prompt": "One premium educational illustration of an EMPTY rectangular clear glass measuring tank, isolated on true transparent background. Tall rectangular cuboid with front face width:height 3:4, perfectly vertical parallel front sides and horizontal front bottom and front top edge; very narrow RIGHT side visible and shallow open top visible from slightly above. Camera front elevation, not diagonal isometric: front face must remain a true rectangle so exact software graduations can be added. Polished thick blue-tinted glass seams with delicate realistic refraction, rounded polished edge bevels, luminous soft studio highlights, sophisticated subtle glass reflections, beautiful premium 3D storybook rendering with elegant material quality. Very restrained close contact shadow directly under base. No water, NO graduations, NO numbers, no text, no handle, no extra objects, no background plane, no checkerboard. Center whole tank with modest transparent margins. Single tank only.",
+      "output": "public/assets/art/calibratedTank-v3.png"
+    }
+  ]
+}

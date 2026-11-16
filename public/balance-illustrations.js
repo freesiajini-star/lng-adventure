@@ -1,3 +1,4 @@
+import {renderCalibratedTanks} from './calibrated-tanks.js';
 import {artImage,objectArtwork} from './art-catalog.js';
 import {sourceDefs} from './source-vessels.js';
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${s}</text>`;
@@ -32,12 +33,4 @@ export function renderBalances(v,object){
   out+='</g>';
  });return `<svg viewBox="0 0 ${v.items.length*360} 270" role="img" aria-label="양팔저울의 내려간 쪽이 더 무겁고, 수평인 양쪽은 무게가 같습니다">${out}</svg>`;
 }
-export function renderEqualTanks(v){
- let out=`<defs><linearGradient id="tank-glass"><stop stop-color="#bfdee5" stop-opacity=".6"/><stop offset=".17" stop-color="#fff" stop-opacity=".72"/><stop offset=".65" stop-color="#ecf9fb" stop-opacity=".2"/><stop offset="1" stop-color="#8eb9c5" stop-opacity=".48"/></linearGradient><linearGradient id="tank-water" x2="0" y2="1"><stop stop-color="#b4eff5" stop-opacity=".78"/><stop offset="1" stop-color="#63bed0" stop-opacity=".9"/></linearGradient><radialGradient id="tank-shadow"><stop stop-color="#446570" stop-opacity=".2"/><stop offset="1" stop-color="#446570" stop-opacity="0"/></radialGradient></defs>`;
- v.values.forEach((value,i)=>{
-  const x=110+i*330,top=45,bottom=235,h=190,y=bottom-h*value/v.max;
-  out+=`<g class="calibrated-tank" data-value="${value}" data-level="${y}" data-bottom="${bottom}" data-height="${h}" data-max="${v.max}"><ellipse cx="${x+4}" cy="240" rx="88" ry="12" fill="url(#tank-shadow)"/><path d="M${x+70} ${top}l16-12v190l-16 12Z" fill="#a2c8d3" fill-opacity=".4" stroke="#81a5b2"/><rect x="${x-70}" y="${top}" width="140" height="190" rx="4" fill="url(#tank-glass)" stroke="#7fa9b8" stroke-width="1.5"/><rect x="${x-68}" y="${y}" width="136" height="${bottom-y}" fill="url(#tank-water)"/><path d="M${x+70} ${y}L${x+86} ${y-12}V${bottom-12}L${x+70} ${bottom}Z" fill="url(#tank-water)"/><path d="M${x-68} ${y}L${x-52} ${y-12}H${x+84}L${x+68} ${y}Z" fill="#bceff5" fill-opacity=".62"/><path d="M${x-68} ${y}H${x+68}" stroke="#58adbf" stroke-width="1.7"/><path d="M${x-70} ${top}l16-12h140l-16 12Z" fill="#ebf9fc" fill-opacity=".48" stroke="#81a9b7" stroke-width="1.5"/><path d="M${x-60} 57V224" stroke="white" stroke-width="5" stroke-opacity=".8" stroke-linecap="round"/><path d="M${x-68} ${bottom}H${x+70}l16-12" fill="none" stroke="#719fac" stroke-width="2.3"/>`;
-  for(let n=0;n<=v.max;n+=100){const yy=bottom-h*n/v.max;out+=`<path data-tick="${n}" d="M${x+(n%500===0?26:46)} ${yy}H${x+68}" stroke="${n%500===0?'#315562':'#7e9fa9'}" stroke-width="${n%500===0?2:1}"/>`+(n%500===0?tx(x+105,yy+5,n,13):'');}
-  out+=tx(x+105,24,'mL',14)+tx(x,267,v.labels[i]+' 수조',18)+'</g>';
- });return `<svg viewBox="0 0 620 288" role="img" aria-label="같은 눈금의 두 수조에 담긴 물의 양">${out}</svg>`;
-}
+export function renderEqualTanks(v){return renderCalibratedTanks(v);}

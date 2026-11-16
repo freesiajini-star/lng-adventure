@@ -15,7 +15,7 @@ function outline(uid){
 }
 export function spillPool(pool,liquid,scale,uid){
  const d=outline(uid),id=uid+'-pool',milk=liquid==='우유',juice=liquid==='주스';
- const light=milk?'#fffdf0':juice?'#fff0ab':'#d4f9ff',body=milk?'#f8edda':juice?'#f4b54f':'#8edce6',edge=milk?'#c2ad8a':juice?'#d29024':'#409eb6';
+ const light=milk?'#fffdf0':juice?'#ffd264':'#d4f9ff',body=milk?'#f8edda':juice?'#ffa30e':'#8edce6',edge=milk?'#c2ad8a':juice?'#d29024':'#409eb6';
  const depth=Math.max(12,2.4/scale)/pool.ry;
  return `<g class="ground-pool" data-liquid="${liquid}" transform="translate(${pool.cx} ${pool.cy}) scale(${pool.rx} ${pool.ry})">
  <defs><linearGradient id="${id}-surface" x1=".2" y1="0" x2=".6" y2="1"><stop stop-color="${light}"/><stop offset=".5" stop-color="${body}"/><stop offset="1" stop-color="${edge}"/></linearGradient><linearGradient id="${id}-depth" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${body}"/><stop offset="1" stop-color="${edge}"/></linearGradient><radialGradient id="${id}-gloss" cx=".3" cy=".1" r=".85"><stop stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><clipPath id="${id}-clip"><path d="${d}"/></clipPath></defs>

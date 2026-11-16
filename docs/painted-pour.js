@@ -1,12 +1,12 @@
-import {spillPool} from './spill-pool.js?v=179a427bc0f8';
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=179a427bc0f8';
-import {artImage,vesselArt} from './art-catalog.js?v=179a427bc0f8';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=179a427bc0f8';
+import {spillPool} from './spill-pool.js?v=fe325cda4368';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=fe325cda4368';
+import {artImage,vesselArt} from './art-catalog.js?v=fe325cda4368';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=fe325cda4368';
 // Interior coordinates of the EMPTY artwork. Rim ellipses, sleeves, labels and
 // reflections are not changes in the vessel's internal radius.
 const profiles={...ART_PROFILES,
  waterBottle:[[100,105],[190,105],[265,195],[320,210],[785,210],[850,170],[875,80]],
- juiceBottle:[[115,120],[205,120],[290,170],[395,235],[800,235],[855,190],[875,90]],
+ juiceBottle:[[112,105],[205,105],[270,133],[350,205],[430,222],[790,222],[840,185],[869,95]],
  pitcher:[[240,125],[300,125],[370,265],[440,280],[810,280],[870,220],[895,100]],
  glass:[[215,255],[760,220],[815,205],[835,130]],
  mug:[[270,250],[350,270],[620,270],[760,235],[820,180],[840,100]],
@@ -18,18 +18,23 @@ const profiles={...ART_PROFILES,
 export function paintedGeometry(id,capacity,amount){if(!(capacity>0)||amount<0||amount>capacity)throw Error('Invalid painted volume');const profile=profiles[id].map(p=>[...p]);if(id.endsWith('Carton'))profile.depth=420;const volume=volumeBelow(profile,profile[0][0]);return {profile,volume,scale:Math.cbrt(capacity*1000/volume),level:fillLevel(profile,amount/capacity)};}
 // Bottle axes are calibrated to the empty artwork used by the liquid overlay,
 // rather than the independently painted full-bottle assets in ART_AXES.
-export const EMPTY_BOTTLE_AXES={waterBottle:566.40625,juiceBottle:557.2916666666666};
+export const EMPTY_BOTTLE_AXES={waterBottle:566.40625,juiceBottle:550,tumbler:550};
 const center=id=>EMPTY_BOTTLE_AXES[id]??ART_AXES[id]??500;
 export function paintedVessel(id,capacity,amount,liquid,cx,baseline,camera,uid,overflow=false){
- const g=paintedGeometry(id,capacity,amount),scale=g.scale*camera,p=g.profile,axis=center(id),bottom=p.at(-1)[0],y=baseline-bottom*scale,opaque=id.endsWith('Carton'),full=liquid==='우유'?'milk-full':liquid==='주스'?'juice-full':'water-full',color=liquid==='우유'?'#f8edda':liquid==='주스'?'#f4b54f':'#8edce6';
+ const g=paintedGeometry(id,capacity,amount),scale=g.scale*camera,p=g.profile,axis=center(id),bottom=p.at(-1)[0],y=baseline-bottom*scale,opaque=id.endsWith('Carton'),full=liquid==='우유'?'milk-full':liquid==='주스'?'juice-full':'water-full',color=liquid==='우유'?'#fff9e9':liquid==='주스'?'#ffa30e':'#8edce6';
  const lower=[[g.level,radiusAt(p,g.level)],...p.filter(a=>a[0]>g.level)],liquidPath='M'+lower.map(([yy,r])=>[-r,yy].join(',')).join('L')+'L'+[...lower].reverse().map(([yy,r])=>[r,yy].join(',')).join('L')+'Z';
  // One fixed silhouette for every quantity. Independently painted "full" assets
  // contain arbitrary headspace and cannot represent a calculated fill level.
  let inner=artImage(vesselArt(id,opaque?full:'empty'),-axis,0,1000);
- if(!opaque&&amount>0){inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath></defs><path class="calculated-liquid" data-liquid="${liquid}" data-level="${g.level}" d="${liquidPath}" fill="${color}" fill-opacity="${liquid==='우유'?'.94':'.68'}" style="mix-blend-mode:multiply"/><ellipse cx="0" cy="${g.level}" rx="${radiusAt(p,g.level)*.97}" ry="${Math.min(70,radiusAt(p,g.level)*.16)}" fill="${color}" fill-opacity=".8" stroke="${color}" stroke-width="2"/>`;}
+ if(!opaque&&amount>0){
+  const milk=liquid==='우유',juice=liquid==='주스',r=radiusAt(p,g.level),material=uid+'-drink',decor=uid+'-decor';
+  const front=id==='tumbler'?'<rect x="-230" y="410" width="460" height="220"/>':id==='juiceBottle'?'<ellipse cx="0" cy="645" rx="156" ry="112"/>':'';
+  inner+=`<defs><clipPath id="${uid}"><path d="${liquidPath}"/></clipPath><linearGradient id="${material}" x1="0" x2="1"><stop stop-color="${milk?'#f3e8d4':juice?'#e98a00':'#65bfd3'}"/><stop offset=".28" stop-color="${milk?'#fffdf4':juice?'#ffb92d':'#b0e8f1'}"/><stop offset=".7" stop-color="${color}"/><stop offset="1" stop-color="${milk?'#eee2cd':juice?'#ec8f06':'#6ec7d8'}"/></linearGradient><clipPath id="${decor}">${front}<rect x="-350" y="${p[0][0]-35}" width="700" height="38"/></clipPath></defs><g clip-path="url(#${uid})"><path class="calculated-liquid" data-liquid="${liquid}" data-level="${g.level}" d="${liquidPath}" fill="url(#${material})" fill-opacity="${milk?'.99':juice?'.96':'.63'}"/><ellipse cx="0" cy="${g.level}" rx="${r*.98}" ry="${Math.min(45,r*.13)}" fill="${milk?'#fffdf4':juice?'#ffc245':'#b7ebf3'}" fill-opacity="${milk?1:.95}"/><path d="M${-r*.75} ${g.level+28}V${Math.max(g.level+28,bottom-70)}" stroke="#fff" stroke-opacity="${milk?.18:.3}" stroke-width="20" stroke-linecap="round"/></g><g class="vessel-front-details" clip-path="url(#${decor})">${artImage(vesselArt(id,'empty'),-axis,0,1000)}</g>`;
+ }
  let effect='',ground='';const bounds=ART_BOUNDS[id]||[0,1000],left=(bounds[0]-axis)*scale,right=(bounds[1]-axis)*scale;
  let min=left,max=right;
- if(overflow){const points=p.map(([yy,r])=>[-r-8,yy]),foot=points.at(-1),pool={cx:foot[0]-25,cy:bottom+18,rx:3*Math.max(150,18/scale),ry:3*Math.max(30,4/scale)},streamWidth=Math.max(22,3/scale),edge=liquid==='우유'?'#b5a184':liquid==='주스'?'#d99728':'#4aa4b5';max=Math.max(max,(pool.cx+pool.rx)*scale);min=Math.min(min,(pool.cx-pool.rx)*scale,...points.map(([x])=>x*scale-streamWidth*scale));let flow='M'+points[0];for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],mid=(a[1]+b[1])/2;flow+=`C${a[0]},${mid} ${b[0]},${mid} ${b[0]},${b[1]}`;}flow+=`Q${foot[0]},${pool.cy} ${pool.cx},${pool.cy}`;ground=spillPool(pool,liquid,scale,uid);effect=`<g class="wall-overflow" data-liquid="${liquid}"><path d="${flow}" fill="none" stroke="${edge}" stroke-width="${streamWidth+Math.max(5,.7/scale)}" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="${color}" stroke-width="${streamWidth}" stroke-linecap="round"/><path d="${flow}" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="${Math.max(4,.7/scale)}" stroke-linecap="round"/></g>`;}
+ if(overflow){const foot=-p.at(-1)[1]-8,pool={cx:foot-25,cy:bottom+18,rx:3*Math.max(150,18/scale),ry:3*Math.max(30,4/scale)};max=Math.max(max,(pool.cx+pool.rx)*scale);min=Math.min(min,(pool.cx-pool.rx)*scale);ground=spillPool(pool,liquid,scale,uid);}
+
  return {markup:`<g class="painted-vessel" data-fill="${amount/capacity}" transform="translate(${cx} ${y}) scale(${scale})">${ground}${inner}${effect}</g>`,min,max,geometry:g};
 }
 const tx=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="var(--stage-ink,#304f4b)" font-family="Malgun Gothic,sans-serif">${s}</text>`;

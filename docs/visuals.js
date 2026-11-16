@@ -1,14 +1,16 @@
-import {renderObjectEquations,renderScaleStory} from './advanced-illustrations.js?v=179a427bc0f8';
-import {renderPlateDial,renderSumDifference} from './scene-refinements.js?v=179a427bc0f8';
-import {artImage,objectArtwork} from './art-catalog.js?v=179a427bc0f8';
-import {renderCargo} from './cargo-illustration.js?v=179a427bc0f8';
-import {renderPackage} from './package-illustration.js?v=179a427bc0f8';
-import {renderBundleRelations} from './bundle-illustration.js?v=179a427bc0f8';
-import {renderLimit} from './limit-illustrations.js?v=179a427bc0f8';
-import {renderBalances,renderEqualTanks} from './balance-illustrations.js?v=179a427bc0f8';
-import {renderLifeTable,renderReference} from './life-illustrations.js?v=179a427bc0f8';
-import {renderPourComparison} from './pour-illustrations.js?v=179a427bc0f8';
-import {restoredVisual,restoredObject} from './restoration-visuals.js?v=179a427bc0f8';
+import {renderMaterialBars} from './material-bars.js?v=fe325cda4368';
+import {renderReadingJug} from './reading-jug.js?v=fe325cda4368';
+import {renderObjectEquations,renderScaleStory} from './advanced-illustrations.js?v=fe325cda4368';
+import {renderPlateDial} from './scene-refinements.js?v=fe325cda4368';
+import {artImage,objectArtwork} from './art-catalog.js?v=fe325cda4368';
+import {renderCargo} from './cargo-illustration.js?v=fe325cda4368';
+import {renderPackage} from './package-illustration.js?v=fe325cda4368';
+import {renderBundleRelations} from './bundle-illustration.js?v=fe325cda4368';
+import {renderLimit} from './limit-illustrations.js?v=fe325cda4368';
+import {renderBalances,renderEqualTanks} from './balance-illustrations.js?v=fe325cda4368';
+import {renderLifeTable,renderReference} from './life-illustrations.js?v=fe325cda4368';
+import {renderPourComparison} from './pour-illustrations.js?v=fe325cda4368';
+import {restoredVisual,restoredObject} from './restoration-visuals.js?v=fe325cda4368';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=(x,y,s,size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="var(--stage-ink,#304f4b)" font-family="Noto Sans KR,Malgun Gothic,sans-serif">${esc(s)}</text>`;
 const svg=(width,height,content,label)=>`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}"><defs><linearGradient id="water" x2="0" y2="1"><stop stop-color="#8edbdc" stop-opacity=".7"/><stop offset="1" stop-color="#49b6c4" stop-opacity=".9"/></linearGradient><linearGradient id="glass"><stop stop-color="#e8f8f6"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#e4f2ef"/></linearGradient></defs>${content}</svg>`;
@@ -43,10 +45,11 @@ export function renderVisual(v){if(!v)return '';if(v.kind==='objectEquations')re
  if(v.kind==='weighings'&&v.counts)return `<div class="paired-weighings">${v.counts.map((n,i)=>renderVisual({kind:'package',items:n,label:'사과',unknownBox:true,total:v.totals[i]})).join('')}</div>`;
  if(v.kind==='package'){let items='';for(let i=0;i<v.items;i++)items+=object(70+i*37,v.box||v.unknownBox?70:77,v.label);const width=Math.max(400,v.items*40+130),boxWidth=v.items*37+40;const box=v.box||v.unknownBox?`<path d="M45 42v51h${boxWidth}V42" fill="#eee1c7" stroke="#a78d68" stroke-width="3"/>`:'';return svg(width,200,box+items+`<path d="M45 100h${boxWidth}l15 55H30z" fill="#d4dfd8" stroke="#76958a" stroke-width="2"/><rect x="100" y="119" width="160" height="28" rx="3" fill="#fffdf0" stroke="#9baea3"/>`+text(180,140,(v.total??'?')+' g',20)+text(width/2,185,v.unknownBox?'같은 상자를 사용합니다.':v.box?'빈 상자 '+v.box+' g':v.label+' '+v.items+'개',16),'무게가 같은 '+v.label+' '+v.items+'개를 저울에 올린 모습입니다. 표시된 전체 무게는 '+(v.total??'구할 양')+' g입니다.');}
  if(v.kind==='weighings'||v.kind==='relation')return `<div class="relation-visual">${(v.labels||v.rows).map((line,i)=>`<div><span>${i+1}차 측정</span><p>${esc(line)}</p></div>`).join('')}</div>`;
- if(v.kind==='comparisonBars')return renderSumDifference(v);
+ if(v.kind==='comparisonBars')return renderMaterialBars(v);
  if(v.kind==='load')return `<div class="data-cards"><div><span>다리의 전체 무게 한도</span><b>${v.limit} kg</b></div><div><span>빈 트럭</span><b>${v.empty} kg</b></div><div><span>상자 한 개</span><b>${v.item} kg</b></div></div>`;
  if(v.kind==='equation')return `<div class="equation">${esc(v.text).replace('○','<span class="comparison-slot" data-comparison-slot aria-live="polite"></span>')}</div>`;
  if(v.kind==='countTable')return `<div class="data-cards">${v.rows.map(([label,value])=>`<div><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join('')}</div>`;
+ if(v.kind==='vessels'&&v.ticks&&v.values.length===1)return renderReadingJug(v);
  if(v.kind==='vessels'){const width=v.values.length*190+30;v.values.forEach((n,i)=>inner+=vessel(25+i*190,n,v.max,v.labels[i],v.ticks));return svg(width,235,inner,'같은 크기의 계량 용기. 수위와 눈금으로 양을 비교합니다.');}
  if(v.kind==='dial')return renderPlateDial(v);
  if(v.kind==='balances'){v.items.forEach((item,i)=>inner+=balance(item,i*330));return svg(v.items.length*330,240,inner,'같은 팔 길이의 양팔저울. 무거운 쪽이 내려갑니다.');}

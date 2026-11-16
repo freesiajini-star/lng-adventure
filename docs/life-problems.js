@@ -1,4 +1,4 @@
-import {seeded} from './core-revisions.js?v=179a427bc0f8';
+import {seeded} from './core-revisions.js?v=fe325cda4368';
 // Each table is a fictional plan, recipe, product label or a measured result.
 export const LIFE_SCENES=[
  {title:'학교 텃밭',intro:'오늘 정한 화분 물주기 계획입니다.',items:['상추','방울토마토','피망','꽃'],values:[200,300,400,500],art:'plant',unit:'화분 1개',count:'개'},

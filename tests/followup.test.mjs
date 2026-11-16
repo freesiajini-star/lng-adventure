@@ -7,8 +7,8 @@ test('every pouring scene depicts the actual filled quantity using one consisten
  for(let seed=0;seed<POUR_SCENARIOS.length;seed++){
   const v=makePourQuestion({},seed).visual,g=paintedGeometry(v.to.id,v.target,v.filled),html=renderVisual(v);
   assert.ok(Math.abs(volumeBelow(g.profile,g.level)/g.volume-v.filled/v.target)<1e-10);
-  assert.equal((html.match(/<image /g)||[]).length,2);
-  assert.equal(html.includes('class="wall-overflow"'),v.source>v.target);
+  assert.equal((html.match(/class="painted-vessel"/g)||[]).length,2);
+  assert.equal(html.includes('class="ground-pool"'),v.source>v.target);
   assert.ok(html.includes('data-level="'+g.level+'"'));
   if(v.outcome==='space')assert.ok(g.level>g.profile[0][0]);
   else assert.equal(g.level,g.profile[0][0]);
@@ -17,8 +17,8 @@ test('every pouring scene depicts the actual filled quantity using one consisten
 test('overflow uses one fixed vessel silhouette and calculated liquid up to the rim',()=>{
  for(const liquid of ['물','우유','주스'])for(const id of ['waterBottle','juiceBottle','mug','measureJug','tumbler']){
   const html=paintedVessel(id,1000,1000,liquid,0,240,1,'test',true).markup;
-  assert.equal((html.match(/<image /g)||[]).length,1);assert.ok(html.includes('-empty-v1.webp'));assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
-  const effect=html.split('class="wall-overflow"')[1];assert.ok(effect.includes(liquid==='우유'?'#f8edda':liquid==='주스'?'#f4b54f':'#8edce6'));assert.ok(effect.includes('C'));
+  assert.equal(new Set([...html.matchAll(/href="([^"]+)"/g)].map(m=>m[1])).size,1);assert.ok(html.includes('-empty-v1.webp'));assert.ok(html.includes('class="calculated-liquid"'));assert.ok(html.includes('data-liquid="'+liquid+'"'));
+  assert.ok(!html.includes('class="wall-overflow"'));assert.ok(html.includes('class="ground-pool"'));assert.ok(html.includes('class="pool-depth"'));
  }
 });
 test('container weighing pictures retain the selected produce and independently correct mass differences',()=>{
@@ -47,6 +47,6 @@ test('student page has no teacher link and teacher page has no password entry fo
  for(let type of[0,4])for(let seed=1;seed<=12;seed++){
   const v=makeQuestion(17,type,seed).visual,html=renderVisual(v),surface=Number(html.match(/class="collected-water" data-surface="(\d+)"/)[1]);
   for(const end of html.matchAll(/class="falling-water"[^>]*d="M[\d.]+ 105V([\d.]+)"/g))assert.equal(Number(end[1]),surface);
-  assert.ok(html.includes(v.initial?'처음 물 '+v.initial:'처음 빈 '));
+  assert.ok(!html.includes('처음 빈 '));assert.ok(!html.includes('물 받는 중'));assert.ok(html.includes('mask="url(#stream-fade-'));
  }
  });

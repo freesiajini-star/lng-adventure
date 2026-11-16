@@ -58,5 +58,5 @@ test('overflow touches and follows the vessel wall and ends in an attached puddl
   for(let i=0;i<flow.points.length;i++){const[x,y]=flow.points[i],[py,r]=g.profile[i];assert.ok(Math.abs(x-(570-r*scale))+1e-8>=scale);assert.ok(Math.abs(x-(570-r*scale))<=scale+1e-8);assert.equal(y,20+py*scale);if(i)assert.ok(y>flow.points[i-1][1]);}
   const end=flow.points.at(-1),p=flow.pool;assert.ok(Math.abs(end[0]-p.cx)<p.rx);assert.ok(Math.abs(end[1]-p.cy)<p.ry);
  }
- for(const seed of [0,50,500]){const v=makeQuestion(1,0,seed).visual;assert.equal(renderVisual(v).includes('class="wall-overflow"'),v.remainder>0);}
+ for(const seed of [0,50,500]){const v=makeQuestion(1,0,seed).visual;assert.equal(renderVisual(v).includes('class="ground-pool"'),v.remainder>0);}
 });

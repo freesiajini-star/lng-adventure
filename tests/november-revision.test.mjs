@@ -23,7 +23,7 @@ test('all 30 substitution situations and 24 two-equation situations have integra
   else [x,y]=solve(v.rows);
   for(const [i,n]of[x,y].entries()){assert.ok(Number.isInteger(n)&&n>0);const spec=RELATION_OBJECTS[audit.keys[i]];assert.ok(n>=spec[2]&&n<=spec[3],audit.title+': '+n);}
   const expected=structure==='pairs'?[2*x,2*y]:structure==='extend'?[x*(audit.count+audit.extra)]:structure==='known'?[x]:['package','capsule'].includes(structure)?[y]:[x,y];assert.deepEqual(q.fields.map(f=>Number(f.answer)),expected,audit.title);
-  const html=renderVisual(v),count=v.rows.reduce((n,row)=>n+Math.max(0,row.a)+(row.op==='='?1:Math.max(0,row.b)),0);assert.equal((html.match(/<img /g)||[]).length,count,audit.title);assert.ok(!JSON.stringify(publicQuestion(q)).includes('weights'));assert.equal(q.column,undefined);
+  const html=renderVisual(v),count=v.rows.reduce((n,row)=>n+Math.max(0,row.a)+(row.op==='='?1:Math.max(0,row.b)),0);assert.equal((html.match(/<(?:img|image) /g)||[]).length,count,audit.title);assert.ok(!JSON.stringify(publicQuestion(q)).includes('weights'));assert.equal(q.column,undefined);
  }
 });
 test('30 scaling contexts always scale a larger target and preserve units, shortages, change and package comparisons',()=>{

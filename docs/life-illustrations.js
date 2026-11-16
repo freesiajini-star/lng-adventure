@@ -1,8 +1,8 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=179a427bc0f8';
-import {artImage,lifeArtwork} from './art-catalog.js?v=179a427bc0f8';
-import {illustration} from './pour-illustrations.js?v=179a427bc0f8';
-import {vesselGeometry} from './pour-geometry.js?v=179a427bc0f8';
-import {source,sourceDefs,transferArrow} from './source-vessels.js?v=179a427bc0f8';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=fe325cda4368';
+import {artImage,lifeArtwork} from './art-catalog.js?v=fe325cda4368';
+import {illustration} from './pour-illustrations.js?v=fe325cda4368';
+import {vesselGeometry} from './pour-geometry.js?v=fe325cda4368';
+import {source,sourceDefs,transferArrow} from './source-vessels.js?v=fe325cda4368';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${esc(s)}</text>`;
 const colors=['#e78d9c','#b5b3dc','#f1c37c','#9ac8ad'];
@@ -16,10 +16,11 @@ function fruit(i){
 function pot(i){return `<path d="M-30 9H30L24 42Q0 49-24 42Z" fill="url(#life-pot)" stroke="#ae8c6c" stroke-width="1.6"/><ellipse cy="9" rx="30" ry="7" fill="#806f58" stroke="#ae8c6c"/><g transform="translate(0 1)">${leaf}${i===1?'<circle cx="-12" cy="-11" r="9" fill="#e38e74"/><circle cx="15" cy="-5" r="7" fill="#e38e74"/>':i===2?'<path d="M7-18Q28-13 10 4Q22-13 7-18" fill="#e88b70"/>':i===3?'<g fill="#e5a0b8"><circle cy="-32" r="10"/><circle cx="-11" cy="-22" r="10"/><circle cx="11" cy="-22" r="10"/><circle cy="-12" r="10"/><circle cy="-22" r="7" fill="#f0d28f"/></g>':''}</g>`;}
 function bottle(i,art){return `<g transform="scale(${.65+i*.07})">${source('물병')}</g>${art==='camp'?'<path d="M-19-22Q-25-55 18-43" fill="none" stroke="#567e7d" stroke-width="4"/><path d="M-17 5h34v20h-34" fill="#c5d9b3"/><path d="M-10 18 0 8 10 18Z" fill="#688e72"/>':''}${art==='fruit'?`<g transform="translate(0 4) scale(.55)">${fruit(i)}</g>`:''}`;}
 function art(row,scene,rows){
- if(row.art==='paint'){const widths=[70,96,122,146],heights=[60,80,100,120],i=row.index||0,w=widths[i],h=heights[i];return `<rect x="${-w/2+3}" y="${42-h+4}" width="${w}" height="${h}" rx="3" fill="#46515b" opacity=".12"/><rect x="${-w/2}" y="${42-h}" width="${w}" height="${h}" rx="3" fill="#fffdf9" stroke="#bcc4cb" stroke-width="1.4"/><path d="M${w/2-14} ${42-h}v14h14" fill="#e4eaf0"/>`+artImage('paint',-60,-45,120,110);}
+ if(row.art==='paint'){const widths=[104,120,140,154],heights=[88,104,120,132],i=row.index||0,w=widths[i],h=heights[i];return `<rect x="${-w/2+3}" y="${32-h+4}" width="${w}" height="${h}" rx="3" fill="#46515b" opacity=".12"/><rect x="${-w/2}" y="${32-h}" width="${w}" height="${h}" rx="3" fill="#fffdf9" stroke="#bcc4cb" stroke-width="1.4"/><path d="M${w/2-14} ${32-h}v14h14" fill="#e4eaf0"/>`+artImage('paint',-52,-35,104,94);}
  if(row.art==='tap'){const colors=[[1,1,1],[.88,.55,.32],[1,.79,.38],[1,.86,.25]],i=row.index||0,c=colors[i],id='tap-metal-'+i;return `<defs><filter id="${id}" color-interpolation-filters="sRGB"><feColorMatrix values="${c[0]*.2126} ${c[0]*.7152} ${c[0]*.0722} 0 0 ${c[1]*.2126} ${c[1]*.7152} ${c[1]*.0722} 0 0 ${c[2]*.2126} ${c[2]*.7152} ${c[2]*.0722} 0 0 0 0 0 1 0"/></filter></defs><g filter="url(#${id})">${artImage('tap',-70,-70,140,130)}</g>`;}
  if(row.art==='measure'){const g=paintedGeometry('measureJug',1000,row.value);return paintedVessel('measureJug',1000,row.value,'물',0,50,.14/g.scale,'measure-table-'+row.index).markup;}
  if(['juice','snack','drink'].includes(row.art)){const id=row.art==='drink'&&row.index>=2?'waterBottle':'glass',max=Math.max(...rows.map(r=>r.value)),geometries=rows.map(r=>paintedGeometry(row.art==='drink'&&r.index>=2?'waterBottle':'glass',r.value/.8,r.value)),camera=120/Math.max(...geometries.map(g=>(g.profile.at(-1)[0]-g.profile[0][0])*g.scale)),liquid=row.art==='snack'?(rows.indexOf(row)===0?'우유':rows.indexOf(row)===1?'주스':'물'):row.art==='juice'?'주스':'물';return paintedVessel(id,row.value/.8,row.value,liquid,0,55,camera,'life-'+scene+'-'+row.index).markup;}
+ if(row.art==='rice'){const scale=.95*Math.cbrt(row.value/Math.max(...rows.map(r=>r.value)));return artImage('rice',-70*scale,48-130*scale,140*scale,130*scale);}
  if(row.art==='rain'){const max=Math.max(...rows.map(r=>r.value)),scale=Math.cbrt(row.value/max);return artImage('rainBucket',-70*scale,55-135*scale,140*scale,135*scale);}
  const scale=['bottle','camp','tank','ice'].includes(row.art)?.76+(row.index||0)*.08:1;return artImage(lifeArtwork(row),-70*scale,-70*scale,140*scale,130*scale);
 }
@@ -27,7 +28,7 @@ function art(row,scene,rows){
 export function renderLifeTable(v){let out=sourceDefs()+`<defs><linearGradient id="life-pot"><stop stop-color="#ecd2b7"/><stop offset="1" stop-color="#c49a75"/></linearGradient></defs>${tx(360,27,v.title,21)}`;
  const head=v.recipe?'섞는 물':v.scene===9||v.scene===14?'측정한 양':'물 또는 음료의 양';
  out+=`<rect x="15" y="46" width="690" height="258" rx="12" fill="var(--stage-panel,#fffdf8)" stroke="var(--stage-edge,#a6b9ae)"/><path d="M15 237H705V269H15Z" fill="var(--stage-soft,#e8eee4)"/><path d="M15 237H705M15 269H705" stroke="var(--stage-edge,#a6b9ae)"/>`;
- v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)">${art(row,v.scene,v.rows)}</g>${tx(x,214,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="var(--stage-edge,#a6b9ae)"/>`;});
+ v.rows.forEach((row,i)=>{const x=101+i*172;out+=`<g transform="translate(${x} 131)">${art(row,v.scene,v.rows)}</g>${tx(x,220,row.label,16)}${tx(x,259,v.basis,14)}${tx(x,293,row.value+' mL',20)}`;if(i)out+=`<path d="M${15+i*172} 46V304" stroke="var(--stage-edge,#a6b9ae)"/>`;});
  if(v.recipe)out+=tx(360,332,'표의 수치는 '+v.basis+'에 '+head+'입니다.',15);
  return `<svg viewBox="0 0 720 350" role="img" aria-label="${esc(v.title)} 그림표">${out}</svg>`;
 }

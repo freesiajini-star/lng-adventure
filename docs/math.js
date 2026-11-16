@@ -1,7 +1,7 @@
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=179a427bc0f8';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=179a427bc0f8';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=179a427bc0f8';
-import {reviewQuestion} from './curriculum.js?v=179a427bc0f8';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=fe325cda4368';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=fe325cda4368';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=fe325cda4368';
+import {reviewQuestion} from './curriculum.js?v=fe325cda4368';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
@@ -16,7 +16,7 @@ export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%100
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
  const variants=TYPE_GROUPS[stage]?.[type],variant=variants?.[(Math.max(0,seed-1)>>>0)%variants.length]??type;
- const q=makeQuestionRaw(stage,variant,seed);q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
+ const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
 }
 function makeQuestionRaw(stage,type,seed=1){
  if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');
@@ -55,7 +55,7 @@ function makeQuestionRaw(stage,type,seed=1){
   else if(type===2||type===3){x=(a+b)*1000+(type===2?800:200);y=b*1000+(type===2?300:600);z=x-y;lines('계산하세요.');q.visual={kind:'equation',text:`${fmt(x)} − ${fmt(y)}`};}
   else if(type===4){x=(a+b)*1000+200;y=b*1000+700;z=x-y;lines(vol?`물 ${fmt(x)} 중 ${fmt(y)}를 사용했습니다.`:`최대 ${fmt(x)}까지 담는 가방에 ${fmt(y)}를 담았습니다.`,vol?'남은 물은 얼마인가요?':'더 담을 수 있는 무게는 얼마인가요?');}
   else{x=(a+b)*1000+300;y=b*1000+800;z=x-y;lines('빈칸에 알맞은 양을 구하세요.');q.visual={kind:'equation',text:`${fmt(x)} − □ = ${fmt(z)}`};}
-  q.column={a:x,b:type===5?z:y,operation:type<2?'+':'−',large:vol?'L':'kg',small:vol?'mL':'g',optional:type===5};
+  q.column={a:x,b:type===5?z:y,operation:type<2?'+':'−',large:vol?'L':'kg',small:vol?'mL':'g',optional:type===5||stage===4&&type===4};
   const ans=type===5?y:z;num(vol?'L':'kg',Math.floor(ans/1000),vol?'L':'kg');num(small,ans%1000,small);q.explanation=type===5?`${fmt(x)} − ${fmt(z)} = ${fmt(y)}입니다.`:`${fmt(x)} ${type<2?'+':'−'} ${fmt(y)} = ${fmt(z)}입니다.`;fact('연산',type<2?x+y:x-y,z);
  }
  if(stage===5){const low=r(2,7)*100,move=r(1,4)*100,high=low+move*2,equal=low+move;
