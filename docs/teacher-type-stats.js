@@ -1,5 +1,5 @@
-import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=852a8fa87cf3';
-import {preferenceStats,scoringScope,policyKey} from './scoring-policy.js?v=852a8fa87cf3';
+import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=a7cf9ea93477';
+import {preferenceStats,scoringScope,policyKey} from './scoring-policy.js?v=a7cf9ea93477';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function typeStatsMarkup({data,students,scope='all'}){
  const stats=preferenceStats(data,students),policy=scope==='all'?data.scoringPolicy?.defaults||{}:scoringScope(data.scoringPolicy,scope);

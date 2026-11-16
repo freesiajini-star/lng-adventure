@@ -16,7 +16,7 @@ export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%100
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
  const variants=TYPE_GROUPS[stage]?.[type],variant=variants?.[(Math.max(0,seed-1)>>>0)%variants.length]??type;
- const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
+ const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');if(q.column&&q.visual?.kind==='pairedDials')q.column.readOperands=true;q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
 }
 function makeQuestionRaw(stage,type,seed=1){
  if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');

@@ -1,3 +1,3 @@
-import {artPath} from './art-catalog.js?v=852a8fa87cf3';
+import {artPath} from './art-catalog.js?v=a7cf9ea93477';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderGuess(v){const counts=v.comparison==='cupCounts'||v.rows.some(([name])=>['주전자','물병','냄비'].includes(name)),art=v.reference?.art||(counts?'kettle':'pitcher-water-full'),label=v.reference?.name||(counts?'주전자':'물통');return `<div class="guess-visual"><figure><img src="${artPath(art)}" alt="${counts?'컵의 수로 들이를 비교하는 '+esc(label):esc(label)+'의 실제 들이를 비교하는 그림'}"></figure><table><thead><tr><th>${counts?'용기':'어림한 사람'}</th>${v.rows.map(([name])=>`<th>${esc(name)}</th>`).join('')}</tr></thead><tbody><tr><th>${counts?'컵의 수':'어림한 들이'}</th>${v.rows.map(([,amount])=>`<td>${esc(amount)}</td>`).join('')}</tr></tbody></table></div>`;}

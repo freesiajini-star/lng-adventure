@@ -38,3 +38,5 @@ test('new leading addition digit is entered directly in the result without a car
  for(const [a,b] of [[7200,4700],[9900,100],[95000,6000]]){const model=columnSteps(a,b,'+'),tasks=columnTasks(model);assert.ok(!tasks.some(t=>t.kind==='note'&&t.index===0));assert.ok(tasks.some(t=>t.kind==='result'&&t.index===0&&t.answer==='1'));assert.equal(model.steps.at(-1).notes[0],null);const digits=Array(model.length).fill('');tasks.filter(t=>t.kind==='result').forEach(t=>digits[t.index]=t.answer);assert.equal(Number(digits.join('')),a+b);}
  assert.ok(columnTasks(columnSteps(12000,9000,'+')).some(t=>t.kind==='note'&&t.index===0));
 });
+
+test('paired dial calculations require reading both operands before calculating',()=>{for(const type of [0,1,2,3])for(let seed=1;seed<=40;seed++){const q=makeQuestion(9,type,seed);if(q.visual?.kind==='pairedDials'){assert.equal(q.column.readOperands,true);assert.equal(q.column.a,q.visual.items[0].value);assert.equal(q.column.b,q.visual.items[1].value);}}assert.ok(!makeQuestion(4,0,1).column.readOperands);});
