@@ -1,10 +1,10 @@
-import {selectionCredit,cleanPolicyFlags} from './scoring-policy.js?v=9af4d9107f0c';
-import {createAdvancedDeck} from './advanced-deck.js?v=9af4d9107f0c';
-import {isTeacherClaims} from './teacher-session.js?v=9af4d9107f0c';
-import {publicOverviewSnapshot} from './public-overview.js?v=9af4d9107f0c';
-import {FIREBASE_CONFIG} from './firebase-config.js?v=9af4d9107f0c';
-import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=9af4d9107f0c';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=9af4d9107f0c';
+import {selectionCredit,cleanPolicyFlags} from './scoring-policy.js?v=3f567d69f234';
+import {createAdvancedDeck} from './advanced-deck.js?v=3f567d69f234';
+import {isTeacherClaims} from './teacher-session.js?v=3f567d69f234';
+import {publicOverviewSnapshot} from './public-overview.js?v=3f567d69f234';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=3f567d69f234';
+import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=3f567d69f234';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=3f567d69f234';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);
