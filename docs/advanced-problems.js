@@ -1,4 +1,4 @@
-import {makeScaleQuestion} from './scale-problems.js?v=fe325cda4368';
+import {makeScaleQuestion} from './scale-problems.js?v=7dc80e4c82cc';
 const rng=seed=>{let x=seed>>>0;return()=>{x+=0x6D2B79F5;let z=x;z=Math.imul(z^z>>>15,z|1);z^=z+Math.imul(z^z>>>7,z|61);return((z^z>>>14)>>>0)/4294967296;}};
 const mass=n=>n<1000?n+' g':Math.floor(n/1000)+' kg'+(n%1000?' '+n%1000+' g':'');
 const numeric=(label,answer)=>({kind:'number',label,answer:String(answer),unit:'g'});
