@@ -1,9 +1,9 @@
-import {enlargeWorksheet} from './visual-sizing.js?v=fc046b738e6e';
-import {mountStageGlow} from './stage-glow.js?v=fc046b738e6e';
-import {columnMarkup,mountColumn} from './column-work.js?v=fc046b738e6e';
-import {api} from './firebase-client.js?v=fc046b738e6e';
-import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=fc046b738e6e';
-import {renderVisual} from './visuals.js?v=fc046b738e6e';
+import {enlargeWorksheet} from './visual-sizing.js?v=144680e2030b';
+import {mountStageGlow} from './stage-glow.js?v=144680e2030b';
+import {columnMarkup,mountColumn} from './column-work.js?v=144680e2030b';
+import {api} from './firebase-client.js?v=144680e2030b';
+import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=144680e2030b';
+import {renderVisual} from './visuals.js?v=144680e2030b';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let columnController=null;
 let student=null,preview=false,course=0,stage=1,selected=new Set([1]),q=null,fullQ=null,answers=[],activeField=0,correctCount=0,previewScore=0,rows=[],submitting=false,correctRecorded=false,wrongRecorded=false,usage=null,forcedType=-1,lastActive=Date.now(),busy=false;
@@ -14,7 +14,7 @@ function identity(){ $('#identity').textContent=preview?'미리보기':student?`
 let entryVersion=0,entryFirst=false,proposed='';
 function renderLogin(){preview=true;student=null;identity();renderEntry();mount();}
 function renderEntry(){
- const host=$('#studentEntry');host.innerHTML=`<form id="entryForm" class="student-entry"><label><input id="entryClass" aria-label="반" type="text" inputmode="numeric" maxlength="1" autocomplete="off">반</label><label><input id="entryNumber" aria-label="번호" type="text" inputmode="numeric" maxlength="2" autocomplete="off">번</label><span id="entryNick" class="entry-nick nickpill" hidden></span><button type="button" id="rerollNick" hidden>별명 고르기</button><button type="button" id="confirmNick" hidden disabled>확정</button><label>비밀번호<input id="entryPassword" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" disabled></label><button id="entryConnect" type="submit" disabled>접속</button><span id="entryMessage" role="status"></span></form>`;
+ const host=$('#studentEntry');host.innerHTML=`<form id="entryForm" class="student-entry"><span class="entry-school">봉산초등학교 3학년</span><label><input id="entryClass" aria-label="반" type="text" inputmode="numeric" maxlength="1" autocomplete="off">반</label><label><input id="entryNumber" aria-label="번호" type="text" inputmode="numeric" maxlength="2" autocomplete="off">번</label><span id="entryNick" class="entry-nick nickpill" hidden></span><button type="button" id="rerollNick" hidden>별명 고르기</button><button type="button" id="confirmNick" hidden disabled>확정</button><label>비밀번호<input id="entryPassword" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" disabled></label><button id="entryConnect" type="submit" disabled>접속</button><span id="entryMessage" role="status"></span></form>`;
  let lookupTimer;for(const id of ['entryClass','entryNumber'])$('#'+id).oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'');entryVersion++;proposed='';$('#entryNick').hidden=true;$('#entryConnect').hidden=false;$('#entryConnect').disabled=true;$('#entryPassword').disabled=true;$('#rerollNick').hidden=$('#confirmNick').hidden=true;clearTimeout(lookupTimer);lookupTimer=setTimeout(lookupEntry,350);};$('#rerollNick').onclick=rollNick;$('#confirmNick').onclick=()=>$('#entryForm').requestSubmit();
  $('#entryForm').onsubmit=async e=>{e.preventDefault();if(entryFirst&&!proposed)return;const button=$('#entryConnect');button.disabled=$('#confirmNick').disabled=true;try{const result=await api(entryFirst?'/api/register':'/api/login',{classNo:Number($('#entryClass').value),studentNo:Number($('#entryNumber').value),nickname:proposed,password:$('#entryPassword').value});if(result.needsNickname){entryFirst=true;await lookupEntry();return;}student=result.student;preview=false;identity();$('#entryClass').disabled=$('#entryNumber').disabled=true;$('#rerollNick').hidden=$('#confirmNick').hidden=true;$('#entryNick').hidden=false;$('#entryNick').textContent=nickname(student.nickname);$('#entryPassword').disabled=false;$('#entryPassword').readOnly=true;button.hidden=true;if(result.password){$('#entryPassword').type='text';$('#entryPassword').value=result.password;$('#entryMessage').textContent='처음 비밀번호예요. 알림장에 적어 두세요.';}else{$('#entryPassword').value='';$('#entryPassword').placeholder='';$('#entryMessage').textContent='';}await mount();}catch(e){$('#entryMessage').textContent=e.message;flashNick(false);}finally{button.disabled=false;$('#confirmNick').disabled=!proposed;}};
 }
