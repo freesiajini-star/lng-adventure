@@ -1,5 +1,15 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {createFirebaseAPI} from '../public/firebase-client.js';import {makeQuestion} from '../math.js';
 const memory=()=>{const values=new Map();return{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)}};
+test('student resume and answer accept Firebase stage arrays with null holes',async()=>{
+ const f=fixture();await f.api('/api/register',{classNo:1,studentNo:1,nickname:'고양이'});
+ const stats={correct:1,wrong:0,score:1,total:1,questions:1};
+ f.data.studentDays={'2026-11-15':{c1s01:{total:{correct:1,wrong:0,score:1,total:1},stages:[null,stats],seen:{},sessions:{}}}};
+ assert.deepEqual((await f.api('/api/me')).usage.stages,{'1':1});
+ const q=await f.api('/api/question',{stage:1,type:2});
+ const result=await f.api('/api/answer',{questionId:q.id,answers:makeQuestion(1,2,7).fields.map(x=>x.answer)});
+ assert.equal(result.ok,true);assert.equal(result.usage.stages[1],2);
+ assert.equal(f.data.monthlySummaries['2026-11'].c1s01.total.total,2);
+});
 function fixture({failFirstWrite=false,seed=7,teacherGoogleEmail}={}){const time=new Date('2026-11-15T12:00:00+09:00').getTime(),id='c1s01';let version=0,calls=0;const data={settings:{ready:true,points:{1:1,13:10}},students:{1:{[id]:{id,class_no:1,student_no:1,nickname:'',initialized:false,qrValidAfter:0}}},firstLogin:{1:{[id]:{email:id+'@students.lng-adventure.invalid',password:'123456'}}},credentials:{1:{[id]:{password:'123456',qrSecret:'a'.repeat(64)}}}};
  const get=path=>{let value=data;for(const p of path.split('/').filter(Boolean))value=value?.[p];return structuredClone(value??null);};const set=(path,value)=>{const parts=path.split('/').filter(Boolean);let node=data;for(const p of parts.slice(0,-1))node=node[p]??(node[p]={});node[parts.at(-1)]=structuredClone(value);version++;};
  const jwt=claims=>['e30',Buffer.from(JSON.stringify(claims)).toString('base64url'),'signature'].join('.');

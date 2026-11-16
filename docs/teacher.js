@@ -1,11 +1,11 @@
-import {prepareTeacherGoogle,signInTeacherGoogle} from './teacher-google.js?v=d192a6acac2b';
-import {publicOverviewMarkup} from './public-overview.js?v=d192a6acac2b';
-import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=d192a6acac2b';
-import {dayUsage} from './learning.js?v=d192a6acac2b';
-import {createFirebaseAPI} from './firebase-client.js?v=d192a6acac2b';
-import {createTeacherStorage} from './teacher-session.js?v=d192a6acac2b';
+import {prepareTeacherGoogle,signInTeacherGoogle} from './teacher-google.js?v=0e0afdf041a9';
+import {publicOverviewMarkup} from './public-overview.js?v=0e0afdf041a9';
+import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=0e0afdf041a9';
+import {dayUsage} from './learning.js?v=0e0afdf041a9';
+import {createFirebaseAPI} from './firebase-client.js?v=0e0afdf041a9';
+import {createTeacherStorage} from './teacher-session.js?v=0e0afdf041a9';
 const api=createFirebaseAPI({storage:createTeacherStorage()});
-import {STAGES,NICKS} from './math.js?v=d192a6acac2b';
+import {STAGES,NICKS} from './math.js?v=0e0afdf041a9';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;
@@ -17,9 +17,9 @@ async function mount(){$('#teacherLogout').hidden=false;$('#teacherApp').innerHT
 $('#teacherLogout').onclick=async()=>{await api('/api/logout',{});location.reload();};
 async function refresh(){try{data=await api(`/api/teacher/data?day=${date}&month=${month}`);if(!dirty&&tab!=='credentials')await draw();else if(tab==='credentials'&&!credentials)await draw();await api(`/api/teacher/publish-overview?day=${date}&month=${month}`,{});$('#refreshState').textContent='연결됨 · '+new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());}catch(e){toast(e.message);}}
 const filteredStudents=()=>data.students.filter(s=>cl==='all'||s.class_no===Number(cl));
-const eventsFor=(id,byMonth=false)=>byMonth?data.monthly.filter(e=>e.student_id===id):Object.entries(data.daily?.[id]?.stages||{}).map(([stage,s])=>({student_id:id,stage:Number(stage),correct:s.correct,wrong:s.wrong,points:s.score,total:s.total,questions:s.questions}));
+const eventsFor=(id,byMonth=false)=>byMonth?data.monthly.filter(e=>e.student_id===id):Object.entries(data.daily?.[id]?.stages||{}).filter(([,s])=>s!=null).map(([stage,s])=>({student_id:id,stage:Number(stage),correct:s.correct,wrong:s.wrong,points:s.score,total:s.total,questions:s.questions}));
 const metrics=events=>({correct:events.reduce((s,e)=>s+Number(e.correct??e.ok),0),wrong:events.reduce((s,e)=>s+Number(e.wrong??(!e.ok?1:0)),0),score:events.reduce((s,e)=>s+e.points,0),total:events.reduce((s,e)=>s+(e.total??1),0)});
-function sessionsFor(id){return Object.values(data.daily?.[id]?.sessions||{}).sort((a,b)=>a.start-b.start);}
+function sessionsFor(id){return Object.values(data.daily?.[id]?.sessions||{}).filter(Boolean).sort((a,b)=>a.start-b.start);}
 function risk(id){return dayUsage(data.daily?.[id],[-1,-2].map(n=>data.histories?.[todayOffset(date,n)]?.[id])).hits.filter(Boolean).length;}
 function todayOffset(day,n){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(new Date(day+'T12:00:00+09:00').getTime()+n*86400000));}
 const time=ms=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(ms);
