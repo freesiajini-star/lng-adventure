@@ -1,4 +1,4 @@
-import {artImage,vesselArt,VESSEL_IDS} from './art-catalog.js?v=3a9eb86cd05c';
+import {artImage,vesselArt,VESSEL_IDS} from './art-catalog.js?v=d192a6acac2b';
 export const sourceDefs=()=>`<defs><linearGradient id="sv-metal"><stop stop-color="#a7bec7"/><stop offset=".3" stop-color="#f9fcfc"/><stop offset=".65" stop-color="#d0dee3"/><stop offset="1" stop-color="#96afb9"/></linearGradient><linearGradient id="sv-yellow"><stop stop-color="#ffe9a0"/><stop offset="1" stop-color="#e5ba58"/></linearGradient><linearGradient id="sv-pink"><stop stop-color="#ef9cae"/><stop offset=".4" stop-color="#ffd0d8"/><stop offset="1" stop-color="#d77d93"/></linearGradient><linearGradient id="sv-glass"><stop stop-color="#b6e0e9" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#a5d2df" stop-opacity=".4"/></linearGradient><linearGradient id="sv-water" x2="0" y2="1"><stop stop-color="#a5e4ee"/><stop offset="1" stop-color="#68bfd5"/></linearGradient></defs>`;
 export const transferArrow=(x,y,vertical=false)=>`<g transform="translate(${x} ${y})${vertical?' rotate(90)':''}"><path d="M0-4H22V-10L34 0L22 10V4H0Z" fill="var(--diagram-main-mid,#91ada5)" stroke="var(--stage-ink,#78998e)" stroke-width=".7" stroke-linejoin="round"/></g>`;
 const text=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${s}</text>`;
@@ -19,7 +19,7 @@ export function renderSourceVessels(v){
  let out=defs;
  v.values.forEach((amount,i)=>{
   const x=110+i*210,level=300-110*amount/v.max;
-  out+=`<rect x="${x-93}" y="12" width="186" height="360" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".65" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(${x} 87)"><ellipse cy="41" rx="50" ry="5" fill="#7b9996" opacity=".12"/>${source(v.sources[i])}</g>${text(x,151,v.labels[i]+' '+v.sources[i])}${transferArrow(x,168,true)}<g transform="translate(0 35)"><ellipse cx="${x}" cy="307" rx="49" ry="6" fill="#729b9f" opacity=".12"/><path d="M${x-42} 190V300a42 9 0 0 0 84 0V190" fill="url(#sv-glass)" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-40} ${level}V300a40 8 0 0 0 80 0V${level}" fill="url(#sv-water)" opacity=".85"/><ellipse cx="${x}" cy="${level}" rx="40" ry="8" fill="#b5eaf1" stroke="#6cb9cf" stroke-width="1.2"/><ellipse cx="${x}" cy="190" rx="42" ry="9" fill="#f5fdff" fill-opacity=".5" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-33} 201V293" stroke="white" stroke-width="4" opacity=".8" stroke-linecap="round"/><path d="M${x-42} 300a42 9 0 0 0 84 0" fill="none" stroke="#78aab9" stroke-width="1.5"/></g>`;
+  out+=`<rect x="${x-93}" y="12" width="186" height="360" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".65" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(${x} 87)">${source(v.sources[i])}</g>${text(x,151,v.labels[i]+' '+v.sources[i])}${transferArrow(x,168,true)}<g transform="translate(0 35)"><ellipse cx="${x}" cy="307" rx="49" ry="6" fill="#729b9f" opacity=".12"/><path d="M${x-42} 190V300a42 9 0 0 0 84 0V190" fill="url(#sv-glass)" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-40} ${level}V300a40 8 0 0 0 80 0V${level}" fill="url(#sv-water)" opacity=".85"/><ellipse cx="${x}" cy="${level}" rx="40" ry="8" fill="#b5eaf1" stroke="#6cb9cf" stroke-width="1.2"/><ellipse cx="${x}" cy="190" rx="42" ry="9" fill="#f5fdff" fill-opacity=".5" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-33} 201V293" stroke="white" stroke-width="4" opacity=".8" stroke-linecap="round"/><path d="M${x-42} 300a42 9 0 0 0 84 0" fill="none" stroke="#78aab9" stroke-width="1.5"/></g>`;
  });
  return `<svg viewBox="0 0 640 389" role="img" aria-label="세 용기의 물을 모양과 크기가 같은 투명한 원통 그릇에 각각 옮긴 모습">${out}</svg>`;
 }
@@ -29,7 +29,7 @@ export function renderCupGroups(v){
  let out=sourceDefs();
  v.groups.forEach((g,i)=>{
   const y=16+i*185;
-  out+=`<rect x="14" y="${y}" width="612" height="171" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+73})"><ellipse cy="42" rx="52" ry="5" fill="#7b9996" opacity=".12"/>${source(g.source)}</g>${text(90,y+145,g.label,16)}${transferArrow(164,y+84)}`;
+  out+=`<rect x="14" y="${y}" width="612" height="171" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+73})">${source(g.source)}</g>${text(90,y+145,g.label,16)}${transferArrow(164,y+84)}`;
   // The artwork has transparent side margins; a 52-unit pitch keeps the
   // visible glasses separate while fitting all eight in the existing panel.
   const pitch=52,start=226+(8-g.count)*pitch/2;
