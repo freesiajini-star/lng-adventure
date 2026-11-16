@@ -16,7 +16,15 @@
   "auth": {
     "providers": {
       "anonymous": true,
-      "emailPassword": true
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "들이와 무게 탐험대",
+        "supportEmail": "freesia.jini@gmail.com",
+        "authorizedRedirectUris": [
+          "https://lng-adventure.firebaseapp.com/__/auth/handler",
+          "https://freesiajini-star.github.io"
+        ]
+      }
     }
   }
 }

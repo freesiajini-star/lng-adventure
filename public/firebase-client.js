@@ -1,3 +1,4 @@
+import {isTeacherClaims} from './teacher-session.js';
 import {publicOverviewSnapshot} from './public-overview.js';
 import {FIREBASE_CONFIG} from './firebase-config.js';
 import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js';
@@ -16,7 +17,7 @@ export function createFirebaseAPI({config=FIREBASE_CONFIG,fetchImpl=globalThis.f
  const enabled=()=>config.enabled&&config.apiKey&&config.databaseURL&&config.projectId==='lng-adventure'&&config.requiredPlan==='SPARK';
  const mustEnable=()=>{if(!enabled())fail('새 lng-adventure 무료 Firebase 연결을 먼저 완료해 주세요. 문제 미리보기는 바로 사용할 수 있어요.',503);};
  const claims=()=>{try{return decode(session.idToken.split('.')[1]);}catch{return {};}};
- const role=()=>claims().lngRole||null;
+ const role=()=>{const c=claims();return isTeacherClaims(c,config.teacherGoogleEmail)?'teacher':c.lngRole||null;};
  const sid=()=>claims().lngStudent;
  const persist=()=>{if(role())storage.setItem(key,JSON.stringify(session));else storage.removeItem(key);};
  const authURL=method=>`https://identitytoolkit.googleapis.com/v1/accounts:${method}?key=${encodeURIComponent(config.apiKey)}`;
@@ -59,6 +60,13 @@ export function createFirebaseAPI({config=FIREBASE_CONFIG,fetchImpl=globalThis.f
   if(p==='/api/login')return loginStudent(body);
   if(p==='/api/register')return register(body);
   if(p==='/api/teacher/setup')fail('무료 Firebase용 계정 준비는 초기 설정 도구에서 한 번 실행합니다. 교사 비밀번호는 공개 웹페이지에서 새로 만들지 않습니다.');
+  if(p==='/api/teacher/google-login'){
+   const c=(()=>{try{return decode(body.idToken.split('.')[1]);}catch{return {};}})();
+   if(!isTeacherClaims({...c,lngRole:undefined},config.teacherGoogleEmail))fail('지정된 교사 Google 계정으로 로그인해 주세요.',403);
+   const lookup=await authRequest('lookup',{idToken:body.idToken});
+   if(!lookup.users?.some(u=>u.emailVerified===true&&u.email?.toLowerCase()===config.teacherGoogleEmail?.toLowerCase()))fail('교사 Google 계정을 확인하지 못했습니다.',403);
+   useAuth({idToken:body.idToken,refreshToken:body.refreshToken,expiresIn:Math.max(60,(c.exp||0)-Math.floor(clock()/1000))});return{ok:true};
+  }
   if(p==='/api/teacher/login'){useAuth(await authRequest('signInWithPassword',{email:config.teacherEmail,password:String(body.password||''),returnSecureToken:true}));if(role()!=='teacher'){session=null;persist();fail('교사 계정이 아닙니다.',403);}return{ok:true};}
   if(p==='/api/question'){const s=Number(body.stage),t=Number(body.type);if(!Number.isInteger(s)||s<1||s>17||!Number.isInteger(t)||t<0||t>=TYPE_NAMES[s-1].length)fail('단계를 확인해 주세요.');await requireAllowed(s);if(s===1&&t===0&&body.variant!=null&&(!Number.isInteger(body.variant)||body.variant<0||body.variant>=POUR_VARIANT_COUNT))fail('문항 변형을 확인해 주세요.');const q=makeQuestion(s,t,s===1&&t===0&&body.variant!=null?body.variant:random()),id=crypto.randomUUID();questions.set(id,q);storage.setItem('lng-question:'+id,JSON.stringify(q));return{...publicQuestion(q),id};}
   if(p==='/api/answer'){const id=mustStudent();requireAwake();let q=questions.get(body.questionId);if(!q){try{q=JSON.parse(storage.getItem('lng-question:'+body.questionId));}catch{}}if(!q)fail('새 문제를 불러와 주세요.');if(!Array.isArray(body.answers)||body.answers.length!==q.fields.length)fail('모든 답을 입력해 주세요.');const result=grade(q,body.answers);if(!result.ok){q.hadWrong=true;q.firstWrongAt??=clock();questions.set(body.questionId,q);storage.setItem('lng-question:'+body.questionId,JSON.stringify(q));}const corrected=result.ok&&!!q.hadWrong,points=await db('settings/points','GET',undefined,{ttl:60000}),at=clock(),event={studentId:id,qid:body.questionId,stage:q.stage,ok:result.ok,correction:corrected,firstWrongAt:q.firstWrongAt,points:corrected?0:result.ok?(q.stage>=11?2:(points?.[q.stage]??1)):-1,day:dayKey(q.firstWrongAt??at),at};addQueue(event);try{const saved=await saveEvent(event);return{...result,corrected:result.ok&&saved.corrected,explanation:q.explanation,usage:saved.usage};}catch(e){if(e.status===401||e.status===403||e.status===423)throw e;return{...result,corrected,explanation:q.explanation,pending:true};}}

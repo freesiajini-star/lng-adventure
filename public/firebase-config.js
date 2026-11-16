@@ -2,6 +2,7 @@
 // Filled after the NEW lng-adventure Spark project is created. No old project is used.
 export const FIREBASE_CONFIG={
  enabled:true,
+ teacherGoogleEmail:'freesia.jini@gmail.com',
  projectId:'lng-adventure',
  apiKey:'AIzaSyA7W9qBK_eilQyB0hJPiuLZDJPiuWJPlSc',
  databaseURL:'https://lng-adventure-default-rtdb.asia-southeast1.firebasedatabase.app',

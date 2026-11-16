@@ -1,10 +1,11 @@
-import {publicOverviewMarkup} from './public-overview.js?v=7997b9eb88db';
-import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=7997b9eb88db';
-import {dayUsage} from './learning.js?v=7997b9eb88db';
-import {createFirebaseAPI} from './firebase-client.js?v=7997b9eb88db';
-import {createTeacherStorage} from './teacher-session.js?v=7997b9eb88db';
+import {prepareTeacherGoogle,signInTeacherGoogle} from './teacher-google.js?v=8019dbee1674';
+import {publicOverviewMarkup} from './public-overview.js?v=8019dbee1674';
+import {teacherOverview,bindTeacherOverview} from './teacher-overview.js?v=8019dbee1674';
+import {dayUsage} from './learning.js?v=8019dbee1674';
+import {createFirebaseAPI} from './firebase-client.js?v=8019dbee1674';
+import {createTeacherStorage} from './teacher-session.js?v=8019dbee1674';
 const api=createFirebaseAPI({storage:createTeacherStorage()});
-import {STAGES,NICKS} from './math.js?v=7997b9eb88db';
+import {STAGES,NICKS} from './math.js?v=8019dbee1674';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;
@@ -38,8 +39,9 @@ setInterval(()=>{if(data&&!document.hidden&&!dirty&&tab!=='credentials')refresh(
 
 async function mountPublic(){
  $('#teacherLogout').hidden=true;
- $('#teacherApp').innerHTML='<div class="teacher-shell"><div class="teacher-top"><div><h1>들이와 무게 탐험대 · 학습 현황</h1><p>학급·단계별 집계</p></div><button id="teacherAccess">교사 전용 기능</button></div><section class="paper teacher-content"><button id="publicRefresh">현황 새로고침</button><div id="publicOverview" aria-live="polite">집계를 불러오는 중입니다.</div></section></div>';
- $('#teacherAccess').onclick=()=>{const dialog=document.createElement('dialog');dialog.innerHTML='<h2>교사 전용 기능</h2><p>학생 비밀번호·개인 QR·설정은 선생님 전용 바로가기로 열어 주세요.</p><button>닫기</button>';dialog.querySelector('button').onclick=()=>{dialog.close();dialog.remove();};document.body.append(dialog);dialog.showModal();};
+ $('#teacherApp').innerHTML='<div class="teacher-shell"><div class="teacher-top"><div><h1>들이와 무게 탐험대 · 학습 현황</h1><p>학급·단계별 집계</p></div><button id="teacherAccess">Google로 교사 로그인</button></div><section class="paper teacher-content"><button id="publicRefresh">현황 새로고침</button><div id="publicOverview" aria-live="polite">집계를 불러오는 중입니다.</div></section></div>';
+ prepareTeacherGoogle().catch(()=>{});
+ $('#teacherAccess').onclick=async()=>{const button=$('#teacherAccess');button.disabled=true;button.textContent='로그인 중…';try{await signInTeacherGoogle(api);await mount();}catch(e){toast(e.message);}finally{if(button.isConnected){button.disabled=false;button.textContent='Google로 교사 로그인';}}};
  const refreshPublic=async()=>{try{$('#publicOverview').innerHTML=publicOverviewMarkup(await api('/api/public-overview'),STAGES);}catch{$('#publicOverview').innerHTML='<p>공개 집계를 불러오지 못했습니다. 잠시 후 다시 확인해 주세요.</p>';}};
  $('#publicRefresh').onclick=refreshPublic;await refreshPublic();
 }

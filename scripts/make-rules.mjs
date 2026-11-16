@@ -1,6 +1,9 @@
+import {FIREBASE_CONFIG} from '../public/firebase-config.js';
 import {writeFileSync,mkdirSync} from 'node:fs';
-const teacher="auth != null && auth.token.lngRole == 'teacher'";
-const reader="auth != null && (auth.token.lngRole == 'teacher' || auth.token.lngRole == 'student')";
+const googleEmail=FIREBASE_CONFIG.teacherGoogleEmail;
+const googleTeacher=googleEmail?"auth.token.email_verified == true && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email == "+JSON.stringify(googleEmail):'false';
+const teacher="auth != null && (auth.token.lngRole == 'teacher' || ("+googleTeacher+"))";
+const reader="("+teacher+") || (auth != null && auth.token.lngRole == 'student')";
 const owner="auth != null && auth.token.lngRole == 'student' && auth.token.lngStudent == $student && (auth.token.lngKind != 'qr' || auth.token.auth_time >= root.child('lngAdventure/students').child(auth.token.lngClass + '').child($student).child('qrValidAfter').val())";
 const awake="(now + 32400000) % 86400000 >= 21600000 && (now + 32400000) % 86400000 < 75600000";
 const aggregate={'.validate':"newData.hasChildren(['correct','wrong','score','total']) && newData.child('correct').isNumber() && newData.child('wrong').isNumber() && newData.child('score').isNumber() && newData.child('total').isNumber() && newData.child('correct').val() >= 0 && newData.child('wrong').val() >= 0 && newData.child('total').val() == newData.child('correct').val() + newData.child('wrong').val()"};

@@ -1,6 +1,6 @@
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=7997b9eb88db';
-import {artImage,vesselArt} from './art-catalog.js?v=7997b9eb88db';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=7997b9eb88db';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=8019dbee1674';
+import {artImage,vesselArt} from './art-catalog.js?v=8019dbee1674';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=8019dbee1674';
 // Interior coordinates of the EMPTY artwork. Rim ellipses, sleeves, labels and
 // reflections are not changes in the vessel's internal radius.
 const profiles={...ART_PROFILES,
