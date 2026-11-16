@@ -1,6 +1,7 @@
-import {FIREBASE_CONFIG} from './firebase-config.js?v=c51d5d366659';
-import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=c51d5d366659';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=c51d5d366659';
+import {publicOverviewSnapshot} from './public-overview.js?v=7997b9eb88db';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=7997b9eb88db';
+import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=7997b9eb88db';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly} from './learning.js?v=7997b9eb88db';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);
@@ -63,6 +64,8 @@ export function createFirebaseAPI({config=FIREBASE_CONFIG,fetchImpl=globalThis.f
   if(p==='/api/answer'){const id=mustStudent();requireAwake();let q=questions.get(body.questionId);if(!q){try{q=JSON.parse(storage.getItem('lng-question:'+body.questionId));}catch{}}if(!q)fail('새 문제를 불러와 주세요.');if(!Array.isArray(body.answers)||body.answers.length!==q.fields.length)fail('모든 답을 입력해 주세요.');const result=grade(q,body.answers);if(!result.ok){q.hadWrong=true;q.firstWrongAt??=clock();questions.set(body.questionId,q);storage.setItem('lng-question:'+body.questionId,JSON.stringify(q));}const corrected=result.ok&&!!q.hadWrong,points=await db('settings/points','GET',undefined,{ttl:60000}),at=clock(),event={studentId:id,qid:body.questionId,stage:q.stage,ok:result.ok,correction:corrected,firstWrongAt:q.firstWrongAt,points:corrected?0:result.ok?(q.stage>=11?2:(points?.[q.stage]??1)):-1,day:dayKey(q.firstWrongAt??at),at};addQueue(event);try{const saved=await saveEvent(event);return{...result,corrected:result.ok&&saved.corrected,explanation:q.explanation,usage:saved.usage};}catch(e){if(e.status===401||e.status===403||e.status===423)throw e;return{...result,corrected,explanation:q.explanation,pending:true};}}
   if(p==='/api/presence'){const id=mustStudent();await db(`presence/${id}`,'PUT',{stage:Number(body.stage),at:{'.sv':'timestamp'},visible:!!body.visible,last_activity:body.active?{'.sv':'timestamp'}:clock()-300001});await flush();return{ok:true,night:night(clock()),usage:await usage(id)};}
   if(p==='/api/rankings'){const id=mustStudent(),c=classOf(id),month=url.searchParams.get('month')||dayKey(clock()).slice(0,7),stage=Number(url.searchParams.get('stage')||1),all=url.searchParams.get('all')==='1';const contributions=await db('classContributions/'+month,'GET',undefined,{ttl:120000})||{};const rows=Object.values(contributions).map(x=>({...x,stage:0}));const types=all?Array.from({length:17},(_,i)=>i+1):[stage];for(const n of types){const ranks=await db(`rankings/${month}/${c}/${n}`,'GET',undefined,{ttl:120000});rows.push(...Object.values(ranks||{}).map(x=>({...x,stage:n})));}return{month,classNo:c,rows};}
+  if(p==='/api/public-overview')return db('publicOverview','GET',undefined,{ttl:30000});
+  if(p==='/api/teacher/publish-overview'){mustTeacher();const data=await teacherData(url);await db('publicOverview','PUT',publicOverviewSnapshot(data,clock()));return{ok:true};}
   if(p==='/api/teacher/data')return teacherData(url);
   if(p==='/api/teacher/credentials'){mustTeacher();const c=Number(url.searchParams.get('class'));if(c<1||c>5)fail('반을 확인해 주세요.');const profiles=await db('students/'+c),secrets=await db('credentials/'+c);return{students:Object.values(profiles||{}).map(s=>({...s,password:secrets[s.id].password,qr_token:encode({id:s.id,secret:secrets[s.id].qrSecret})}))};}
   if(p==='/api/teacher/points'){mustTeacher();const values={};for(let i=1;i<=17;i++){const n=Number(body[i]);if(!Number.isInteger(n)||n<1||n>100)fail('배점은 1~100 사이의 정수로 입력해 주세요.');values[i]=n;}await db('settings/points','PUT',values);return{ok:true};}

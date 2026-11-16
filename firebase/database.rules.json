@@ -3,6 +3,74 @@
     ".read": false,
     ".write": false,
     "lngAdventure": {
+      "publicOverview": {
+        ".read": true,
+        ".write": "auth != null && auth.token.lngRole == 'teacher'",
+        ".validate": "newData.hasChildren(['updatedAt','month','classes','stages'])",
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 10000"
+        },
+        "month": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}$/)"
+        },
+        "classes": {
+          ".validate": "newData.hasChildren(['c1','c2','c3','c4','c5'])",
+          "$class": {
+            ".validate": "newData.hasChildren(['participants','correct','wrong','score','total','connected']) && newData.child('total').val() == newData.child('correct').val() + newData.child('wrong').val() && $class.matches(/^c[1-5]$/)",
+            "participants": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "correct": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "wrong": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "score": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0"
+            },
+            "total": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "connected": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "stages": {
+          ".validate": "newData.hasChildren(['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16','s17'])",
+          "$stage": {
+            ".validate": "newData.hasChildren(['participants','correct','wrong','score','total','connected']) && newData.child('total').val() == newData.child('correct').val() + newData.child('wrong').val() && $stage.matches(/^s([1-9]|1[0-7])$/)",
+            "participants": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "correct": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "wrong": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "score": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0"
+            },
+            "total": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "connected": {
+              ".validate": "newData.isNumber() && newData.val() % 1 == 0 && newData.val() >= 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      },
       "settings": {
         "ready": {
           ".read": true,

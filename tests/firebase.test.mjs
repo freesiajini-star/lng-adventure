@@ -43,3 +43,15 @@ test('teacher access persists across tabs and stays separate from student sessio
  assert.equal(nextTab.getItem(key),null);assert.equal(temporary.getItem(key),student);
  nextTab.setItem(key,student);assert.equal(nextTab.getItem(key),null);
 });
+
+import {publicOverviewSnapshot} from '../public/public-overview.js';
+test('public overview publishes aggregate counts without student identifiers or login secrets',async()=>{
+ const snapshot=publicOverviewSnapshot({month:'2026-11',students:[{id:'private-id',class_no:1,student_no:12,nickname:'secret-name',visible:true,at:1000,stage:2,password:'private-password',qr_token:'private-qr'}],monthly:[{student_id:'private-id',stage:2,correct:3,wrong:1,total:4,points:2}]},1000);
+ assert.deepEqual(snapshot.classes.c1,{participants:1,correct:3,wrong:1,total:4,score:2,connected:1});
+ assert.equal(snapshot.stages.s2.participants,1);assert.equal(snapshot.stages.s2.total,4);
+ const json=JSON.stringify(snapshot);for(const text of['private-id','secret-name','private-password','private-qr','student_no','student_id'])assert.ok(!json.includes(text));
+ const f=fixture();assert.equal(await f.api('/api/public-overview'),null);
+ await assert.rejects(()=>f.api('/api/teacher/publish-overview',{}),/교사/);
+ await f.api('/api/teacher/login',{password:'test-only'});await f.api('/api/teacher/publish-overview',{});await f.api('/api/logout');
+ assert.ok((await f.api('/api/public-overview')).classes.c1);await assert.rejects(()=>f.api('/api/teacher/credentials?class=1'),/교사/);
+});
