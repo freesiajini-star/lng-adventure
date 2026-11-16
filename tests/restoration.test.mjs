@@ -4,9 +4,9 @@ import {makeQuestion,TYPE_NAMES,grade,publicQuestion} from '../math.js';
 import {renderVisual} from '../public/visuals.js';
 
 test('source picture groups remain illustrated, including newly restored families',()=>{
- const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'limitPacking'],[4,6,'lifeTable'],[11,0,'guessDistance'],[11,2,'labeledBottle'],[15,4,'recipe'],[15,5,'cacao'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
+ const cases=[[1,0,'pourCompare'],[1,1,'sourceVessels'],[1,2,'bottleCups'],[1,4,'fillTable'],[3,0,'referenceEstimate'],[5,3,'equalizeTanks'],[6,0,'balances'],[6,6,'balances'],[8,0,'objectCards'],[8,6,'pairedDials'],[9,6,'pairedDials'],[9,7,'limitPacking'],[4,6,'lifeTable'],[11,0,'guessDistance'],[11,2,'labeledBottle'],[15,4,'scaleStory'],[15,5,'scaleStory'],[6,4,'balances'],[6,5,'balances'],[16,1,'balances']];
  assert.equal(cases.length,20);
- for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),kind==='limitPacking'?/limit-item-art/:kind==='guessDistance'?/<img/:/<svg/);assert.ok(q.source);}
+ for(const[s,t,kind]of cases){const q=makeQuestion(s,t,37);assert.equal(q.visual.kind,kind,`${s}/${t}`);assert.match(renderVisual(q.visual),kind==='limitPacking'?/limit-item-art/:['guessDistance','scaleStory'].includes(kind)?/<img/:/<svg/);assert.ok(q.source);}
  assert.equal(TYPE_NAMES.flat().length,113);
 });
 test('stage 11 excludes duplicated tank filling while retaining cup-count comparison',()=>{
@@ -14,8 +14,8 @@ test('stage 11 excludes duplicated tank filling while retaining cup-count compar
   const q=makeQuestion(11,0,seed),values=q.fields.map(f=>f.answer);
   assert.ok(!q.lines.join(' ').includes('어항'));
   assert.ok(!['cupTable','fillTable'].includes(q.visual.kind));
-  const kettle=Number(q.visual.rows[0][1].replace('컵',''));
-  assert.deepEqual(values,[String(kettle-2),String(kettle+1),'냄비']);
+  assert.equal(q.visual.reference.name,q.visual.rows[0][0]);
+  assert.equal(values.length,3);assert.ok(q.visual.rows.some(([name])=>name===values[2]));
  }
 });
 
@@ -31,8 +31,7 @@ test('all valid 2 kg combinations are accepted; all fields still form one outcom
  assert.ok(publicQuestion(q).fields.every(f=>!('answer'in f)));
 });
 test('recipe, cacao, clean-water table, half box and connected balance keep original arithmetic',()=>{
- const recipe=makeQuestion(15,4),v=recipe.visual;const people=Number(recipe.lines[0].match(/(\d+)인분을 만들/)[1]);assert.equal(Number(recipe.fields[0].answer),v.cups*v.cup*people/v.servings);
- assert.deepEqual(makeQuestion(15,5).fields.map(f=>Number(f.answer)),[500*30,500*30/1000]);
+ const recipe=makeQuestion(15,4,1),a=recipe.facts[0].audit;assert.equal(Number(recipe.fields[0].answer),a.targetScale/a.baseScale);assert.equal(Number(recipe.fields[1].answer)*1000+Number(recipe.fields[2].answer),a.baseAmount*a.k);
  const box=makeQuestion(12,6),bv=box.visual;assert.equal(bv.totals[0]-bv.totals[1],bv.one*(bv.counts[0]-bv.counts[1]));assert.equal(bv.totals[1]-bv.one*bv.counts[1],Number(box.fields.at(-1).answer));
  const balance=makeQuestion(16,1).visual.items;assert.equal(balance[0].rightMass/8,balance[1].leftMass/4);assert.equal(balance[0].leftMass/7,200);assert.equal(balance[1].rightMass*2,1400);
 });

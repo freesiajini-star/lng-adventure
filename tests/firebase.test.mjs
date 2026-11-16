@@ -78,3 +78,23 @@ test('Google teacher access requires the designated, verified Google identity',a
  const persistent=memory(),temporary=memory(),storage=createTeacherStorage({persistent,temporary,teacherGoogleEmail:email});
  const value=JSON.stringify({idToken:token(claims),refreshToken:'test'});storage.setItem('lng-auth:lng-adventure',value);assert.equal(createTeacherStorage({persistent,temporary,teacherGoogleEmail:email}).getItem('lng-auth:lng-adventure'),value);
 });
+test('selected-only policy gives zero for both outcomes, mixed credit and practice exceptions remain normal',async()=>{
+ const f=fixture();await f.api('/api/register',{classNo:1,studentNo:1,nickname:'고양이'});
+ f.data.settings.scoringPolicy={version:1,defaults:{configured:true,blocked:{s4t2:true}},classes:{},updatedAt:0};
+ const answers=makeQuestion(4,2,7).fields.map(x=>x.answer),bad=answers.map(()=> '999999');
+ const selected=await f.api('/api/question',{stage:4,type:2,selectionMode:'selected'});assert.equal(selected.creditEligible,false);
+ assert.equal((await f.api('/api/answer',{questionId:selected.id,answers:bad})).ok,false);
+ assert.equal((await f.api('/api/answer',{questionId:selected.id,answers})).corrected,true);
+ const mixed=await f.api('/api/question',{stage:4,type:2,selectionMode:'mixed'});assert.equal(mixed.creditEligible,true);await f.api('/api/answer',{questionId:mixed.id,answers});
+ let d=f.data.studentDays['2026-11-15'].c1s01;assert.equal(d.total.score,1);assert.deepEqual(d.types.s4t2,{total:2,mixed:1,selected:1,correct:1,wrong:1});
+ await assert.rejects(()=>f.api('/api/teacher/scoring-policy',{scope:'all',blocked:{},practice:{}}),/교사/);
+ await f.api('/api/teacher/login',{password:'test-only'});await f.api('/api/teacher/scoring-policy',{scope:'all',blocked:{s4t2:true},practice:{s4t2:true}});
+ assert.equal(f.data.settings.scoringPolicy.defaults.practice.s4t2,true);await f.api('/api/logout',{});await f.api('/api/login',{classNo:1,studentNo:1,password:'123456'});
+ const practice=await f.api('/api/question',{stage:4,type:2,selectionMode:'selected'});assert.equal(practice.creditEligible,true);await f.api('/api/answer',{questionId:practice.id,answers});assert.equal(f.data.studentDays['2026-11-15'].c1s01.total.score,2);
+ assert.equal(f.data.monthlySummaries['2026-11'].c1s01.types.s4t2.total,3);
+});
+test('teacher data accepts sparse numeric stage records and presence keeps earlier visit dates',async()=>{
+ const f=fixture();await f.api('/api/register',{classNo:1,studentNo:1,nickname:'고양이'});f.data.presence={c1s01:{visits:{'2026-11-14':1}}};await f.api('/api/presence',{stage:1,visible:true,active:true});assert.equal(f.data.presence.c1s01.visits['2026-11-14'],1);assert.ok(f.data.presence.c1s01.visits['2026-11-15']);
+ const stages=[null,{correct:1,wrong:0,score:1,total:1,questions:1}];f.data.dailySummaries={'2026-11-15':{1:{c1s01:{total:{total:1},stages,sessions:{}}}}};f.data.monthlySummaries={'2026-11':{c1s01:{stages},empty:null}};
+ await f.api('/api/teacher/login',{password:'test-only'});const data=await f.api('/api/teacher/data?day=2026-11-15&month=2026-11');assert.equal(data.monthly.length,1);assert.equal(data.monthly[0].stage,1);assert.equal(data.daily.c1s01.stages[1].questions,1);
+});

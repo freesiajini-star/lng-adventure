@@ -15,13 +15,11 @@ export function source(name){
  return `<path d="M27-10C65-22 65 35 27 25" fill="none" stroke="#b85f76" stroke-width="10"/><path d="M27-10C65-22 65 35 27 25" fill="none" stroke="#f2b7c1" stroke-width="5"/><path d="M-29-23H29V26Q29 37 0 37T-29 26Z" fill="url(#sv-pink)" stroke="#ad6477" stroke-width="1.8"/><ellipse cy="-23" rx="29" ry="6" fill="#ffe0e3" stroke="#ad6477"/><ellipse cy="-23" rx="24" ry="3" fill="#b7e2e9"/><path d="M-22-13V22" stroke="#ffe8eb" stroke-width="4" opacity=".8" stroke-linecap="round"/>`;
 }
 export function renderSourceVessels(v){
- const defs=sourceDefs();
- let out=defs;
+ let out=sourceDefs();
  v.values.forEach((amount,i)=>{
-  const x=110+i*210,level=300-110*amount/v.max;
-  out+=`<rect x="${x-93}" y="12" width="186" height="360" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".65" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(${x} 87)">${source(v.sources[i])}</g>${text(x,151,v.labels[i]+' '+v.sources[i])}${transferArrow(x,168,true)}<g transform="translate(0 35)"><ellipse cx="${x}" cy="307" rx="49" ry="6" fill="#729b9f" opacity=".12"/><path d="M${x-42} 190V300a42 9 0 0 0 84 0V190" fill="url(#sv-glass)" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-40} ${level}V300a40 8 0 0 0 80 0V${level}" fill="url(#sv-water)" opacity=".85"/><ellipse cx="${x}" cy="${level}" rx="40" ry="8" fill="#b5eaf1" stroke="#6cb9cf" stroke-width="1.2"/><ellipse cx="${x}" cy="190" rx="42" ry="9" fill="#f5fdff" fill-opacity=".5" stroke="#78aab9" stroke-width="1.8"/><path d="M${x-33} 201V293" stroke="white" stroke-width="4" opacity=".8" stroke-linecap="round"/><path d="M${x-42} 300a42 9 0 0 0 84 0" fill="none" stroke="#78aab9" stroke-width="1.5"/></g>`;
- });
- return `<svg viewBox="0 0 640 389" role="img" aria-label="세 용기의 물을 모양과 크기가 같은 투명한 원통 그릇에 각각 옮긴 모습">${out}</svg>`;
+  const x=110+i*210,top=211,bottom=320,h=bottom-top,level=bottom-h*amount/v.max,id='comparison-liquid-'+i;
+  out+=`<rect x="${x-93}" y="12" width="186" height="360" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".65" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(${x} 87)">${source(v.sources[i])}</g>${text(x,151,v.labels[i]+' '+v.sources[i])}${transferArrow(x,168,true)}<defs><clipPath id="${id}"><path d="M${x-44} ${top}H${x+44}V${bottom}Q${x} ${bottom+8} ${x-44} ${bottom}Z"/></clipPath></defs><g class="comparison-cylinder" data-value="${amount}" data-level="${level}" data-bottom="${bottom}" data-height="${h}" data-max="${v.max}"><g clip-path="url(#${id})"><rect x="${x-44}" y="${level}" width="88" height="${bottom-level+8}" fill="url(#sv-water)" opacity=".8"/><ellipse cx="${x}" cy="${level}" rx="44" ry="6" fill="#b4eaf2" stroke="#69b8c9"/></g>${artImage('comparisonCylinder',x-72,180,144,168)}</g>`;
+ });return `<svg viewBox="0 0 640 389" role="img" aria-label="세 용기의 물을 모양과 크기가 같은 투명한 원통 그릇에 각각 옮긴 모습">${out}</svg>`;
 }
 
 function cup(x,y){return artImage('glass-water-full',x-29.7,y-8.8,59.4,69.3);}

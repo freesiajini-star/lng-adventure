@@ -72,6 +72,60 @@
         }
       },
       "settings": {
+        "scoringPolicy": {
+          ".read": "(auth != null && (auth.token.lngRole == 'teacher' || (auth.token.email_verified == true && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email == \"freesia.jini@gmail.com\"))) || (auth != null && auth.token.lngRole == 'student')",
+          ".write": "auth != null && (auth.token.lngRole == 'teacher' || (auth.token.email_verified == true && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email == \"freesia.jini@gmail.com\"))",
+          ".validate": "newData.hasChildren(['version','updatedAt']) && newData.child('version').val() == 1",
+          "version": {
+            ".validate": "newData.val() == 1"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 10000"
+          },
+          "defaults": {
+            ".validate": "newData.hasChildren(['configured']) && newData.child('configured').val() == true",
+            "configured": {
+              ".validate": "newData.val() == true"
+            },
+            "blocked": {
+              "$type": {
+                ".validate": "newData.isBoolean() && $type.matches(/^s([1-9]|1[0-7])t[0-9]$/)"
+              }
+            },
+            "practice": {
+              "$type": {
+                ".validate": "newData.isBoolean() && $type.matches(/^s([1-9]|1[0-7])t[0-9]$/)"
+              }
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "classes": {
+            "$class": {
+              ".validate": "newData.hasChildren(['configured']) && newData.child('configured').val() == true && $class.matches(/^c[1-5]$/)",
+              "configured": {
+                ".validate": "newData.val() == true"
+              },
+              "blocked": {
+                "$type": {
+                  ".validate": "newData.isBoolean() && $type.matches(/^s([1-9]|1[0-7])t[0-9]$/)"
+                }
+              },
+              "practice": {
+                "$type": {
+                  ".validate": "newData.isBoolean() && $type.matches(/^s([1-9]|1[0-7])t[0-9]$/)"
+                }
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
         "ready": {
           ".read": true,
           ".write": "auth != null && (auth.token.lngRole == 'teacher' || (auth.token.email_verified == true && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email == \"freesia.jini@gmail.com\"))"

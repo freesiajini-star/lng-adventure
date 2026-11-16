@@ -1,6 +1,7 @@
+import {ADDITIONAL_ART} from './additional-art.js?v=179a427bc0f8';
 // ImageGen artwork is stored as independent files. Quantities and markings stay in code.
 const CLEAN_ART=new Set(["plate","tap","dialScaleBody","berry","carrier-8","carrier-13","limit-16-0","carrier-1","kiwi","bathtub","sweetPotato","potato","carrot","radish","pumpkin","cabbage","limit-15-4","carrier-11"]);
-export const artPath=id=>`./assets/art/${id}-${CLEAN_ART.has(id)?'v2':'v1'}.webp`;
+export const artPath=id=>ADDITIONAL_ART[id]||`./assets/art/${id}-${CLEAN_ART.has(id)?'v2':'v1'}.webp`;
 export const artImage=(id,x,y,w,h=w)=>`<image class="painted-art" href="${artPath(id)}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/>`;
 export const VESSEL_IDS={물통:'pitcher',물병:'waterBottle',주스병:'juiceBottle',유리컵:'glass',머그컵:'mug',머그잔:'mug',텀블러:'tumbler',유리그릇:'bowl',대접:'bowl',계량컵:'measureJug',꽃병:'vase'};
 export function vesselArt(name,state='water-full'){const id=VESSEL_IDS[name]||name;return ['kettle','smallCup','milkCarton','juiceCarton'].includes(id)?id:`${id}-${state}`;}
@@ -13,5 +14,5 @@ export function lifeArtwork(row){const i=row.index||0;switch(row.art){
  case'tank':return'aquarium';case'fruit':return ['concentrate-strawberry','concentrate-grape','concentrate-peach','concentrate-lemon'][i];
  case'bubble':return'bubble-'+i;case'paint':return'paint';case'measure':return'measureJug-water-half';
  case'bottle':case'camp':return'waterBottle-water-full';case'rain':return'rainBucket';case'balloon':return'balloon-'+i;
- case'juice':return'glass-juice-full';case'soup':return ['soup-potato','soup-corn','soup-vegetable','soup-tomato'][i];case'rice':return'rice';case'tap':return'tap';case'ice':return'ice';case'vase':return ['vase-small','vase-round','vase-tall','vase-large'][i];case'fountain':return'fountain';case'snack':return i%2?'glass-juice-full':'glass-milk-full';default:throw Error('Missing picture: '+row.art);
+ case'juice':return'glass-juice-full';case'soup':return ['soup-potato','soup-corn','soup-vegetable','soup-tomato'][i];case'rice':return'rice';case'tap':return'tap';case'ice':return'ice';case'vase':return ['vase-small','vase-round','vase-tall','vase-large'][i];case'fountain':return'fountain-'+i;case'snack':return i%2?'glass-juice-full':'glass-milk-full';default:throw Error('Missing picture: '+row.art);
  }}

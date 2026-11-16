@@ -4,13 +4,14 @@ export function visualFactor(stage,type){
  if(stage===1&&[1,2,3,4,5].includes(type)||stage===10&&[0,1].includes(type))return 1.5;
  if(stage===3&&[1,2,3].includes(type))return 1.2;
  if(stage===4&&type===6)return 1.3;
+ if(stage===17)return 1.1;
  if(stage===8&&[0,2,4,5,6].includes(type))return 1.1;
  return 1;
 }
 export function enlargeWorksheet(box){
  if(!box)return;const factor=visualFactor(Number(box.dataset.worksheetStage),Number(box.dataset.type));
  if(factor===1)return;
- const drawings=[...box.querySelectorAll('svg')].filter(svg=>!svg.parentElement.closest('svg'));
+ const drawings=[...box.querySelectorAll('svg')].filter(svg=>!svg.parentElement.closest('svg')&&!svg.classList.contains('electronic-weighing'));
  for(const drawing of drawings){
   if(drawing.dataset.originalStyle!==undefined)drawing.setAttribute('style',drawing.dataset.originalStyle);
   else drawing.dataset.originalStyle=drawing.getAttribute('style')||'';
@@ -26,4 +27,11 @@ export function enlargeWorksheet(box){
   Object.assign(drawing.style,{width:width*ratio+'px',height:height*ratio+'px',maxWidth:'100%',maxHeight:'none',flexShrink:'0'});
  }
  box.dataset.enlargement=String(factor);
+}
+
+export function fitDiagramText(box){
+ if(!box)return;const stage=Number(box.dataset.worksheetStage),type=Number(box.dataset.type);
+ if(!(stage===1&&box.dataset.visual==='fillTable'||[7,10,12].includes(stage)&&box.querySelector('.electronic-weighing')))return;
+ const size=parseFloat(getComputedStyle(document.querySelector('.question-text')).fontSize)*.95;
+ for(const text of box.querySelectorAll('svg text')){const scale=Math.hypot(text.getScreenCTM().a,text.getScreenCTM().b);if(!scale)continue;text.dataset.originalSize??=text.getAttribute('font-size')||'18';text.setAttribute('font-size',Math.min(Number(text.dataset.originalSize),size/scale));}
 }

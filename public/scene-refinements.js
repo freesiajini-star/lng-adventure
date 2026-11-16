@@ -18,10 +18,10 @@ export function renderPlateDial(v){
 }
 export function renderSumDifference(v){
  const unit=v.unit||'mL',start=155,full=385,b=full*v.values[0]/v.values[1],d=full-b;
- const gel=(x,y,width,fill)=>`<g class="jelly-bar"><rect x="${x}" y="${y+4}" width="${width}" height="44" rx="15" fill="#344b6720"/><rect x="${x}" y="${y}" width="${width}" height="44" rx="15" fill="url(#${fill})" stroke="var(--stage-ink,#549d9e)" stroke-width="1.5"/><rect x="${x+8}" y="${y+4}" width="${Math.max(2,width-16)}" height="13" rx="7" fill="url(#bar-gloss)"/><path d="M${x+10} ${y+31}Q${x+width/2} ${y+43} ${x+width-10} ${y+31}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="2"/></g>`;
+ const gel=(x,y,width,fill)=>`<g class="jelly-bar"><rect x="${x}" y="${y+4}" width="${width}" height="44" rx="15" fill="#344b6720"/><rect x="${x}" y="${y}" width="${width}" height="44" rx="15" fill="url(#${fill})" stroke="var(--stage-ink,#549d9e)" stroke-width="1.5"/><rect x="${x+8}" y="${y+4}" width="${Math.max(2,width-16)}" height="13" rx="7" fill="url(#bar-gloss)"/><ellipse cx="${x+width*.17}" cy="${y+10}" rx="${Math.min(20,width*.1)}" ry="3" fill="#fff" fill-opacity=".45"/><path d="M${x+10} ${y+31}Q${x+width/2} ${y+43} ${x+width-10} ${y+31}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="2"/></g>`;
  return svg(660,235,`<defs><linearGradient id="bar-equal" x2="0" y2="1"><stop stop-color="var(--diagram-main-top,#c4ffff)"/><stop offset=".45" stop-color="var(--diagram-main-mid,#6ed4d0)"/><stop offset="1" stop-color="var(--diagram-main-bottom,#62b4bc)"/></linearGradient><linearGradient id="bar-difference" x2="0" y2="1"><stop stop-color="var(--diagram-extra-top,#fff0bb)"/><stop offset=".45" stop-color="var(--diagram-extra-mid,#ffd27a)"/><stop offset="1" stop-color="var(--diagram-extra-bottom,#e9af60)"/></linearGradient><linearGradient id="bar-gloss" x2="0" y2="1"><stop stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>`+
  tx(80,69,v.labels[0],18)+tx(80,140,v.labels[1],18)+gel(start,39,b,'bar-equal')+gel(start,110,full,'bar-difference')+gel(start,110,b,'bar-equal')+
- tx(start+b/2,68,'?',23)+tx(start+b/2,139,'?',23)+`<path d="M${start+b} 164v9h${d}v-9" fill="none" stroke="var(--stage-ink,#9d7d49)" stroke-width="1.6"/>`+tx(start+b+d/2,197,'차이 '+v.diff+' '+unit,16)+tx(330,225,'전체 '+v.total+' '+unit,18),'두 양의 전체와 차이를 나타낸 모형. 같은 색 부분의 양은 같습니다.');
+ tx(start+b/2,68,'?',23)+tx(start+b/2,139,'?',23)+`<path d="M${start+b-3} 164v9h${d}v-9" fill="none" stroke="var(--stage-ink,#9d7d49)" stroke-width="1.6"/>`+tx(start+b+d/2-3,197,'차이 '+v.diff+' '+unit,16)+tx(330,225,'전체 '+v.total+' '+unit,18),'두 양의 전체와 차이를 나타낸 모형. 같은 색 부분의 양은 같습니다.');
 }
 export function renderFlowScene(v){
  const entries=v.inlets||[v.inflow],tank=v.container==='수조',rate=n=>typeof n==='number'||n==='?'?n+' mL / 초':n;
@@ -33,10 +33,10 @@ export function renderFlowScene(v){
  // Face the two spouts inward, directly above the neck. Water falls vertically;
  // its path must never be bent to compensate for a misplaced faucet.
  entries.forEach((n,i)=>{const pair=entries.length===2,left=pair&&i===0,x=pair?(left?204:304):299,spout=left?293:315,end=surface,faucet=artImage('tap',x,30,100,85);
-  c+=(left?`<g transform="translate(${2*x+100} 0) scale(-1 1)">${faucet}</g>`:faucet)+`<path class="falling-water" data-x="${pair?spout:310}" d="M${pair?spout:310} 105V${end}" fill="none" stroke="#52b5cc" stroke-width="7" stroke-linecap="round"/><path d="M${(pair?spout:310)-1} 108V${end-3}" stroke="#e6fcff" stroke-opacity=".75" stroke-width="1.2"/>`+tx(pair?(i?430:190):310,22,(pair?(i?'나':'가')+' 수도 · ':'수도 · ')+rate(n),17);
+  c+=(left?`<g transform="translate(${2*x+100} 0) scale(-1 1)">${faucet}</g>`:faucet)+`<path class="falling-water" data-x="${pair?spout:310}" d="M${pair?spout:310} 105V${end}" fill="none" stroke="#52b5cc" stroke-width="7" stroke-linecap="round"/><path d="M${(pair?spout:310)-1} 108V${end-3}" stroke="#e6fcff" stroke-opacity=".75" stroke-width="1.2"/>`+tx(pair?(i?430:190):310,22,(pair?(i?'나':'가')+' 수도 · ':'수도 · ')+rate(n),23);
  });
- if(v.outflow)c+=`<g class="flow-direction-arrow" transform="translate(425 270)"><path d="M0-5H61V-13L82 0L61 13V5H0Z" fill="url(#flow-direction)" stroke="var(--stage-ink,#54888c)" stroke-width="1" stroke-linejoin="round"/><path d="M4-3H59" stroke="#e2f6f0" stroke-width="1.4" stroke-linecap="round"/></g>`+tx(540,319,'나가는 양',15)+tx(540,342,rate(v.outflow),16);
+ if(v.outflow)c+=`<g class="flow-direction-arrow" transform="translate(425 270)"><path d="M0-5H61V-13L82 0L61 13V5H0Z" fill="url(#flow-direction)" stroke="var(--stage-ink,#54888c)" stroke-width="1" stroke-linejoin="round"/><path d="M4-3H59" stroke="#e2f6f0" stroke-width="1.4" stroke-linecap="round"/></g>`+tx(540,319,'나가는 양',23)+tx(540,342,rate(v.outflow),23);
  const capacity=v.capacity?Math.floor(v.capacity/1000)+' L'+(v.capacity%1000?' '+v.capacity%1000+' mL':''):'';
- c+=tx(310,367,'물 받는 중 · '+(v.initial?'처음 물 '+v.initial+' mL · ':'처음 빈 ')+v.container+(capacity?' · 들이 '+capacity:''),17);
+ c+=tx(310,367,'물 받는 중 · '+(v.initial?'처음 물 '+v.initial+' mL · ':'처음 빈 ')+v.container+(capacity?' · 들이 '+capacity:''),23);
  return svg(660,385,c,entries.length+'개의 수도와 '+v.container+'에 들어오고 나가는 물의 양');
 }

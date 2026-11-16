@@ -1,0 +1,292 @@
+{
+  "mode": "built-in image_gen",
+  "transparent_background": true,
+  "assetsDirectory": "public/assets/art",
+  "packaging": "PNG RGBA, maximum 512 pixels; resizing only; background edits generated with ImageGen",
+  "prompts": [
+    {
+      "id": "fruitSkewer",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one fruit skewer of alternating strawberry pieces and pale green grapes. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "cupcake",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one vanilla cupcake with glossy cream frosting in a plain paper cup. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "popcorn",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small red and cream striped open popcorn carton filled with fluffy popcorn. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "gimbap",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one neatly cut Korean gimbap roll, two slices beside the whole remaining roll. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "potatoPlant",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one potato plant shown as a clean educational cutaway with green leaves above and several potatoes attached to roots below. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "slush",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one clear tumbler of mango fruit slush, no branding. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "slime",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small clear open tub of shimmering mint slime with a little rounded dollop beside it. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "sandBottle",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small corked clear bottle filled with decorative colored sand layers. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "cottonCandy",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one fluffy pink cotton candy on a simple paper stick. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "plasterOrnament",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small heart-shaped handmade white plaster ornament with a loop of cord, unpainted. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "candle",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one unlit peach colored handmade decorative candle with a short wick. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "grapes",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small bunch of pale green grapes with one leaf. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "riceCake",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small pile of colorful Korean honey rice cakes on a small cream dish. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "pork",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one fresh uncooked boneless pork steak on a plain paper tray, no text. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "jellyBag",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small transparent bag of colorful jelly candies, sealed without text. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "fishBread",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one golden Korean fish-shaped pastry bungeoppang. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "macaron",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one peach colored macaron. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "anchovy",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small plain dish of Korean stir-fried anchovies. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "hotteok",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one golden Korean sweet pancake hotteok. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "cookie",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one round chocolate chip cookie. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "chocolate",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small unwrapped chocolate bar. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "banana",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one yellow ripe banana. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "toyBlock",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one large colorful wooden toy cube. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "donut",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one ring donut with simple strawberry glaze. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "corn",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one fresh ear of sweet corn in partly peeled green husk. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "soap",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one cream oval bar of soap. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "saucer",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small terracotta flowerpot saucer. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "towel",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one neatly folded pale mint dry hand towel. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "plantPot",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one empty small terracotta flowerpot. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "lunchBox",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one empty open mint lunchbox. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "riceBall",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one Korean rice ball with bits of seaweed. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "cookieJar",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one empty transparent glass cookie jar with lid beside it. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "piggyBank",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small pink piggy bank. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "origamiPack",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small square stacked pack of colorful origami paper. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "stickerBook",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one closed small sticker book with simple star decoration, no lettering. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "paintTube",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small capped paint tube with a blue paint swatch, no lettering. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "brush",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one wooden art paintbrush with soft pointed bristles. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "hairPin",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small peach bow hair clip. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "headband",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one simple mint fabric headband. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "dogTreat",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small bone-shaped dog biscuit. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "baseball",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one white baseball with red stitching. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "soilBag",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small brown paper bag open with gardening soil inside, no label. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "tennisBall",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one yellow green tennis ball. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "correctionTape",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small pastel correction tape dispenser. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "bookmark",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one slim paper bookmark with a small tassel and floral illustration, no text. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "capsule",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one empty small transparent toy capsule in two separated halves. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "keyring",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small star shaped acrylic keychain with metal ring. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "markerBox",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one compact box of colorful marker pens without lettering. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "cushion",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small soft square peach cushion. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "inari",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one individual Japanese inari tofu pocket sushi. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "yakgwa",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small Korean honey pastry yakgwa. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "pencil",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one sharpened yellow wooden school pencil. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "toyCoin",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one small golden toy coin with a plain star, no numbers. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "sneaker",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one white and mint child's sneaker, single shoe. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "slipper",
+      "prompt": "Use case: scientific-educational. Asset type: single object cutout for Korean third-grade mathematics. Subject: one light blue indoor slipper, single shoe. High quality warm hand-painted semi-realistic educational illustration with precise material texture, rounded glossy highlights, natural soft shading. Whole object visible, isolated centered, generous empty margins. Actual transparent alpha background. Small contact shadow touching base, no floating shadow, no white rectangle, no checkerboard. No lettering, digits, mathematical symbols, labels or framing. Exactly the requested single object or explicitly described packaged unit; never a grid or collage."
+    },
+    {
+      "id": "carrier-0-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-3-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-2-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-4-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-5-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-6-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-7-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-9-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-10-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-12-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-14-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-16-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-17-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-15-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-19-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    },
+    {
+      "id": "carrier-18-v3",
+      "prompt": "Edit target: attached object illustration. Use case: background-extraction. Remove ONLY the white or off-white background completely to actual transparent alpha, including holes between handles, wheels, spokes and gaps. Keep the entire original object, precise shape, colors, illustration detail, material texture, perspective and interior surfaces unchanged. Preserve a faint natural contact shadow if it touches the object. Do not add a background, checkerboard, labels, border or other objects. Output one isolated unchanged object on fully transparent background."
+    }
+  ]
+}

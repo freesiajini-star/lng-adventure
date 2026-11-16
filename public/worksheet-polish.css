@@ -1,0 +1,26 @@
+.scratchpad{margin-top:18px;border:1px solid var(--stage-edge);border-radius:14px;background:var(--stage-panel);overflow:hidden}
+.scratchpad summary{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:baseline;cursor:pointer;padding:12px 14px;font-size:16px;font-weight:800;color:var(--stage-ink)}
+.scratchpad[open] summary{border-bottom:1px solid var(--stage-edge)}
+.scratch-hint,.scratch-help{font-size:12px;font-weight:400;color:var(--stage-ink)}
+.scratch-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px}
+.scratch-tools button{font-size:13px;background:#fff;color:#33434b;min-height:34px;padding:7px 10px;box-shadow:none}
+.scratch-tools button[aria-pressed=true]{background:var(--accent);color:#fff}
+.scratch-tools label{display:flex;align-items:center;gap:5px;font-size:12px}
+.scratch-tools select{font:inherit;padding:5px;border:1px solid var(--stage-edge);border-radius:7px}
+.scratch-canvas{display:block;width:100%;height:280px;touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none;background:repeating-linear-gradient(0deg,#fffdf8 0,#fffdf8 27px,#e5dfd0 28px,#fffdf8 29px)}
+.scratch-help{margin:0;padding:8px 12px;line-height:1.6}
+@media(max-width:700px){.scratch-canvas{height:240px}.scratch-tools{gap:5px}.scratch-tools button{padding:7px 8px}}
+@media print{.scratchpad{display:none}}
+.limit-packing .limit-context{display:flex;align-items:center;gap:18px}
+.limit-packing .limit-context .limit-carrier{width:clamp(150px,28vw,210px);height:190px;object-fit:contain;flex:none}
+@media(max-width:700px){.limit-packing .limit-context .limit-carrier{width:140px;height:150px}}
+
+.visual-box .electronic-weighing{display:block;width:100%;max-width:560px;max-height:none;margin:auto;height:auto}.weighing-pair{display:flex;flex-direction:column;gap:6px;align-items:center;width:100%}.weighing-pair>.electronic-weighing{flex:none}
+.object-equations{display:grid;gap:14px;width:100%}.object-equation{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 8px;border:1px solid var(--stage-edge);border-radius:14px;background:var(--stage-panel);flex-wrap:wrap}.equation-objects{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:42%}.equation-items{display:grid;grid-template-columns:repeat(4,minmax(0,40px));justify-content:center;gap:2px;max-width:100%}.equation-items img{width:40px;height:44px;object-fit:contain}.equation-items:has(img:first-child:last-child){grid-template-columns:40px}.equation-objects figcaption{font-size:13px;text-align:center}.object-total{white-space:nowrap;font-size:18px}.relation-sign{font-size:22px;font-weight:700}.scale-story{display:flex;align-items:center;justify-content:center;gap:20px;width:100%;max-width:720px;margin:auto}.scale-story-art{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;flex:1}.scale-story-art img{width:150px;height:175px;max-width:48%;object-fit:contain}.scale-story-art img:first-child:last-child{max-width:100%;width:210px;height:190px}.scale-story table{flex:1;font-size:15px}.scale-story th,.scale-story td{padding:10px;white-space:normal}.cargo-heading img[data-normalize-area]{width:min(var(--ink-size,200px),40vw);max-width:45%;max-height:none;height:auto;aspect-ratio:1;object-fit:contain;flex:none}
+@media(max-width:700px){.scale-story{flex-direction:column;gap:10px}.scale-story-art img{height:140px}.scale-story-art img:first-child:last-child{height:160px}.scale-story table{width:100%}.object-equation{gap:5px}.equation-objects{max-width:43%}.equation-items{grid-template-columns:repeat(3,minmax(0,30px))}.equation-items img{width:30px;height:35px}.equation-items:has(img:first-child:last-child){grid-template-columns:30px}.object-total{font-size:16px}}
+
+.scoring-notice{font-size:12px;line-height:1.5;margin:0 0 12px;color:var(--stage-ink)}
+
+.balance-pair{display:flex;align-items:flex-start;gap:10px;width:100%}.balance-pair>svg{width:calc(50% - 5px);flex:1;min-width:0}@media(max-width:700px){.balance-pair{flex-direction:column;align-items:center;gap:8px}.balance-pair>svg{width:100%;max-height:280px;flex:none}}
+
+.data-cards b{overflow-wrap:anywhere;word-break:normal;white-space:normal}

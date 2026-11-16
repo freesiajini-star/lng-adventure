@@ -19,8 +19,8 @@ test('weight families have dozens of distinct pictured questions and independent
 test('before and after water levels differ and agree with the cup arithmetic',()=>{
  for(let seed=1;seed<=300;seed++){const q=reviseQuality({stage:12,type:2},seed),v=q.visual;assert.equal(v.after-v.before,v.one*v.count);assert.ok(v.after<=v.capacity);assert.ok(v.before<v.after);assert.equal(+q.fields[1].answer,v.one);const svg=renderVisual(v);assert.ok(svg.includes('data-fill="'+v.before/v.capacity+'"'));assert.ok(svg.includes('data-fill="'+v.after/v.capacity+'"'));}
 });
-test('recipes vary dishes and serving ratios without changing per-person quantities',()=>{
- const dishes=new Set();for(let seed=1;seed<=300;seed++){const q=reviseQuality({stage:15,type:4},seed),v=q.visual,m=q.lines[0].match(/(\d+)인분을 만들/);dishes.add(v.dish);assert.equal(+q.fields[0].answer,v.cups*v.cup*+m[1]/v.servings);}assert.ok(dishes.size>=6);
+test('scaling contexts vary and recipes preserve the specified serving ratio',()=>{
+ const contexts=new Set();for(let seed=1;seed<=300;seed++){const q=reviseQuality({stage:15,type:4},seed),v=q.visual,a=q.facts[0].audit;contexts.add(v.title);assert.equal(Number(q.fields[0].answer),a.targetScale/a.baseScale);if(a.index===0){const m=q.lines[0].match(/(\d+)인분.*?소스 (\d+)컵.*?(\d+) mL/),target=Number(q.lines[1].match(/(\d+)인분/)[1]),answer=Number(q.fields[1].answer)*1000+Number(q.fields[2].answer);assert.equal(answer,Number(m[2])*Number(m[3])*target/Number(m[1]));}}assert.equal(contexts.size,30);
 });
 test('Korean subjects choose 이/가 from the final syllable',()=>{
  for(const [word,expected]of[['책','책이'],['묶음','묶음이'],['상자','상자가'],['배','배가'],['빈 플라스틱병 묶음','빈 플라스틱병 묶음이']])assert.equal(subject(word),expected);
