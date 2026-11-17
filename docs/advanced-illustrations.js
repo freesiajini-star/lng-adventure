@@ -1,5 +1,5 @@
-import {EQUATION_ART_BOUNDS} from './equation-art-bounds.js?v=f4e46f58fac9';
-import {artPath} from './art-catalog.js?v=f4e46f58fac9';
+import {EQUATION_ART_BOUNDS} from './equation-art-bounds.js?v=c3242010be6a';
+import {artPath} from './art-catalog.js?v=c3242010be6a';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderObjectEquations(v){
  const group=(index,count)=>{const id=v.arts[index],[w,h,x,y,bw,bh]=EQUATION_ART_BOUNDS[id]||[100,100,0,0,100,100],scale=Math.min(1/w,1.1/h),fw=bw*scale,fh=bh*scale;return `<figure class="equation-objects"><div class="equation-items" style="--object-columns:${Math.min(count,4)};--mobile-columns:${Math.min(count,2)};--asset-width:${fw};--asset-height:${fh}" data-object="${esc(v.labels[index])}" data-count="${count}">${Array.from({length:count},()=>`<svg class="equation-asset" role="img" aria-label="${esc(v.labels[index])}" viewBox="${x} ${y} ${bw} ${bh}"><image href="${artPath(id)}" width="${w}" height="${h}"/></svg>`).join('')}</div><figcaption>${esc(v.labels[index])} ${count}${id==='gimbap'?'줄':'개'}</figcaption></figure>`;};

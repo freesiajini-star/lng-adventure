@@ -103,3 +103,10 @@
 .problem-body[data-stage="4"] .answers{flex-direction:row}.problem-body[data-stage="4"] .answers>.answer-row{display:flex;flex-wrap:nowrap;width:auto}
 
 .problem-body[data-stage="5"][data-type="3"] .answers>.answer-row{width:max-content;max-width:none;flex-wrap:nowrap}
+
+/* Align capacity-unit choices in shared columns. */
+.paper .problem-body[data-stage="3"][data-type="1"] .answers{display:grid;grid-template-columns:max-content;justify-content:center;gap:12px}
+.paper .problem-body[data-stage="3"][data-type="1"] .answers>.answer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;width:auto;margin:0}
+.paper .problem-body[data-stage="3"][data-type="1"] .answer-label{text-align:right}
+.paper .problem-body[data-stage="3"][data-type="1"] .choice-group{display:grid;grid-template-columns:repeat(2,64px);gap:10px}
+.paper .problem-body[data-stage="3"][data-type="1"] .choice{width:100%;margin:0}
