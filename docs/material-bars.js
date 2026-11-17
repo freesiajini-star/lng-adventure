@@ -1,4 +1,4 @@
-import {artImage} from './art-catalog.js?v=622233be1c3b';
+import {artImage} from './art-catalog.js?v=f4e46f58fac9';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=18,fill='#304652')=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="750" fill="${fill}">${esc(s)}</text>`;
 export function renderMaterialBars(v){const material=v.material||(v.unit==='g'?'밀가루':'물'),unit=v.unit||'mL',start=140,full=500,b=full*v.values[0]/v.values[1],d=full-b,solid=['밀가루','쌀','설탕','소금'].includes(material),milk=material==='우유',juice=material==='주스',texture=solid?'flourTexture':milk?'milkTexture':juice?'juiceTexture':'waterTexture',edge=solid?'#c3944e':milk?'#6ba5c4':juice?'#c9913b':'#69a9c4',dark=solid?'#8c682f':milk?'#8b806a':juice?'#9d641b':'#356d85',h=64;

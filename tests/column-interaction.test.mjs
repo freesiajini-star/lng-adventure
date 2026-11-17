@@ -10,13 +10,13 @@ test('borrowing 10 leaves the original receiving digit intact and only strikes t
 test('across zeros, write 9 directly and pass 10 to the receiving digit',()=>{
  const tasks=columnTasks(columnSteps(10000,1,'−')),strikes=tasks.filter(t=>t.kind==='strike');
  assert.deepEqual(strikes,[{kind:'strike',index:0,target:'original'}]);
- assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer]),[[0,'0'],[1,'9'],[2,'9'],[3,'9'],[4,'10']]);
+ assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer]),[[1,'9'],[2,'9'],[3,'9'],[4,'10']]);
  const digits=Array(5).fill('');tasks.filter(t=>t.kind==='result').forEach(t=>digits[t.index]=t.answer);assert.equal(Number(digits.join('')),9999);
 });
 
 test('10 L 200 mL minus 3 L 600 mL skips the intermediate 10 and retains 6 L 600 mL',()=>{
  const model=columnSteps(10200,3600,'−'),tasks=columnTasks(model);
- assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer]),[[0,'0'],[1,'9'],[2,'10']]);
+ assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer]),[[1,'9'],[2,'10']]);
  assert.equal(tasks.some(t=>t.kind==='strike'&&t.target==='note'),false);
  assert.equal(model.steps.some(s=>s.focus===1&&s.notes[1]===10),false);
  assert.equal(model.result,6600);
@@ -24,7 +24,7 @@ test('10 L 200 mL minus 3 L 600 mL skips the intermediate 10 and retains 6 L 600
 
 test('a previously decreased note receives a leading 1 instead of a separate 10',()=>{
  const model=columnSteps(13200,4800,'−'),tasks=columnTasks(model);
- assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer,t.role]),[[1,'2','decreased'],[2,'10','borrow'],[0,'0','decreased'],[1,'1','prefix']]);
+ assert.deepEqual(tasks.filter(t=>t.kind==='note').map(t=>[t.index,t.answer,t.role]),[[1,'2','decreased'],[2,'10','borrow'],[1,'1','prefix']]);
  const digits=Array(model.length).fill('');tasks.filter(t=>t.kind==='result').forEach(t=>digits[t.index]=t.answer);
  assert.equal(Number(digits.join('')),8400);
  assert.equal(model.result,8400);

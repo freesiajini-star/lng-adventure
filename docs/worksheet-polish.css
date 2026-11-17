@@ -83,3 +83,23 @@
 .object-equations .equation-objects figcaption{white-space:normal;overflow-wrap:anywhere}.equation-items{align-items:center}
 
 .object-equations .equation-objects figcaption{font-size:12px;white-space:nowrap;width:max-content;min-width:100%;overflow-wrap:normal}
+
+/* Requested answer alignment and compact wording, 2026-11-17. */
+.answer-label[hidden]{display:none!important}.question-note{font-weight:400}
+.problem-body[data-stage="4"] .answers,.problem-body[data-stage="5"]:has([data-type="3"]) .answers{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:16px}
+.problem-body[data-stage="4"] .answer-row{margin:0;width:auto;gap:0}
+.problem-body[data-stage="2"][data-type="0"] .choice-group{display:flex;flex-direction:column;align-items:flex-start;width:max-content;max-width:100%;gap:10px}
+.problem-body[data-stage="2"][data-type="0"] .choice-group .choice{white-space:normal;text-align:left}
+.problem-body[data-stage="8"][data-type="0"] .answers{display:grid;grid-template-columns:max-content;justify-content:center;gap:12px}
+.problem-body[data-stage="8"][data-type="0"] .answer-row{display:grid;grid-template-columns:1fr auto;gap:14px;margin:0;justify-content:unset}
+.problem-body[data-stage="8"][data-type="0"] .answer-label{text-align:right}
+.problem-body[data-stage="5"][data-type="3"] .answers{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:0}
+.problem-body[data-stage="5"][data-type="3"] .answer-row{display:flex;justify-content:center;gap:8px;margin:0;min-width:0}
+.problem-body[data-stage="5"][data-type="3"] .answer-row input{max-width:75px}
+.equation{text-align:center}
+
+.problem-body[data-stage="5"][data-type="3"] .answers{position:relative;display:block;height:64px}.problem-body[data-stage="5"][data-type="3"] .answer-row{position:absolute;top:8px;transform:translateX(-50%);white-space:nowrap}
+
+.problem-body[data-stage="4"] .answers{flex-direction:row}.problem-body[data-stage="4"] .answers>.answer-row{display:flex;flex-wrap:nowrap;width:auto}
+
+.problem-body[data-stage="5"][data-type="3"] .answers>.answer-row{width:max-content;max-width:none;flex-wrap:nowrap}

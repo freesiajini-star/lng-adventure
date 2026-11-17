@@ -10,7 +10,7 @@ test('reference estimates combine full, half, third and mixed receivers',()=>{
 test('equalizing two families conserve water and infer original amounts',()=>{
  for(let seed=0;seed<1000;seed++){
   const q=makeQuestion(5,0,seed),v=q.visual,[a,b]=v.values,moved=Number(q.fields[0].answer);assert.equal(Math.abs(a-b),2*moved);assert.equal(Math.max(a,b)-moved,Math.min(a,b)+moved);assert.ok(v.max>=Math.max(a,b));
-  const inverse=makeQuestion(5,3,seed),before=inverse.fields.map(f=>Number(f.answer)),equal=inverse.visual.values[0],move=Number(inverse.lines[0].match(/물 (\d+) mL/)[1]);assert.equal(before[0]-move,equal);assert.equal(before[1]+move,equal);assert.equal(before[0]+before[1],2*equal);
+  const inverse=makeQuestion(5,3,seed),before=inverse.fields.map(f=>Number(f.answer)),equal=inverse.visual.values[0],move=Number(inverse.lines[0].match(/물 (\d+) mL/)[1]);const from=inverse.lines[0][0]==='가'?0:1;assert.equal(before[from]-move,equal);assert.equal(before[1-from]+move,equal);assert.deepEqual(inverse.fields.map(f=>f.label),['가','나']);assert.equal(before[0]+before[1],2*equal);
  }
 });
 test('four weight families derive answers from rendered pan counts and masses',()=>{

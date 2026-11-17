@@ -1,6 +1,6 @@
-import {renderCalibratedTanks} from './calibrated-tanks.js?v=622233be1c3b';
-import {artImage,objectArtwork} from './art-catalog.js?v=622233be1c3b';
-import {sourceDefs} from './source-vessels.js?v=622233be1c3b';
+import {renderCalibratedTanks} from './calibrated-tanks.js?v=f4e46f58fac9';
+import {artImage,objectArtwork} from './art-catalog.js?v=f4e46f58fac9';
+import {sourceDefs} from './source-vessels.js?v=f4e46f58fac9';
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${s}</text>`;
 function produce(label){const painted=objectArtwork(label,0,0);if(painted)return painted;
  if(label==='볼펜')return '<path d="M5 23 22 3" stroke="#698da6" stroke-width="6" stroke-linecap="round"/><path d="M5 23 1 28 8 25" fill="#7b858d"/><path d="M15 3 24 10" stroke="#b3cbd5" stroke-width="6"/><path d="M10 15 18 6" stroke="#e7f3f7" stroke-width="1.5"/><path d="M19 1 25 6" stroke="#52778d" stroke-width="3"/>';
@@ -23,7 +23,7 @@ export function renderBalances(v,object){
   const x=index*360,delta=Math.sign(item.rightMass-item.leftMass)*15,left=70-delta,right=70+delta;
   out+=`<g transform="translate(${x} 0)"><ellipse cx="180" cy="232" rx="66" ry="10" fill="url(#balance-shadow)"/>${artImage('balanceBase',105,38,150,216).replace('xMidYMid meet','none')}<path d="M65 ${left}L295 ${right}" stroke="#9b7941" stroke-width="10" stroke-linecap="round"/><path d="M65 ${left-1}L295 ${right-1}" stroke="url(#balance-arm)" stroke-width="7" stroke-linecap="round"/><path d="M65 ${left-3}L295 ${right-3}" stroke="#fff3cd" stroke-width="1.5" stroke-linecap="round"/><circle cx="180" cy="70" r="10" fill="url(#balance-arm)" stroke="#997942"/><circle cx="180" cy="70" r="4" fill="#8b6a35"/>`;
   for(const[cx,cy,label,count]of[[65,left,item.left,item.leftCount],[295,right,item.right,item.rightCount]]){
-   out+=`<g class="balance-suspension"><path d="M${cx} ${cy+5}L${cx-47} ${cy+83}M${cx} ${cy+5}L${cx+47} ${cy+83}" stroke="#9b885f" stroke-width="2.6" fill="none"/><path d="M${cx} ${cy+5}L${cx-46} ${cy+82}M${cx} ${cy+5}L${cx+46} ${cy+82}" stroke="#fff0c7" stroke-width=".8" fill="none"/><circle cx="${cx}" cy="${cy}" r="4" fill="url(#balance-arm)" stroke="#977441"/></g>`;
+   out+=`<g class="balance-suspension"><path d="M${cx} ${cy+5}L${cx-47} ${cy+96}M${cx} ${cy+5}L${cx+47} ${cy+96}" stroke="#9b885f" stroke-width="2.6" fill="none"/><path d="M${cx} ${cy+5}L${cx-46} ${cy+95}M${cx} ${cy+5}L${cx+46} ${cy+95}" stroke="#fff0c7" stroke-width=".8" fill="none"/><circle cx="${cx}" cy="${cy}" r="4" fill="url(#balance-arm)" stroke="#977441"/></g>`;
    // Paint the bowl before the objects; the rim never covers their silhouettes.
    out+=artImage('balancePan',cx-56,cy+52,112,83).replace('xMidYMid meet','none');
    const cols=Math.min(count,3),scale=sizes[label],spacing=Math.max(14,Math.min(31,(104-36*scale)/Math.max(1,cols-1)));

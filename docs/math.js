@@ -1,7 +1,7 @@
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=622233be1c3b';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=622233be1c3b';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=622233be1c3b';
-import {reviewQuestion} from './curriculum.js?v=622233be1c3b';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=f4e46f58fac9';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=f4e46f58fac9';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=f4e46f58fac9';
+import {reviewQuestion} from './curriculum.js?v=f4e46f58fac9';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
@@ -16,7 +16,7 @@ export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%100
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
  const variants=TYPE_GROUPS[stage]?.[type],variant=variants?.[(Math.max(0,seed-1)>>>0)%variants.length]??type;
- const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');if(q.column&&q.visual?.kind==='pairedDials')q.column.readOperands=true;q.type=type;q.title=TYPE_NAMES[stage-1][type];return q;
+ const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');if(q.column&&q.visual?.kind==='pairedDials')q.column.readOperands=true;q.type=type;q.title=TYPE_NAMES[stage-1][type];return polishQuestion(q);
 }
 function makeQuestionRaw(stage,type,seed=1){
  if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');
@@ -135,3 +135,13 @@ export function validateQuestion(q){
 }
 export function publicQuestion(q){const {explanation,facts,...rest}=q;return {...rest,fields:q.fields.map(({answer,...f})=>f)};}
 export function grade(q,answers){const wrong=q.fields.map((f,i)=>{const answer=answers[i];if(f.kind==='multi')return Array.isArray(answer)&&new Set(answer).size===answer.length&&JSON.stringify([...answer].sort())===JSON.stringify([...f.answer].sort())?-1:i;return String(answer??'').trim()===f.answer?-1:i;}).filter(i=>i>=0);return {ok:!wrong.length,wrong};}
+
+function polishQuestion(q){
+ if(q.stage===1&&q.type===5&&q.visual)q.visual.hideTitle=true;
+ const hide={1:['더 작은 용기','더 큰 용기','가장 큰 용기','몇 배'],2:['옳은 식','알맞은 기호','바꾼 양'],3:['읽은 값','가장 가까운 사람'],5:['옮길 물'],6:['한 개가 더 무거운 것','물건','몇 배'],7:['물건이 든 상자','바꾼 양','알맞은 기호'],8:['한 눈금','읽은 값','물건'],11:['가장 큰 용기']};
+ q.fields.forEach(f=>{if(hide[q.stage]?.includes(f.label))f.hideLabel=true;if(q.stage===4)f.hideLabel=true;if(q.stage===10&&q.type===0&&q.fields.length===1)f.hideLabel=true;});
+ if(q.stage===5&&q.fields.length===2){q.fields.sort((a,b)=>a.label.includes('가')?-1:b.label.includes('가')?1:0);q.fields.forEach((f,i)=>f.label=['가','나'][i]);}
+ if(q.column&&[4,9].includes(q.stage)&&q.type===5){q.column.readOperands=true;q.column.fromEquation=true;}
+ if(q.stage===10&&q.type===1)q.fields.forEach((f,i)=>{f.label=i===0?'상자를 제외한 전체 무게':f.label.replace(/의 무게|무게/g,'').trim();});
+ return q;
+}

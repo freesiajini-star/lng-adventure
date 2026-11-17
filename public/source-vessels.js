@@ -27,7 +27,7 @@ export function renderCupGroups(v){
  let out=sourceDefs();
  v.groups.forEach((g,i)=>{
   const y=12+i*155;
-  out+=`<rect x="14" y="${y}" width="612" height="145" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+62})">${source(g.source)}</g>${text(90,y+132,g.label,16)}${transferArrow(164,y+70)}`;
+  out+=`<rect x="14" y="${y}" width="612" height="145" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+80}) scale(.9)">${source(g.source)}</g>${text(90,y+132,g.label,16)}${transferArrow(164,y+70)}`;
   // The artwork has transparent side margins; a 52-unit pitch keeps the
   // visible glasses separate while fitting all eight in the existing panel.
   const pitch=52,start=226+(8-g.count)*pitch/2;

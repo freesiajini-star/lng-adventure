@@ -1,5 +1,5 @@
-import {typeStatsMarkup,bindTypeStats} from './teacher-type-stats.js?v=622233be1c3b';
-import {dayKey} from './learning.js?v=622233be1c3b';
+import {typeStatsMarkup,bindTypeStats} from './teacher-type-stats.js?v=f4e46f58fac9';
+import {dayKey} from './learning.js?v=f4e46f58fac9';
 export const attendedOn=(student,day,record)=>!!student.visits?.[day]||(Number(student.at)>0&&dayKey(Number(student.at))===day)||(record?.total?.total||0)>0||Object.values(record?.sessions||{}).some(Boolean);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sum=a=>a.filter(Boolean).reduce((s,x)=>({correct:s.correct+(x.correct||0),total:s.total+(x?.total||0),score:s.score+(x.points??x.score??0)}),{correct:0,total:0,score:0});

@@ -1,7 +1,7 @@
 // Measure the existing responsive drawing, then enlarge it in normal document
 // flow. Reserve its full height so enlarged tables never cover the answers.
 export function visualFactor(stage,type){
- if(stage===1){if(type===1)return 1.05;if(type===2)return 2.25;if([3,4,5].includes(type))return 1.95;}
+ if(stage===1){if(type===0)return 1.3;if(type===1)return 1.365;if(type===2)return 2.475;if([3,4,5].includes(type))return 1.95;}
  if(stage===10&&[0,1].includes(type))return 1.5;
  if(stage===3&&[1,2,3].includes(type))return 1.2;
  if(stage===4&&type===6)return 1.3;
@@ -25,7 +25,7 @@ export function enlargeWorksheet(box){
   // Enlarge its visible viewBox rather than counting those empty side margins.
   const view=drawing.viewBox.baseVal,fit=Math.min(rect.width/view.width,rect.height/view.height);
   const width=view.width*fit,height=view.height*fit;let ratio=Math.min(factor,available/width);
-  if(innerWidth>700&&box.dataset.worksheetStage==='1'&&['fillTable','bottleCups'].includes(box.dataset.visual))ratio=Math.min(ratio,(box.dataset.visual==='bottleCups'?Math.max(255,(innerHeight-740)*1.5):Math.max(221,(innerHeight-740)*1.3))/height);
+  if(innerWidth>700&&box.dataset.worksheetStage==='1'&&['fillTable','bottleCups'].includes(box.dataset.visual))ratio=Math.min(ratio,(box.dataset.visual==='bottleCups'?Math.max(280.5,(innerHeight-740)*1.65):Math.max(221,(innerHeight-740)*1.3))/height);
   if([8,9].includes(Number(box.dataset.worksheetStage))&&['illustratedDial','pairedDials','dial'].includes(box.dataset.visual)&&innerWidth>700){const budget=Math.max(190,Math.min(340,innerHeight-(box.getBoundingClientRect().top+scrollY)-190));ratio=Math.min(ratio,budget/height);}
   Object.assign(drawing.style,{width:width*ratio+'px',height:height*ratio+'px',maxWidth:'100%',maxHeight:'none',flexShrink:'0'});
  }

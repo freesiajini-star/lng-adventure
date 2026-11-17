@@ -31,10 +31,10 @@ export function columnTasks(model){
   if(model.operation==='+'){const sum=model.top[i]+model.bottom[i]+carry;carry=Math.floor(sum/10);if(carry&&i>0&&!(i===1&&model.top[0]===0&&model.bottom[0]===0))tasks.push({kind:'note',index:i-1,answer:String(carry),role:'carry'});tasks.push({kind:'result',index:i,answer:String(sum%10)});continue;}
   if(current[i]<model.bottom[i]){
    let donor=i-1;while(current[donor]===0)donor--;
-   tasks.push({kind:'strike',index:donor,target:'original'});current[donor]--;tasks.push({kind:'note',index:donor,answer:String(current[donor]),role:'decreased'});noted[donor]=true;
+   tasks.push({kind:'strike',index:donor,target:'original'});current[donor]--;if(!(donor===0&&current[donor]===0))tasks.push({kind:'note',index:donor,answer:String(current[donor]),role:'decreased'});noted[donor]=true;
    for(let k=donor+1;k<=i;k++){const prefix=k===i&&noted[k];current[k]+=k<i?9:10;tasks.push({kind:'note',index:k,answer:k<i?'9':prefix?'1':'10',role:k<i?'decreased':prefix?'prefix':'borrow'});noted[k]=true;}
   }
-  tasks.push({kind:'result',index:i,answer:String(current[i]-model.bottom[i])});
+  if(!(i===0&&model.top[0]>0&&current[0]===0&&model.bottom[0]===0))tasks.push({kind:'result',index:i,answer:String(current[i]-model.bottom[i])});
  }
  return tasks;
 }

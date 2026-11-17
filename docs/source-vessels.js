@@ -1,4 +1,4 @@
-import {artImage,vesselArt,VESSEL_IDS} from './art-catalog.js?v=622233be1c3b';
+import {artImage,vesselArt,VESSEL_IDS} from './art-catalog.js?v=f4e46f58fac9';
 export const sourceDefs=()=>`<defs><linearGradient id="sv-metal"><stop stop-color="#a7bec7"/><stop offset=".3" stop-color="#f9fcfc"/><stop offset=".65" stop-color="#d0dee3"/><stop offset="1" stop-color="#96afb9"/></linearGradient><linearGradient id="sv-yellow"><stop stop-color="#ffe9a0"/><stop offset="1" stop-color="#e5ba58"/></linearGradient><linearGradient id="sv-pink"><stop stop-color="#ef9cae"/><stop offset=".4" stop-color="#ffd0d8"/><stop offset="1" stop-color="#d77d93"/></linearGradient><linearGradient id="sv-glass"><stop stop-color="#b6e0e9" stop-opacity=".5"/><stop offset=".3" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#a5d2df" stop-opacity=".4"/></linearGradient><linearGradient id="sv-water" x2="0" y2="1"><stop stop-color="#a5e4ee"/><stop offset="1" stop-color="#68bfd5"/></linearGradient></defs>`;
 export const transferArrow=(x,y,vertical=false)=>`<g transform="translate(${x} ${y})${vertical?' rotate(90)':''}"><path d="M0 0H29M21-8 29 0 21 8" fill="none" stroke="var(--stage-ink,#78998e)" stroke-opacity=".7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>`;
 const text=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${s}</text>`;
@@ -27,7 +27,7 @@ export function renderCupGroups(v){
  let out=sourceDefs();
  v.groups.forEach((g,i)=>{
   const y=12+i*155;
-  out+=`<rect x="14" y="${y}" width="612" height="145" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+62})">${source(g.source)}</g>${text(90,y+132,g.label,16)}${transferArrow(164,y+70)}`;
+  out+=`<rect x="14" y="${y}" width="612" height="145" rx="20" fill="var(--stage-panel,#fffefa)" fill-opacity=".7" stroke="var(--stage-edge,#dce8e2)"/><g transform="translate(90 ${y+80}) scale(.9)">${source(g.source)}</g>${text(90,y+132,g.label,16)}${transferArrow(164,y+70)}`;
   // The artwork has transparent side margins; a 52-unit pitch keeps the
   // visible glasses separate while fitting all eight in the existing panel.
   const pitch=52,start=226+(8-g.count)*pitch/2;
