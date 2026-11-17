@@ -1,5 +1,5 @@
-import {CARGO_ART_BOUNDS} from './cargo-art-bounds.js?v=c3242010be6a';
-import {artPath} from './art-catalog.js?v=c3242010be6a';
+import {CARGO_ART_BOUNDS} from './cargo-art-bounds.js?v=3ad8e58aefce';
+import {artPath} from './art-catalog.js?v=3ad8e58aefce';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const mass=n=>n>=1000&&n%1000===0?n/1000+' t':n+' kg';
 function cargoArt(v){const [w,h,x,y,bw,bh,ink]=CARGO_ART_BOUNDS[v.carrierArt]||[100,100,0,0,100,100,10000],scale=Math.sqrt(24000/ink);return `<svg class="cargo-hero" viewBox="${x} ${y} ${bw} ${bh}" role="img" aria-label="${esc(v.title)}" style="width:${bw*scale}px;height:${bh*scale}px" data-ink-area="24000"><image href="${artPath(v.carrierArt)}" width="${w}" height="${h}"/></svg>`;}

@@ -137,7 +137,7 @@ export function publicQuestion(q){const {explanation,facts,...rest}=q;return {..
 export function grade(q,answers){const wrong=q.fields.map((f,i)=>{const answer=answers[i];if(f.kind==='multi')return Array.isArray(answer)&&new Set(answer).size===answer.length&&JSON.stringify([...answer].sort())===JSON.stringify([...f.answer].sort())?-1:i;return String(answer??'').trim()===f.answer?-1:i;}).filter(i=>i>=0);return {ok:!wrong.length,wrong};}
 
 function polishQuestion(q){
- if(q.stage===1&&[4,5].includes(q.type)&&q.visual)q.visual.hideTitle=true;
+ if(q.stage===1&&[3,4,5].includes(q.type)&&q.visual)q.visual.hideTitle=true;
  const hide={1:['더 작은 용기','더 큰 용기','가장 큰 용기','몇 배'],2:['옳은 식','알맞은 기호','바꾼 양'],3:['읽은 값','가장 가까운 사람'],5:['옮길 물'],6:['한 개가 더 무거운 것','물건','몇 배'],7:['물건이 든 상자','바꾼 양','알맞은 기호'],8:['한 눈금','읽은 값','물건'],11:['가장 큰 용기']};
  q.fields.forEach(f=>{if(hide[q.stage]?.includes(f.label))f.hideLabel=true;if(q.stage===4)f.hideLabel=true;if(q.stage===10&&q.type===0&&q.fields.length===1)f.hideLabel=true;});
  if(q.stage===5&&q.fields.length===2){q.fields.sort((a,b)=>a.label.includes('가')?-1:b.label.includes('가')?1:0);q.fields.forEach((f,i)=>f.label=['가','나'][i]);}

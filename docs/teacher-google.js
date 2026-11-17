@@ -1,4 +1,4 @@
-import {FIREBASE_CONFIG} from './firebase-config.js?v=c3242010be6a';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=3ad8e58aefce';
 let authPromise;
 export function prepareTeacherGoogle(){
  return authPromise??=(async()=>{
