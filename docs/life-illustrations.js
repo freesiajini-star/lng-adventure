@@ -1,8 +1,8 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=3ad8e58aefce';
-import {artImage,lifeArtwork} from './art-catalog.js?v=3ad8e58aefce';
-import {illustration} from './pour-illustrations.js?v=3ad8e58aefce';
-import {vesselGeometry} from './pour-geometry.js?v=3ad8e58aefce';
-import {source,sourceDefs,transferArrow} from './source-vessels.js?v=3ad8e58aefce';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=c8d3e22c77ad';
+import {artImage,lifeArtwork} from './art-catalog.js?v=c8d3e22c77ad';
+import {illustration} from './pour-illustrations.js?v=c8d3e22c77ad';
+import {vesselGeometry} from './pour-geometry.js?v=c8d3e22c77ad';
+import {source,sourceDefs,transferArrow} from './source-vessels.js?v=c8d3e22c77ad';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${esc(s)}</text>`;
 const colors=['#e78d9c','#b5b3dc','#f1c37c','#9ac8ad'];

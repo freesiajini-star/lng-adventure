@@ -7,7 +7,7 @@ test('12 objects × 4 weighing structures stay realistic, uniquely solvable and 
   const delta=v.counts[1]-v.counts[0],one=(v.totals[1]-v.totals[0])/delta,empty=v.totals[0]-v.counts[0]*one;
   assert.ok(Number.isInteger(one)&&one>=entry.min&&one<=entry.max);assert.ok(empty>=60&&empty<=250);
   assert.ok(v.totals.every(n=>n>0&&n<=5000));assert.equal(one,v.one);assert.equal(empty,v.empty);
-  const answers=v.mode===4?[one]:v.mode===6?[one*4,one*8,empty]:[Math.abs(v.totals[1]-v.totals[0]),one,empty];assert.equal(grade(q,answers.map(String)).ok,true);
+  const answers=v.mode===4?[one]:q.lines.join(' ').includes('각각')?[one,empty]:[empty];assert.equal(grade(q,answers.map(String)).ok,true);
   if(seed<=1000){const html=renderVisual(v),asset=artPath(v.objectArt);assert.equal(html.split('href="'+asset+'"').length-1,v.counts[0]+v.counts[1]);assert.ok(fs.existsSync('public/'+asset.slice(2)));}
  }
  for(const objects of seen.values())assert.equal(objects.size,12);

@@ -1,5 +1,5 @@
-import {columnSteps,columnTasks} from './column-calculation.js?v=3ad8e58aefce';
-export function columnMarkup({optional=false}={}){const content='<section class="column-work" aria-label="직접 푸는 격자 세로셈"><h2>세로셈</h2><div class="column-grid-host"></div><p class="column-message" aria-live="polite"></p><div class="column-controls"><button data-column="check" type="button">이 칸 확인</button><button data-column="reset" type="button">처음부터</button></div></section>';return optional?'<details class="column-help"><summary>세로셈으로 풀어보기</summary>'+content+'</details>':content;}
+import {columnSteps,columnTasks} from './column-calculation.js?v=c8d3e22c77ad';
+export function columnMarkup({optional=false}={}){const content='<section class="column-work" aria-label="직접 푸는 격자 세로셈"><h2>세로셈</h2><div class="column-grid-host"></div><p class="column-message" aria-live="polite"></p><div class="column-controls"><button data-column="check" type="button">다음 칸</button><button data-column="reset" type="button">처음부터</button></div></section>';return optional?'<details class="column-help"><summary>세로셈으로 풀어보기</summary>'+content+'</details>':content;}
 export function mountColumn(root,data,{onComplete=()=>{},onWrong=()=>{}}={}){
  if(!root)return null;const large=data.large||'L',small=data.small||'mL',commutative=data.readOperands&&data.operation==='+';
  let model=columnSteps(data.a,data.b,data.operation),orders=commutative?[false,true]:[false];

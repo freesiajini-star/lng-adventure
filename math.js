@@ -1,3 +1,4 @@
+import {WEIGHING_OBJECTS} from './container-weight-problems.js';
 import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js';
 export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js';
 import {restoreQuestion,EXTRA_TYPES} from './restoration.js';
@@ -16,7 +17,7 @@ export const mass=n=>n<1000?`${n} g`:`${Math.floor(n/1000)} kg${n%1000?' '+n%100
 export function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function makeQuestion(stage,type,seed=1){
  const variants=TYPE_GROUPS[stage]?.[type],variant=variants?.[(Math.max(0,seed-1)>>>0)%variants.length]??type;
- const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');if(q.column&&q.visual?.kind==='pairedDials')q.column.readOperands=true;q.type=type;q.title=TYPE_NAMES[stage-1][type];return polishQuestion(q);
+ const q=makeQuestionRaw(stage,variant,seed);if(q.visual?.kind==='comparisonBars')q.visual.material=['우유','주스','밀가루','쌀','설탕','소금','물'].find(name=>q.lines.join(' ').includes(name))||(q.visual.unit==='g'?'밀가루':'물');if(q.column&&q.visual?.kind==='pairedDials')q.column.readOperands=true;q.type=type;q.title=TYPE_NAMES[stage-1][type];return polishQuestion(q,seed);
 }
 function makeQuestionRaw(stage,type,seed=1){
  if(!TYPE_NAMES[stage-1]?.[type])throw Error('없는 문항 유형');
@@ -136,12 +137,25 @@ export function validateQuestion(q){
 export function publicQuestion(q){const {explanation,facts,...rest}=q;return {...rest,fields:q.fields.map(({answer,...f})=>f)};}
 export function grade(q,answers){const wrong=q.fields.map((f,i)=>{const answer=answers[i];if(f.kind==='multi')return Array.isArray(answer)&&new Set(answer).size===answer.length&&JSON.stringify([...answer].sort())===JSON.stringify([...f.answer].sort())?-1:i;return String(answer??'').trim()===f.answer?-1:i;}).filter(i=>i>=0);return {ok:!wrong.length,wrong};}
 
-function polishQuestion(q){
+function polishQuestion(q,seed){
  if(q.stage===1&&[3,4,5].includes(q.type)&&q.visual)q.visual.hideTitle=true;
  const hide={1:['더 작은 용기','더 큰 용기','가장 큰 용기','몇 배'],2:['옳은 식','알맞은 기호','바꾼 양'],3:['읽은 값','가장 가까운 사람'],5:['옮길 물'],6:['한 개가 더 무거운 것','물건','몇 배'],7:['물건이 든 상자','바꾼 양','알맞은 기호'],8:['한 눈금','읽은 값','물건'],11:['가장 큰 용기']};
  q.fields.forEach(f=>{if(hide[q.stage]?.includes(f.label))f.hideLabel=true;if(q.stage===4)f.hideLabel=true;if(q.stage===10&&q.type===0&&q.fields.length===1)f.hideLabel=true;});
  if(q.stage===5&&q.fields.length===2){q.fields.sort((a,b)=>a.label.includes('가')?-1:b.label.includes('가')?1:0);q.fields.forEach((f,i)=>f.label=['가','나'][i]);}
  if(q.column&&[4,9].includes(q.stage)&&q.type===5){q.column.readOperands=true;q.column.fromEquation=true;}
  if(q.stage===10&&q.type===1)q.fields.forEach((f,i)=>{f.label=i===0?'상자를 제외한 전체 무게':f.label.replace(/의 무게|무게/g,'').trim();});
+
+ // Keep only quantities explicitly requested as final answers.
+ if(q.stage===10&&q.type===1){const item=WEIGHING_OBJECTS[(Math.max(1,seed)-1)%WEIGHING_OBJECTS.length],one=item.min+(seed*7%(Math.floor((item.max-item.min)/item.step)+1))*item.step,count=2+seed%5,empty=100+seed%6*50,total=count*one+empty;q.lines=['빈 상자의 무게는 '+empty+' g입니다.','같은 '+item.label+' '+count+'개를 상자에 담아 잰 무게는 '+mass(total)+'입니다.',item.label+' 한 개의 무게는 몇 g인가요?','같은 종류의 물건은 한 개의 무게가 모두 같습니다.'];q.fields=[{kind:'number',label:item.label+' 한 개',unit:'g',answer:String(one)}];q.visual={kind:'package',label:item.label,items:count,box:empty,total,one};q.facts=[{label:'상자와 내용물',left:total,right:empty+count*one}];q.explanation='('+total+' − '+empty+') ÷ '+count+' = '+one+' g입니다.';}
+ if(q.stage===10&&q.type===2)q.fields=q.fields.slice(-1);
+ if(q.stage===11&&q.fields.some(f=>f.kind==='choice'))q.fields=q.fields.filter(f=>f.kind!=='number');
+ if(q.stage===12)q.fields=q.fields.slice(q.type===4&&q.lines.join(' ').includes('각각')?-2:-1);
+ if(q.stage===13&&q.type===0&&q.fields.length>2)q.fields=q.fields.slice(-2);
+ if(q.stage===14&&q.type===1&&q.fields.length>1)q.fields=q.fields.slice(-1);
+ if(q.stage===15){if(q.type===4)q.fields=q.fields.filter(f=>f.label!=='기준량의 몇 배');else q.fields=q.fields.slice(-1);}
+ if(q.stage===16&&q.visual?.kind==='balances'&&q.fields.length>1)q.fields=q.fields.slice(q.fields.at(-2).unit==='kg'?-2:-1);
+ if(q.stage===17)q.fields=q.fields.slice(-1);
+ const numbers=q.fields.filter(f=>f.kind==='number'),mixed=numbers.length===2&&['L,mL','kg,g','t,kg'].includes(numbers.map(f=>f.unit).join(','));
+ q.fields.forEach(f=>{if(q.fields.length===1||mixed)f.hideLabel=true;});
  return q;
 }

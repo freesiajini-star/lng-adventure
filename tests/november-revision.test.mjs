@@ -23,7 +23,7 @@ test('stage 11 references and estimates vary names, matching artwork, capacities
  const seen=new Set(),est=new Set();for(let seed=1;seed<=2000;seed++){
   const q=makeQuestion(11,0,seed),v=q.visual;seen.add(v.reference.name);assert.equal(v.reference.name,v.rows[0][0]);assert.ok(renderVisual(v).includes(v.reference.art));const known=new Map([[v.rows[0][0],Number(v.rows[0][1].replace('컵',''))]]);
   for(const [name,relation]of v.rows.slice(1)){const m=relation.match(/^(.+)보다 (\d+)컵 (많음|적음)$/);assert.ok(m);known.set(name,known.get(m[1])+Number(m[2])*(m[3]==='많음'?1:-1));}
-  const numbers=v.rows.slice(1).map(([name])=>String(known.get(name))),winner=[...known].sort((a,b)=>b[1]-a[1])[0][0];assert.deepEqual(q.fields.map(f=>f.answer),[...numbers,winner]);
+  const numbers=v.rows.slice(1).map(([name])=>String(known.get(name))),winner=[...known].sort((a,b)=>b[1]-a[1])[0][0];assert.deepEqual(q.fields.map(f=>f.answer),[winner]);
   for(const type of[2,3,4]){const e=makeQuestion(11,type,seed),ev=e.visual;if(!ev?.reference)continue;est.add(ev.reference.name);const range=GUESS_VESSELS.find(x=>x[0]===ev.reference.name);assert.ok(ev.actualValue>=range[2]&&ev.actualValue<=range[3]);const guesses=ev.rows.map(([name,value])=>({name,value:amount(value)}));assert.ok(guesses.every(g=>g.value>=range[2]&&g.value<=range[3]));assert.equal(new Set(guesses.map(g=>Math.abs(g.value-ev.actualValue))).size,guesses.length);assert.ok(renderVisual(ev).includes(ev.reference.art));}
  }assert.equal(seen.size,7);assert.equal(est.size,10);
 });

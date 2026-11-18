@@ -1,4 +1,4 @@
-import {CARGO_ART_BOUNDS} from './cargo-art-bounds.js?v=3ad8e58aefce';
+import {CARGO_ART_BOUNDS} from './cargo-art-bounds.js?v=c8d3e22c77ad';
 const cache=new Map();
 export function normalizeCarrierImages(root){
  const specs=Object.values(CARGO_ART_BOUNDS),wide=Math.max(...specs.map(s=>s[4]/Math.sqrt(s[6]))),tall=Math.max(...specs.map(s=>s[5]/Math.sqrt(s[6])));

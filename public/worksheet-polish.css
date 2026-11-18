@@ -110,3 +110,12 @@
 .paper .problem-body[data-stage="3"][data-type="1"] .answer-label{text-align:right}
 .paper .problem-body[data-stage="3"][data-type="1"] .choice-group{display:grid;grid-template-columns:repeat(2,64px);gap:10px}
 .paper .problem-body[data-stage="3"][data-type="1"] .choice{width:100%;margin:0}
+
+/* Final-answer and practice controls, 2026-11-18. */
+.scratchpad>summary,.column-help>summary{display:flex;align-items:center;gap:0;list-style:none;padding:12px 14px!important;font-size:16px!important;font-weight:800!important;line-height:1.5;color:var(--stage-ink);background:var(--stage-panel)}
+.scratchpad>summary::marker,.column-help>summary::marker{content:''}.scratchpad>summary::-webkit-details-marker,.column-help>summary::-webkit-details-marker{display:none}
+.column-help{border:1px solid var(--stage-edge);border-radius:14px;background:var(--stage-panel);overflow:hidden}.column-help>summary::before,.column-help>summary::after{display:none!important}
+.numeric-content>.scratchpad{margin:14px 0}.scratchpad+ .answers{margin-top:14px}
+.paper .practice-cell:has(.column-target){z-index:8}.paper .practice-cell .column-target{position:relative;z-index:9;animation:columnFlatFocus 1.1s ease-in-out infinite!important;box-shadow:none!important}
+@keyframes columnFlatFocus{0%,100%{outline-color:color-mix(in srgb,var(--accent) 40%,transparent);outline-width:2px}50%{outline-color:var(--accent);outline-width:3px}}
+.paper .answers:has(>.answer-row:only-child):not(.column-final-fields){display:flex;flex-direction:row;justify-content:center}.paper .answers>.answer-row:only-child{display:flex;justify-content:center;align-items:center;width:auto}
