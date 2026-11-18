@@ -1,4 +1,4 @@
-import {ADDITIONAL_ART} from './additional-art.js?v=ac1b9ece63e7';
+import {ADDITIONAL_ART} from './additional-art.js?v=584be18050bc';
 // ImageGen artwork is stored as independent files. Quantities and markings stay in code.
 const CLEAN_ART=new Set(["plate","tap","dialScaleBody","berry","carrier-8","carrier-13","limit-16-0","carrier-1","kiwi","bathtub","sweetPotato","potato","carrot","radish","pumpkin","cabbage","limit-15-4","carrier-11"]);
 export const artPath=id=>ADDITIONAL_ART[id]||`./assets/art/${id}-${CLEAN_ART.has(id)?'v2':'v1'}.webp`;
