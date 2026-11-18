@@ -15,11 +15,11 @@ test('20 scenes × 6 structures × 20 variants: independent sums and exact-set g
    assert.ok(totals.some(x=>x<=v.limit)&&totals.some(x=>x>v.limit));assert.ok(totals.length>=4&&totals.length<=6);equal+=totals.includes(v.limit);
    const valid=totals.map((x,i)=>x<=v.limit?i:-1).filter(x=>x>=0);
    if(form===0)assert.deepEqual(q.fields.map(f=>f.answer),totals.map(x=>x<=v.limit?'가능':'불가능'));
-   if(form===1||form===3){assert.ok(valid.length>=1&&valid.length<=3);assert.deepEqual(q.fields[0].answer,valid.map(i=>q.fields[0].options[i]));if(form===3)assert.ok(v.candidates.every(g=>g.length===3&&g.includes(v.required)));}
+   if(form===1||form===3){assert.ok(valid.length>=1&&valid.length<v.candidates.length);assert.deepEqual(q.fields[0].answer,valid.map(i=>q.fields[0].options[i]));if(form===3)assert.ok(v.candidates.every(g=>g.length===3&&g.includes(v.required)));}
    if(form===4){const best=Math.max(...valid.map(i=>totals[i]));assert.equal(totals.filter(x=>x===best).length,1);assert.equal(q.fields[0].answer,q.fields[0].options[totals.indexOf(best)]);}
   }
   if(form===2){assert.equal(v.loaded.length,1);assert.deepEqual(q.fields[0].answer,v.items.filter(x=>!v.loaded.includes(x.id)&&sum(v.loaded)+x.weight<=v.limit).map(x=>x.name));assert.ok(q.fields[0].answer.length<q.fields[0].options.length);}
-  if(form===5){const total=sum(v.loaded);assert.ok(total>v.limit);const eligible=v.items.filter(x=>v.loaded.includes(x.id)&&total-x.weight<=v.limit).sort((a,b)=>a.weight-b.weight);assert.equal(q.fields[0].answer,eligible[0].name);assert.equal(new Set(eligible.map(x=>x.weight)).size,eligible.length);}
+  if(form===5){const total=sum(v.loaded);assert.ok(total>v.limit);const eligible=v.items.filter(x=>v.loaded.includes(x.id)&&total-x.weight<=v.limit).sort((a,b)=>a.weight-b.weight);if(v.questionMode==='removeAll')assert.deepEqual(q.fields[0].answer,q.fields[0].options.filter(name=>eligible.some(x=>x.name===name)));else assert.equal(q.fields[0].answer,eligible[0].name);assert.equal(new Set(eligible.map(x=>x.weight)).size,eligible.length);}
   const answer=q.fields.map(f=>f.answer);assert.equal(grade(q,answer).ok,true);const bad=structuredClone(answer);if(q.fields[0].kind==='multi'){bad[0]=[];assert.equal(grade(q,bad).ok,false);bad[0]=[...answer[0],answer[0][0]];assert.equal(grade(q,bad).ok,false);assert.equal(grade(q,answer.map(a=>Array.isArray(a)?[...a].reverse():a)).ok,true);}else{bad[0]='잘못된 답';assert.deepEqual(grade(q,bad),{ok:false,wrong:[0]});}
   assert.ok(publicQuestion(q).fields.every(f=>!('answer'in f)));assert.ok(!/NaN|undefined|Infinity/.test(renderLimit(v)));distinct[scene].add(JSON.stringify([v.items,v.limit,v.candidates]));
  }

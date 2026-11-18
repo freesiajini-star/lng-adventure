@@ -1,5 +1,5 @@
-import {reviseAdvanced} from './advanced-problems.js?v=c8d3e22c77ad';
-import {makeCargoQuestion} from './cargo-problems.js?v=c8d3e22c77ad';
+import {reviseAdvanced} from './advanced-problems.js?v=64f253e53fc0';
+import {makeCargoQuestion} from './cargo-problems.js?v=64f253e53fc0';
 // Quantities are generated in grams or millilitres; pictures never expose an answer.
 export const hasBatchim=s=>{const n=String(s).trim().codePointAt(String(s).trim().length-1);return n>=0xac00&&n<=0xd7a3&&(n-0xac00)%28!==0;};
 export const subject=s=>s+(hasBatchim(s)?'이':'가');

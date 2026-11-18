@@ -119,3 +119,6 @@
 .paper .practice-cell:has(.column-target){z-index:8}.paper .practice-cell .column-target{position:relative;z-index:9;animation:columnFlatFocus 1.1s ease-in-out infinite!important;box-shadow:none!important}
 @keyframes columnFlatFocus{0%,100%{outline-color:color-mix(in srgb,var(--accent) 40%,transparent);outline-width:2px}50%{outline-color:var(--accent);outline-width:3px}}
 .paper .answers:has(>.answer-row:only-child):not(.column-final-fields){display:flex;flex-direction:row;justify-content:center}.paper .answers>.answer-row:only-child{display:flex;justify-content:center;align-items:center;width:auto}
+
+/* Capacity-limit cards must keep names and weights readable on phones. */
+@media(max-width:700px){.paper [data-visual="limitPacking"] .limit-items,.paper [data-visual="limitPacking"] .limit-items:has(>.limit-item:nth-child(5)){grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.paper [data-visual="limitPacking"] .limit-item-art{height:100px}.paper [data-visual="limitPacking"] .limit-item figcaption{overflow-wrap:normal;word-break:keep-all}.paper [data-visual="limitPacking"] .limit-item figcaption span{white-space:nowrap}.paper [data-visual="limitPacking"] .limit-item small{word-break:keep-all}}
