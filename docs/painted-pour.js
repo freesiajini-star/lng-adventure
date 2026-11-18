@@ -1,8 +1,8 @@
-import {VESSEL_PHOTO_BOUNDS} from './vessel-photo-bounds.js?v=584be18050bc';
-import {spillPool} from './spill-pool.js?v=584be18050bc';
-import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=584be18050bc';
-import {artImage,vesselArt} from './art-catalog.js?v=584be18050bc';
-import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=584be18050bc';
+import {VESSEL_PHOTO_BOUNDS} from './vessel-photo-bounds.js?v=a515892c9d7c';
+import {spillPool} from './spill-pool.js?v=a515892c9d7c';
+import {ART_PROFILES,ART_AXES,ART_BOUNDS} from './art-vessel-profiles.js?v=a515892c9d7c';
+import {artImage,vesselArt} from './art-catalog.js?v=a515892c9d7c';
+import {volumeBelow,fillLevel,radiusAt} from './pour-geometry.js?v=a515892c9d7c';
 // Interior coordinates of the EMPTY artwork. Rim ellipses, sleeves, labels and
 // reflections are not changes in the vessel's internal radius.
 const profiles={...ART_PROFILES,
