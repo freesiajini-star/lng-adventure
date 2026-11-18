@@ -36,3 +36,5 @@ test('corrections never earn points even with adjusted points, retries, or reord
   const first=applyAttempt(null,{...event(31,stage,true),points:reward});assert.equal(first.total.score,reward);assert.equal(first.total.correct,1);
  }
 });
+
+test('Korea night lock covers midnight and releases exactly at 06:00 independently of UTC dates',()=>{for(const[at,locked]of [['2026-11-18T20:59:59.999+09:00',false],['2026-11-18T21:00:00+09:00',true],['2026-11-19T00:00:00+09:00',true],['2026-11-19T05:59:59.999+09:00',true],['2026-11-19T06:00:00+09:00',false],['2026-11-18T12:00:00Z',true],['2026-11-18T21:00:00Z',false]])assert.equal(night(Date.parse(at)),locked,at);});

@@ -1,0 +1,11 @@
+import {night} from './learning.js?v=ac1b9ece63e7';
+// Student entry and preview share the same Korea-time lock, without a network dependency.
+export function mountNightLock({doc=document,clock=()=>Date.now(),onUnlock=()=>{}}={}){
+ const overlay=doc.createElement('div');overlay.id='nightLockOverlay';overlay.hidden=true;overlay.setAttribute('role','alertdialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','nightLockTitle');overlay.tabIndex=-1;overlay.innerHTML='<div class="night-lock-card"><div class="night-lock-moon" aria-hidden="true">☾</div><h1 id="nightLockTitle">지금은 쉬는 시간이에요</h1><p>밤 9시부터 아침 6시까지는 탐험을 쉬어요.<br>아침 6시에 다시 만나요!</p></div>';doc.body.append(overlay);
+ let locked=false,previousFocus=null;const inertBefore=new Map();
+ function refresh(){const next=night(clock());if(next===locked)return locked;locked=next;overlay.hidden=!locked;doc.documentElement.classList.toggle('night-locked',locked);if(locked){previousFocus=doc.activeElement;for(const node of doc.querySelectorAll('.masthead,#app')){inertBefore.set(node,node.inert);node.inert=true;}overlay.focus({preventScroll:true});}else{for(const[node,inert]of inertBefore)node.inert=inert;inertBefore.clear();if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});onUnlock();}return locked;}
+ const block=e=>{if(!refresh()||overlay.contains(e.target))return;if(e.cancelable)e.preventDefault();e.stopImmediatePropagation();};
+ const events=['pointerdown','click','keydown','beforeinput','input','change','submit'];for(const type of events)doc.addEventListener(type,block,true);
+ const win=doc.defaultView;doc.addEventListener('visibilitychange',refresh);win.addEventListener('focus',refresh);win.addEventListener('pageshow',refresh);const timer=win.setInterval(refresh,1000);refresh();
+ return{locked:refresh,refresh,destroy(){win.clearInterval(timer);for(const type of events)doc.removeEventListener(type,block,true);doc.removeEventListener('visibilitychange',refresh);win.removeEventListener('focus',refresh);win.removeEventListener('pageshow',refresh);for(const[node,inert]of inertBefore)node.inert=inert;doc.documentElement.classList.remove('night-locked');overlay.remove();}};
+}
