@@ -1,4 +1,4 @@
-import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=dff2bdf4f217';
+import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=8a281ca2f2b6';
 export const RECOMMENDATION_RULES={days:14,minQuestions:10,graduateAccuracy:.8,limit:5,bonusLimit:100};
 export function weakTypes(days){
  const totals={};for(const d of days)for(const[key,t]of Object.entries(d?.types||{})){const match=/^s(\d+)t(\d+)$/.exec(key);if(!match)continue;const stage=+match[1],type=+match[2];if(!ACTIVE_TYPES[stage-1]?.includes(type))continue;const a=totals[key]??={key,stage,type,correct:0,wrong:0};a.correct+=Math.max(0,Number(t.correct)||0);a.wrong+=Math.max(0,Number(t.wrong)||0);}
@@ -9,3 +9,7 @@ export function weakTypes(days){
 // A reservation counts toward the cap until its score write is confirmed.
 export function reserveBonus(old,event){const ledger=structuredClone(old||{awards:{},used:0});ledger.awards=Object.fromEntries(Object.entries(ledger.awards||{}).filter(([,a])=>a));if(Object.values(ledger.awards).some(a=>a?.qid===event.qid))return undefined;const used=Object.keys(ledger.awards).length;if(used>=RECOMMENDATION_RULES.bonusLimit)return undefined;const slot=Array.from({length:RECOMMENDATION_RULES.bonusLimit},(_,i)=>String(i)).find(i=>!ledger.awards[i]);ledger.awards[slot]={qid:event.qid,day:event.day,points:event.basePoints*2,state:'reserved'};ledger.used=used+1;return ledger;}
 export function finishBonus(old,qid,credited){const slot=Object.keys(old?.awards||{}).find(i=>old.awards[i]?.qid===qid);if(slot===undefined||old.awards[slot].state==='credited')return undefined;const ledger=structuredClone(old);ledger.awards=Object.fromEntries(Object.entries(ledger.awards||{}).filter(([,a])=>a));if(credited)ledger.awards[slot].state='credited';else delete ledger.awards[slot];ledger.used=Object.keys(ledger.awards).length;return ledger;}
+
+// Projected ledgers know the exact used count, but only the inspected award slots.
+export function reserveBonusProjection(old,event,slot){if(Object.values(old.awards||{}).some(a=>a?.qid===event.qid)||old.used>=RECOMMENDATION_RULES.bonusLimit)return undefined;if(slot==null||old.awards?.[slot])throw Error('보너스 빈칸을 다시 확인해 주세요.');const ledger=structuredClone(old);ledger.awards??={};ledger.awards[slot]={qid:event.qid,day:event.day,points:event.basePoints*2,state:'reserved'};ledger.used++;return ledger;}
+export function finishBonusProjection(old,qid,credited){const slot=Object.keys(old?.awards||{}).find(i=>old.awards[i]?.qid===qid);if(slot===undefined||old.awards[slot].state==='credited')return undefined;const ledger=structuredClone(old);if(credited)ledger.awards[slot].state='credited';else{delete ledger.awards[slot];ledger.used--;}return ledger;}

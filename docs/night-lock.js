@@ -1,4 +1,4 @@
-import {night} from './learning.js?v=dff2bdf4f217';
+import {night} from './learning.js?v=8a281ca2f2b6';
 // Student entry and preview share the same Korea-time lock, without a network dependency.
 export function mountNightLock({doc=document,clock=()=>Date.now(),onUnlock=()=>{}}={}){
  const overlay=doc.createElement('div');overlay.id='nightLockOverlay';overlay.hidden=true;overlay.setAttribute('role','alertdialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','nightLockTitle');overlay.tabIndex=-1;overlay.innerHTML='<div id="nightLockMessage"><span class="night-emoji" aria-hidden="true">🌜</span><span id="nightLockTitle" class="night-main">봉산초 친구들,<br>지금은 잘 시간입니다.</span><span class="night-sub">밤 9시부터 아침 6시까지 이용을 제한합니다.</span></div>';doc.body.append(overlay);

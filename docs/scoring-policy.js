@@ -1,4 +1,4 @@
-import {ACTIVE_TYPES} from './math.js?v=dff2bdf4f217';
+import {ACTIVE_TYPES} from './math.js?v=8a281ca2f2b6';
 export const policyKey=(stage,type)=>'s'+stage+'t'+type;
 export function scoringScope(policy,classNo){return policy?.classes?.['c'+classNo]?.configured?policy.classes['c'+classNo]:policy?.defaults||{};}
 export function selectionCredit(policy,classNo,stage,type,mode){if(mode!=='selected')return true;const scope=scoringScope(policy,classNo),key=policyKey(stage,type);return !!scope.practice?.[key]||!scope.blocked?.[key];}

@@ -1,4 +1,4 @@
-import {artPath} from './art-catalog.js?v=dff2bdf4f217';
+import {artPath} from './art-catalog.js?v=8a281ca2f2b6';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const mass=g=>g>=1000?`${Math.floor(g/1000)} kg${g%1000?' '+g%1000+' g':''}`:`${g} g`;
 export function renderLimit(v){
