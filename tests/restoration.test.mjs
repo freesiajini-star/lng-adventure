@@ -75,7 +75,7 @@ test('tank tables conserve volume and vary all three tasks independently',()=>{
    v.capacities.forEach((capacity,i)=>{assert.equal(capacity*v.counts[i],v.tank);const[lo,hi]=ranges[v.sources[i]];assert.ok(capacity>=lo&&capacity<=hi);record.objects.add(v.sources[i]);});
    const order=v.capacities.map((amount,i)=>({amount,label:v.labels[i]})).sort((a,b)=>b.amount-a.amount).map(x=>x.label);
    if(type===3&&q.fields.length===4)assert.deepEqual(q.fields.map(f=>f.answer),q.lines.at(-1).includes('큰')?order:[...order].reverse());
-   if(type===4||type===3&&q.fields.length!==4)for(const f of q.fields){const index={'가장 큰 용기':0,'둘째로 큰 용기':1,'둘째로 작은 용기':2,'가장 작은 용기':3}[f.label];assert.equal(f.answer,order[index]);}
+   if(type===4||type===3&&q.fields.length!==4)for(const f of q.fields){const index={'가장 큰 용기':0,'들이가 가장 큰 용기':0,'둘째로 큰 용기':1,'둘째로 작은 용기':2,'가장 작은 용기':3}[f.label];assert.equal(f.answer,order[index]);}
    if(type===5){const match=q.lines.at(-1).match(/^([가나다라]) 용기의 들이는 ([가나다라])/);const a=v.labels.indexOf(match[1]),b=v.labels.indexOf(match[2]);assert.equal(Number(q.fields[0].answer),v.capacities[a]/v.capacities[b]);assert.ok(Number(q.fields[0].answer)>=2&&Number(q.fields[0].answer)<=4);}
    const svg=renderVisual(v);assert.ok(svg.includes('부은 횟수(번)'));for(const count of v.counts)assert.ok(svg.includes('>'+count+'</text>'));
    const data=JSON.stringify([v.sources,v.counts,v.tank]);fixtures.push(data);record.data.add(data);record.answers.add(q.fields.map(f=>f.answer).join(','));

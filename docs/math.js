@@ -1,8 +1,8 @@
-import {WEIGHING_OBJECTS} from './container-weight-problems.js?v=a515892c9d7c';
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=a515892c9d7c';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=a515892c9d7c';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=a515892c9d7c';
-import {reviewQuestion} from './curriculum.js?v=a515892c9d7c';
+import {WEIGHING_OBJECTS} from './container-weight-problems.js?v=0ff5edc406c1';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=0ff5edc406c1';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=0ff5edc406c1';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=0ff5edc406c1';
+import {reviewQuestion} from './curriculum.js?v=0ff5edc406c1';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
@@ -156,6 +156,9 @@ function polishQuestion(q,seed){
  if(q.stage===16&&q.visual?.kind==='balances'&&q.fields.length>1)q.fields=q.fields.slice(q.fields.at(-2).unit==='kg'?-2:-1);
  if(q.stage===17)q.fields=q.fields.slice(-1);
  const numbers=q.fields.filter(f=>f.kind==='number'),mixed=numbers.length===2&&['L,mL','kg,g','t,kg'].includes(numbers.map(f=>f.unit).join(','));
- q.fields.forEach(f=>{if(q.fields.length===1||mixed)f.hideLabel=true;});
+ q.fields.forEach(f=>{if(q.fields.length===1||mixed)f.hideLabel=true;else f.hideLabel=false;});
+ if(q.stage===1&&q.type===3&&q.fields.length>1)for(const f of q.fields)if(f.label==='가장 큰 용기')f.label='들이가 가장 큰 용기';
+ if(!mixed&&q.fields.length>2&&q.fields.every(f=>f.kind==='number')&&q.fields.some(f=>/^(?:나머지|모두 나머지)\s*(?:mL|g|kg)$/.test(f.label))){let group=-1;q.answerLayout='named-quantities';for(const f of q.fields){const tail=/^(?:나머지|모두 나머지)\s*(?:mL|g|kg)$/.test(f.label);if(!tail)group++;f.answerGroup=group;f.appendUnit=tail;f.hideLabel=tail;if(!tail)f.label=f.label.replace(/\s+(?:L|mL|kg|g|t)$/,'');}}
+
  return q;
 }

@@ -156,6 +156,9 @@ function polishQuestion(q,seed){
  if(q.stage===16&&q.visual?.kind==='balances'&&q.fields.length>1)q.fields=q.fields.slice(q.fields.at(-2).unit==='kg'?-2:-1);
  if(q.stage===17)q.fields=q.fields.slice(-1);
  const numbers=q.fields.filter(f=>f.kind==='number'),mixed=numbers.length===2&&['L,mL','kg,g','t,kg'].includes(numbers.map(f=>f.unit).join(','));
- q.fields.forEach(f=>{if(q.fields.length===1||mixed)f.hideLabel=true;});
+ q.fields.forEach(f=>{if(q.fields.length===1||mixed)f.hideLabel=true;else f.hideLabel=false;});
+ if(q.stage===1&&q.type===3&&q.fields.length>1)for(const f of q.fields)if(f.label==='가장 큰 용기')f.label='들이가 가장 큰 용기';
+ if(!mixed&&q.fields.length>2&&q.fields.every(f=>f.kind==='number')&&q.fields.some(f=>/^(?:나머지|모두 나머지)\s*(?:mL|g|kg)$/.test(f.label))){let group=-1;q.answerLayout='named-quantities';for(const f of q.fields){const tail=/^(?:나머지|모두 나머지)\s*(?:mL|g|kg)$/.test(f.label);if(!tail)group++;f.answerGroup=group;f.appendUnit=tail;f.hideLabel=tail;if(!tail)f.label=f.label.replace(/\s+(?:L|mL|kg|g|t)$/,'');}}
+
  return q;
 }

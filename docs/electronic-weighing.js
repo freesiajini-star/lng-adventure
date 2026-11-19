@@ -1,4 +1,4 @@
-import {artImage} from './art-catalog.js?v=a515892c9d7c';
+import {artImage} from './art-catalog.js?v=0ff5edc406c1';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderElectronicWeighing({label,art,count,total,container,containerArt,one=200}){
  const box=container==='상자',size=(box?50:Math.min(110,Math.max(46,85*Math.cbrt(one/200))))*(label==='딸기'?1.1:1),cols=Math.min(3,count),rows=Math.ceil(count/cols);

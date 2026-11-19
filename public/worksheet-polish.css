@@ -122,3 +122,8 @@
 
 /* Capacity-limit cards must keep names and weights readable on phones. */
 @media(max-width:700px){.paper [data-visual="limitPacking"] .limit-items,.paper [data-visual="limitPacking"] .limit-items:has(>.limit-item:nth-child(5)){grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.paper [data-visual="limitPacking"] .limit-item-art{height:100px}.paper [data-visual="limitPacking"] .limit-item figcaption{overflow-wrap:normal;word-break:keep-all}.paper [data-visual="limitPacking"] .limit-item figcaption span{white-space:nowrap}.paper [data-visual="limitPacking"] .limit-item small{word-break:keep-all}}
+
+/* Distinguish separate final quantities while keeping their units together. */
+.paper .problem-body .answers.named-quantities{display:grid;grid-template-columns:max-content max-content max-content;justify-content:center;align-items:center;gap:10px 12px}
+.paper .problem-body .answers.named-quantities>.answer-row{display:contents}.answers.named-quantities .answer-label{grid-column:1;grid-row:var(--answer-line);text-align:right}.answers.named-quantities .entry-wrap{grid-column:2;grid-row:var(--answer-line)}.answers.named-quantities .unit-tail .entry-wrap{grid-column:3}
+@media(max-width:500px){.paper .problem-body .answers.named-quantities{gap:10px 7px}.answers.named-quantities input{width:64px!important}}
