@@ -1,5 +1,5 @@
-import {PLATE_ART_BOUNDS} from './plate-art-bounds.js?v=d1cf92ef0983';
-import {artImage,objectArtwork,OBJECT_ART} from './art-catalog.js?v=d1cf92ef0983';
+import {PLATE_ART_BOUNDS} from './plate-art-bounds.js?v=ea181ab26c73';
+import {artImage,objectArtwork,OBJECT_ART} from './art-catalog.js?v=ea181ab26c73';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=16)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${esc(s)}</text>`;
 const svg=(w,h,c,label)=>`<svg class="refined-scene" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">${c}</svg>`;
