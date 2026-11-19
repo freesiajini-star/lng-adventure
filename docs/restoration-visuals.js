@@ -1,10 +1,10 @@
-import {renderPlateDial,renderFlowScene} from './scene-refinements.js?v=ea181ab26c73';
-import {renderGuess} from './guess-illustration.js?v=ea181ab26c73';
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=ea181ab26c73';
-import {paintedDetails} from './painted-details.js?v=ea181ab26c73';
-import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=ea181ab26c73';
-import {renderFillTable} from './fill-table-illustration.js?v=ea181ab26c73';
-import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=ea181ab26c73';
+import {renderPlateDial,renderFlowScene} from './scene-refinements.js?v=dff2bdf4f217';
+import {renderGuess} from './guess-illustration.js?v=dff2bdf4f217';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=dff2bdf4f217';
+import {paintedDetails} from './painted-details.js?v=dff2bdf4f217';
+import {artImage,objectArtwork,vesselArt,VESSEL_IDS} from './art-catalog.js?v=dff2bdf4f217';
+import {renderFillTable} from './fill-table-illustration.js?v=dff2bdf4f217';
+import {renderSourceVessels,renderCupGroups} from './source-vessels.js?v=dff2bdf4f217';
 const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="var(--stage-ink,#304f4b)" font-family="Malgun Gothic,sans-serif">${e(s)}</text>`;
 const wrap=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${e(label)}">${c}</svg>`;

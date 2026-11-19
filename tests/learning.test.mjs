@@ -38,3 +38,5 @@ test('corrections never earn points even with adjusted points, retries, or reord
 });
 
 test('Korea night lock covers midnight and releases exactly at 06:00 independently of UTC dates',()=>{for(const[at,locked]of [['2026-11-18T20:59:59.999+09:00',false],['2026-11-18T21:00:00+09:00',true],['2026-11-19T00:00:00+09:00',true],['2026-11-19T05:59:59.999+09:00',true],['2026-11-19T06:00:00+09:00',false],['2026-11-18T12:00:00Z',true],['2026-11-18T21:00:00Z',false]])assert.equal(night(Date.parse(at)),locked,at);});
+
+test('older daily revisions cannot replace a newer monthly snapshot at equal timestamps',()=>{const projection=(revision,correct)=>({sourceRevision:revision,updatedAt:1,total:{correct,wrong:0,score:correct,total:correct},stages:{}});let m=updateMonthly(null,'2026-11-19',projection(2,2));m=updateMonthly(m,'2026-11-19',projection(1,1));assert.equal(m.total.score,2);});

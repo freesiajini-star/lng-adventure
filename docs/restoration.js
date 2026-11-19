@@ -1,9 +1,9 @@
-import {makeContainerWeightQuestion} from './container-weight-problems.js?v=ea181ab26c73';
-import {makeLimitQuestion} from './limit-problems.js?v=ea181ab26c73';
-import {makeLifeQuestion} from './life-problems.js?v=ea181ab26c73';
-import {reviseCore} from './core-revisions.js?v=ea181ab26c73';
-import {makeFillTableQuestion} from './fill-tables.js?v=ea181ab26c73';
-import {makePourQuestion} from './pour-problems.js?v=ea181ab26c73';
+import {makeContainerWeightQuestion} from './container-weight-problems.js?v=dff2bdf4f217';
+import {makeLimitQuestion} from './limit-problems.js?v=dff2bdf4f217';
+import {makeLifeQuestion} from './life-problems.js?v=dff2bdf4f217';
+import {reviseCore} from './core-revisions.js?v=dff2bdf4f217';
+import {makeFillTableQuestion} from './fill-tables.js?v=dff2bdf4f217';
+import {makePourQuestion} from './pour-problems.js?v=dff2bdf4f217';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 액체의 들이'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
