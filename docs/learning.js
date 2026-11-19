@@ -17,7 +17,7 @@ export function applyAttempt(old,event,previous=[]){
  if(dayUsage(d,previous).locked)throw Error('오늘은 충분히 탐험했어요. 내일 다시 만나요!');
  const s=d.stages[event.stage]||{...empty(),questions:0};if(!seen.counted&&s.questions>=100)throw Error('이 단계는 오늘 100문제를 풀었어요. 다른 단계를 골라 주세요.');
  if(!seen.counted){s.questions++;seen.counted=true;if(Number.isInteger(event.type)){d.types??={};const key='s'+event.stage+'t'+event.type,t=d.types[key]??={total:0,mixed:0,selected:0,correct:0,wrong:0};t.total++;t[event.selectionMode==='selected'?'selected':'mixed']++;t[event.ok?'correct':'wrong']++;}}for(const target of[d.total,s]){target.correct+=event.ok?1:0;target.wrong+=event.ok?0:1;target.total++;target.score+=event.points;}
- seen[event.ok?'correct':'wrong']=true;d.seen[event.qid]=seen;d.stages[event.stage]=s;
+ seen[event.ok?'correct':'wrong']=true;seen.points=event.points;if(event.ok&&event.bonusCandidate&&event.points===event.basePoints*2)seen.bonus=true;d.seen[event.qid]=seen;d.stages[event.stage]=s;
  const ss=Object.entries(d.sessions).filter(([,v])=>v!=null).sort((a,b)=>b[1].end-b[1].end),last=ss[0];const key=last&&event.at-last[1].end<1800000?last[0]:'s'+event.at;const session=d.sessions[key]||{start:event.at,end:event.at,count:0,correct:0,wrong:0};session.end=Math.max(session.end,event.at);session.count++;session.correct+=event.ok?1:0;session.wrong+=event.ok?0:1;d.sessions[key]=session;d.updatedAt=Math.max(d.updatedAt||0,event.at);if(dayUsage(d,previous).locked)d.locked=true;return d;
 }
 export function dayProjection(d){return d?{total:d.total,stages:d.stages,types:d.types||{},sessions:d.sessions,locked:!!d.locked,updatedAt:d.updatedAt||0}:null;}

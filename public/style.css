@@ -23,3 +23,5 @@
 @media(max-width:420px){.numeric-work .numeric-pad{grid-column:1!important;grid-row:auto!important}}
 .recipe-visual{display:grid;grid-template-columns:160px 1fr;align-items:center;width:100%;column-gap:10px}.recipe-visual>svg{grid-row:1/4;height:100px}.recipe-visual p{grid-column:2;font-size:14px;line-height:1.55}
 @media(max-width:600px){.recipe-visual{grid-template-columns:1fr}.recipe-visual>svg{grid-row:auto;height:70px}.recipe-visual p{grid-column:1}}
+
+.personal-challenges ol{margin:10px 0 0;padding-left:24px}.personal-challenges li{padding:3px 0}.personal-challenges button{display:block;width:100%;text-align:left;padding:9px 10px;font-size:14px;line-height:1.45}.personal-challenges button small{display:block;font-size:12px;font-weight:500;margin-top:4px}.personal-challenges .challenge-note{font-size:12px;line-height:1.6;margin:8px 0;color:#655341}
