@@ -1,14 +1,14 @@
-import {compactRank,completeBoard,boardRows,readBoard,writeBoard} from './compact-ranks.js?v=a6bf77d7dfbf';
-import {createSnapshotCache,clearOptimizationCaches} from './snapshot-cache.js?v=a6bf77d7dfbf';
-import {createConditionalTransactions} from './conditional-transactions.js?v=a6bf77d7dfbf';
-import {weakTypes,reserveBonus,finishBonus,reserveBonusProjection,finishBonusProjection} from './recommendations.js?v=a6bf77d7dfbf';
-import {selectionCredit,cleanPolicyFlags,scoringScope} from './scoring-policy.js?v=a6bf77d7dfbf';
-import {createAdvancedDeck} from './advanced-deck.js?v=a6bf77d7dfbf';
-import {isTeacherClaims} from './teacher-session.js?v=a6bf77d7dfbf';
-import {publicOverviewSnapshot} from './public-overview.js?v=a6bf77d7dfbf';
-import {FIREBASE_CONFIG} from './firebase-config.js?v=a6bf77d7dfbf';
-import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=a6bf77d7dfbf';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly,usageProjection} from './learning.js?v=a6bf77d7dfbf';
+import {compactRank,completeBoard,boardRows,readBoard,writeBoard} from './compact-ranks.js?v=7218b52df547';
+import {createSnapshotCache,clearOptimizationCaches} from './snapshot-cache.js?v=7218b52df547';
+import {createConditionalTransactions} from './conditional-transactions.js?v=7218b52df547';
+import {weakTypes,reserveBonus,finishBonus,reserveBonusProjection,finishBonusProjection} from './recommendations.js?v=7218b52df547';
+import {selectionCredit,cleanPolicyFlags,scoringScope} from './scoring-policy.js?v=7218b52df547';
+import {createAdvancedDeck} from './advanced-deck.js?v=7218b52df547';
+import {isTeacherClaims} from './teacher-session.js?v=7218b52df547';
+import {publicOverviewSnapshot} from './public-overview.js?v=7218b52df547';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=7218b52df547';
+import {makeQuestion,publicQuestion,grade,NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=7218b52df547';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly,usageProjection} from './learning.js?v=7218b52df547';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);
