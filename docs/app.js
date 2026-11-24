@@ -1,16 +1,16 @@
-import {mountLearningLock} from './learning-lock.js?v=f8c3837f1d13';
-import {dayKey} from './learning.js?v=f8c3837f1d13';
-import {mountNightLock} from './night-lock.js?v=f8c3837f1d13';
-import {createAdvancedDeck} from './advanced-deck.js?v=f8c3837f1d13';
-import {fitEquationGroups} from './equation-layout.js?v=f8c3837f1d13';
-import {normalizeCarrierImages} from './art-ink.js?v=f8c3837f1d13';
-import {needsScratchpad,mountScratchpad} from './scratchpad.js?v=f8c3837f1d13';
-import {enlargeWorksheet,fitDiagramText} from './visual-sizing.js?v=f8c3837f1d13';
-import {mountStageGlow,mountRankGlow} from './stage-glow.js?v=f8c3837f1d13';
-import {columnMarkup,mountColumn} from './column-work.js?v=f8c3837f1d13';
-import {api} from './firebase-client.js?v=f8c3837f1d13';
-import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=f8c3837f1d13';
-import {renderVisual} from './visuals.js?v=f8c3837f1d13';
+import {mountLearningLock} from './learning-lock.js?v=4f6805dbf12f';
+import {dayKey} from './learning.js?v=4f6805dbf12f';
+import {mountNightLock} from './night-lock.js?v=4f6805dbf12f';
+import {createAdvancedDeck} from './advanced-deck.js?v=4f6805dbf12f';
+import {fitEquationGroups} from './equation-layout.js?v=4f6805dbf12f';
+import {normalizeCarrierImages} from './art-ink.js?v=4f6805dbf12f';
+import {needsScratchpad,mountScratchpad} from './scratchpad.js?v=4f6805dbf12f';
+import {enlargeWorksheet,fitDiagramText} from './visual-sizing.js?v=4f6805dbf12f';
+import {mountStageGlow,mountRankGlow} from './stage-glow.js?v=4f6805dbf12f';
+import {columnMarkup,mountColumn} from './column-work.js?v=4f6805dbf12f';
+import {api} from './firebase-client.js?v=4f6805dbf12f';
+import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,LEGACY_NICKS,makeQuestion,publicQuestion,grade} from './math.js?v=4f6805dbf12f';
+import {renderVisual} from './visuals.js?v=4f6805dbf12f';
 let personalRecommendations=null;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let columnController=null,scratchController=null;
@@ -24,7 +24,7 @@ function handleUsageLock(error){if(error.status!==423)return false;if(error.mess
 const advancedDeck=createAdvancedDeck();
 const bags=new Map(),pouringDeck=createPourDeck();
 function toast(s){$('#toast').textContent=s;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',4000);}
-function nickname(name){const icon=NICKS.find(x=>x[1]===name)?.[0]||'🌟';return icon+' '+name;}
+function nickname(name){const icon=[...NICKS,...LEGACY_NICKS].find(x=>x[1]===name)?.[0]||'🌟';return icon+' '+name;}
 function identity(){ $('#identity').textContent=preview?'미리보기':student?`${nickname(student.nickname)} · ${student.classNo}반 ${student.studentNo}번`:''; }
 let entryVersion=0,entryFirst=false,proposed='';
 function renderLogin(){personalRecommendations=null;preview=true;student=null;identity();renderEntry();mount();}

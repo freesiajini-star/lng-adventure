@@ -6,11 +6,11 @@ import {dayUsage} from './learning.js';
 import {createFirebaseAPI} from './firebase-client.js';
 import {createTeacherStorage} from './teacher-session.js';
 const api=createFirebaseAPI({storage:createTeacherStorage()});
-import {STAGES,NICKS} from './math.js';
+import {STAGES,NICKS,LEGACY_NICKS} from './math.js';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 let tab='activity',cl='all',date=today(),month=today().slice(0,7),data=null,credentials=null,detailId=null,dirty=false;
-const label=s=>`${s.class_no}반 ${s.student_no}번 · ${s.nickname?(NICKS.find(x=>x[1]===s.nickname)?.[0]||'')+' '+s.nickname:'입장 전'}`;
+const label=s=>`${s.class_no}반 ${s.student_no}번 · ${s.nickname?([...NICKS,...LEGACY_NICKS].find(x=>x[1]===s.nickname)?.[0]||'')+' '+s.nickname:'입장 전'}`;
 function toast(s){$('#toast').textContent=s;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',4000);}
 function login(){document.querySelector('#teacherApp').innerHTML='<div class="teacher-shell"><section class="paper login-card"><h2>교사 전용 대시보드</h2><p>처음 한 번은 선생님 전용 바로가기로 열어 주세요.</p><p>인증한 브라우저에서는 다음부터 teacher.html 주소만 열면 자동으로 들어옵니다.</p><a href="./">학생 화면으로 돌아가기</a></section></div>';}
 async function mount(){$('#teacherLogout').hidden=false;$('#teacherApp').innerHTML=`<div class="teacher-shell"><div class="teacher-top"><div><h1>선생님의 탐험 노트</h1><p>3학년 · 5개 반 · 125명</p></div><span id="refreshState" class="small" style="color:#d3dfc4">최대 1분 간격 자동 갱신</span></div><div class="teacher-tabs"><button data-tab="activity">학습 현황</button><button data-tab="rank">점수판</button><button data-tab="stats">단계별 통계</button><button data-tab="credentials">비밀번호·QR</button><button data-tab="points">배점 설정</button></div><div class="teacher-controls"><select id="classFilter" aria-label="반 선택"><option value="all">전체 반</option>${[1,2,3,4,5].map(c=>`<option value="${c}">${c}반</option>`).join('')}</select><input id="dateFilter" type="date" value="${date}" aria-label="날짜 선택"><input id="monthFilter" type="month" value="${month}" aria-label="순위 월 선택"><button id="refresh">새로고침</button><button id="previewQuestions">문제 미리보기 ↗</button></div><div class="teacher-classtabs" aria-label="학급 선택"><button data-class-filter="all">전체</button><button data-class-filter="1">1반</button><button data-class-filter="2">2반</button><button data-class-filter="3">3반</button><button data-class-filter="4">4반</button><button data-class-filter="5">5반</button></div><section class="paper teacher-content" id="content"></section></div>`;

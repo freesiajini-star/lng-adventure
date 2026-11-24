@@ -9,7 +9,7 @@ import {enlargeWorksheet,fitDiagramText} from './visual-sizing.js';
 import {mountStageGlow,mountRankGlow} from './stage-glow.js';
 import {columnMarkup,mountColumn} from './column-work.js';
 import {api} from './firebase-client.js';
-import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,makeQuestion,publicQuestion,grade} from './math.js';
+import {STAGES,COLORS,TYPE_NAMES,ACTIVE_TYPES,createPourDeck,NICKS,LEGACY_NICKS,makeQuestion,publicQuestion,grade} from './math.js';
 import {renderVisual} from './visuals.js';
 let personalRecommendations=null;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -24,7 +24,7 @@ function handleUsageLock(error){if(error.status!==423)return false;if(error.mess
 const advancedDeck=createAdvancedDeck();
 const bags=new Map(),pouringDeck=createPourDeck();
 function toast(s){$('#toast').textContent=s;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',4000);}
-function nickname(name){const icon=NICKS.find(x=>x[1]===name)?.[0]||'🌟';return icon+' '+name;}
+function nickname(name){const icon=[...NICKS,...LEGACY_NICKS].find(x=>x[1]===name)?.[0]||'🌟';return icon+' '+name;}
 function identity(){ $('#identity').textContent=preview?'미리보기':student?`${nickname(student.nickname)} · ${student.classNo}반 ${student.studentNo}번`:''; }
 let entryVersion=0,entryFirst=false,proposed='';
 function renderLogin(){personalRecommendations=null;preview=true;student=null;identity();renderEntry();mount();}
