@@ -1,0 +1,1651 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>들이 실험실</title></head><body>
+<title>들이 실험실</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 레이아웃: 위 = 진행 단계, 가운데 = 실험 무대, 아래 = 조작·안내, 오른쪽(넓은 화면) = 기록·질문 */
+:root{
+  --bg:#FBF6EC; --surface:#FFFFFF; --surface2:#FFF9F0; --ink:#2F2B45; --muted:#6A6585; --line:#E6DCCB;
+  --primary:#D6532F; --primary-ink:#FFFFFF; --focus:#2F6FC9;
+  --sky:#D3EBF8; --mint:#D2F0DE; --lemon:#FFEFB0; --lilac:#E5DEFB; --rose:#FFDCE4;
+  --good:#2A8F61; --good-soft:#D8F3E4; --try:#A8630F; --try-soft:#FFEBC4; --bad:#B8403A;
+  --wall:#DCEEF8; --dot:#C7E2F1; --wood:#EBCB9F; --wood-d:#D2AB78; --pedestal:#F5DDB8;
+  --glass:rgba(255,255,255,.46); --glass-line:#7F94BE; --water:#79C8EE; --water-hi:#E3F7FF;
+  --cap-blue:#5C9CF0; --cap-green:#5EC48B; --cap-pink:#F4A2BD; --cap-amber:#F2B35F; --cap-lilac:#A895EC;
+  --font-d:'Jua','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+  --font-b:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1D1A2C; --surface:#2A2640; --surface2:#322D4C; --ink:#F3EFFF; --muted:#B7B1D3; --line:#463F66;
+    --primary:#F0805F; --primary-ink:#1D1A2C; --focus:#8DB8FF;
+    --sky:#2C4A63; --mint:#2A4A3E; --lemon:#5B4F22; --lilac:#413A6E; --rose:#5C3342;
+    --good:#6BD8A2; --good-soft:#244636; --try:#F4C171; --try-soft:#4D3C1B; --bad:#FF8E86;
+    --wall:#2A3556; --dot:#33406A; --wood:#8A6A47; --wood-d:#6E533A; --pedestal:#6F5A41;
+    --glass:rgba(255,255,255,.10); --glass-line:#A9BCE6; --water:#5DB6E3; --water-hi:#C6ECFF;
+    --cap-blue:#6FA8F5; --cap-green:#63CE90; --cap-pink:#F4A2BD; --cap-amber:#F2B35F; --cap-lilac:#B3A2F2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1D1A2C; --surface:#2A2640; --surface2:#322D4C; --ink:#F3EFFF; --muted:#B7B1D3; --line:#463F66;
+  --primary:#F0805F; --primary-ink:#1D1A2C; --focus:#8DB8FF;
+  --sky:#2C4A63; --mint:#2A4A3E; --lemon:#5B4F22; --lilac:#413A6E; --rose:#5C3342;
+  --good:#6BD8A2; --good-soft:#244636; --try:#F4C171; --try-soft:#4D3C1B; --bad:#FF8E86;
+  --wall:#2A3556; --dot:#33406A; --wood:#8A6A47; --wood-d:#6E533A; --pedestal:#6F5A41;
+  --glass:rgba(255,255,255,.10); --glass-line:#A9BCE6; --water:#5DB6E3; --water-hi:#C6ECFF;
+  --cap-blue:#6FA8F5; --cap-green:#63CE90; --cap-pink:#F4A2BD; --cap-amber:#F2B35F; --cap-lilac:#B3A2F2;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 17px/1.55 var(--font-b);
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  padding-block:10px 48px;
+}
+.wrap{max-width:1280px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-d);font-weight:400;margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- 상단 진행 표시 ---------- */
+.top{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:4px 0 10px}
+.brand{
+  display:flex;align-items:center;gap:10px;background:none;border:0;cursor:pointer;padding:6px 8px 6px 0;
+  font:400 26px/1 var(--font-d);color:var(--ink);
+}
+.brand svg{width:34px;height:34px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 0 auto;padding:0;list-style:none}
+.step{
+  min-height:50px;padding:6px 16px 6px 8px;border-radius:999px;border:2px solid var(--line);background:var(--surface);
+  display:flex;align-items:center;gap:9px;cursor:pointer;font:400 17px/1 var(--font-d);color:var(--ink);
+  transition:border-color .15s, background .15s;
+}
+.step:hover{border-color:var(--muted)}
+.step .n{
+  width:34px;height:34px;border-radius:50%;background:var(--lilac);display:grid;place-items:center;
+  font:400 18px/1 var(--font-d);flex:none;
+}
+.step.cur{border-color:var(--ink);background:var(--lemon)}
+.step.done .n{background:var(--good);color:#fff}
+.step.done .n span{display:none}
+.step .ck{display:none;width:18px;height:18px}
+.step.done .ck{display:block}
+.prog{font:500 15px var(--font-b);color:var(--muted);align-self:center}
+
+/* ---------- 버튼·칩 ---------- */
+.btn{
+  font:400 21px/1.1 var(--font-d);min-height:58px;padding:12px 24px;border-radius:18px;
+  border:2px solid var(--ink);background:var(--surface);color:var(--ink);cursor:pointer;
+  transition:transform .12s ease, background .15s ease;touch-action:manipulation;
+}
+.btn:hover{transform:translateY(-1px);background:var(--surface2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--primary-ink)}
+.btn.primary:hover{filter:brightness(1.05);background:var(--primary)}
+.btn.soft{border-color:var(--line);background:var(--sky)}
+.btn.ghost{border-color:var(--line);background:transparent;font-size:18px;min-height:52px}
+.btn.small{min-height:50px;font-size:18px;padding:8px 18px}
+.btn[disabled]{opacity:.42;cursor:not-allowed;transform:none}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  min-height:56px;min-width:76px;padding:8px 18px;border-radius:16px;border:2px solid var(--line);
+  background:var(--surface2);font:400 20px/1.2 var(--font-d);cursor:pointer;color:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;touch-action:manipulation;
+  transition:background .15s,border-color .15s,transform .12s;
+}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--lemon)}
+.chip.good{border-color:var(--good);background:var(--good-soft)}
+.chip.bad{border-color:var(--try);background:var(--try-soft)}
+.chip[disabled]{cursor:default;opacity:1}
+.chip:not(.good)[disabled]{opacity:.55}
+.chip svg{width:38px;height:46px;flex:none}
+.chips.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chip.v{gap:6px;min-width:0;min-height:54px;padding:5px 8px;font-size:19px;white-space:nowrap}
+.chip.v svg{width:26px;height:34px}
+@media (max-width:1400px){.chip.v{flex-direction:column;gap:2px;min-height:78px;padding:6px 4px}.chip.v svg{width:32px;height:42px}}
+.pred-first .side{gap:12px}
+.pred-first .card{padding:14px 18px;gap:10px}
+.pred-first .q + .q{padding-top:10px}
+.pred-first .q{gap:8px}
+.pred-first .fb:not(:empty){padding:6px 12px;font-size:15px;white-space:nowrap}
+.pred-first .card h3{font-size:21px}
+@media (max-width:1200px){.pred-first .fb:not(:empty){white-space:normal}}
+.chip.wide{justify-content:flex-start;text-align:left;font-family:var(--font-b);font-weight:500;font-size:17px;padding:10px 16px;line-height:1.35}
+
+/* ---------- 홈 ---------- */
+.home{display:grid;gap:26px;padding-top:4px}
+.hero{
+  border-radius:32px;overflow:hidden;border:2px solid var(--line);background:var(--wall);
+  display:grid;grid-template-rows:auto auto;
+}
+.hero-art{display:block;width:100%;height:auto;aspect-ratio:960/330}
+.hero-text{background:var(--surface);padding:28px clamp(20px,4vw,48px) 32px;display:grid;gap:16px;justify-items:start}
+.hero-text h1{font-size:clamp(34px,5.4vw,60px)}
+.hero-text .sub{font:500 clamp(19px,2.4vw,24px)/1.4 var(--font-b);color:var(--muted)}
+.hero-text .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:0;padding:0;list-style:none}
+.plan li{
+  background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px 18px;
+  display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;
+}
+.plan .n{
+  grid-row:span 2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  font:400 22px/1 var(--font-d);background:var(--lilac);
+}
+.plan b{font:400 21px/1.25 var(--font-d)}
+.plan span{color:var(--muted);font-size:15.5px;line-height:1.45}
+.note{font-size:15px;color:var(--muted)}
+
+/* ---------- 실험실 ---------- */
+.lab-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;margin:0 0 12px}
+.lab-head .goal{flex-basis:100%;order:3}
+.lab-head h2{font-size:clamp(26px,3.4vw,36px)}
+.lab-head .goal{color:var(--muted);font-weight:500}
+.subtabs{display:flex;gap:10px;flex-wrap:wrap}
+.subtabs .chip{min-height:50px;font-size:18px}
+.lab-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(320px,1fr);gap:22px;align-items:start}
+.lab-grid.pred-first{grid-template-columns:minmax(320px,1fr) minmax(0,1.6fr)}
+.lab-grid.pred-first .side{order:-1}
+@media (max-width:1040px){.lab-grid,.lab-grid.pred-first{grid-template-columns:minmax(0,1fr)}}
+.stage-col{display:grid;gap:14px;min-width:0}
+.stage-wrap{border-radius:26px;overflow:hidden;border:2px solid var(--line);background:var(--wall);aspect-ratio:960/620}
+#stage,#homeSvg{display:block;width:100%;height:100%;user-select:none;-webkit-user-select:none}
+.controls{display:grid;gap:14px;min-width:0}
+.guide{
+  font:500 18.5px/1.5 var(--font-b);background:var(--surface);border:2px solid var(--line);border-radius:18px;
+  padding:14px 18px;display:flex;gap:12px;align-items:flex-start;
+}
+.guide svg{flex:none;width:26px;height:26px;margin-top:2px}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.toggle{display:inline-flex;gap:10px;align-items:center;font-weight:500;font-size:16px;cursor:pointer;min-height:44px}
+.toggle input{width:22px;height:22px;accent-color:var(--primary)}
+.side{display:grid;gap:16px;min-width:0}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:18px 20px;display:grid;gap:14px;min-width:0}
+.card h3{font-size:23px}
+.card .hint{font-size:15.5px;color:var(--muted)}
+.card.locked{background:transparent;border-style:dashed}
+.card.locked h3{color:var(--muted)}
+.lab-nav{display:flex;gap:8px;margin-left:auto;order:2}
+.lab-nav .btn{min-height:46px;font-size:18px;padding:8px 18px}
+
+/* 질문 */
+.q{display:grid;gap:10px}
+.q + .q{border-top:2px dashed var(--line);padding-top:16px}
+.qt{font:500 18.5px/1.45 var(--font-b)}
+.fb{min-height:0;font:500 16.5px/1.5 var(--font-b);border-radius:14px;padding:0}
+.fb:not(:empty){padding:10px 14px}
+.fb.good{background:var(--good-soft);color:var(--ink);animation:cheer .5s ease-out}
+.fb.good::before{content:"★ ";color:var(--good);font-family:var(--font-d)}
+.fb.try{background:var(--try-soft);color:var(--ink)}
+.shake{animation:shake .38s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes cheer{0%{transform:scale(.94);opacity:.4}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+
+/* 표 */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:17px;table-layout:fixed}
+.tbl caption{text-align:left;font:400 22px var(--font-d);padding-bottom:10px}
+.tbl th,.tbl td{padding:10px 8px;text-align:center;border-bottom:2px solid var(--line);overflow-wrap:anywhere}
+.tbl thead th{font:400 17px var(--font-d);border-bottom-color:var(--ink);background:var(--surface2)}
+.tbl tbody th{text-align:left;font:500 16px var(--font-b)}
+.tbl tr.cur th,.tbl tr.cur td{background:var(--lemon)}
+.tbl td.have{font:400 21px var(--font-d);color:var(--ink)}
+.tbl td.have.ok{background:var(--good-soft)}
+.tbl .ph{color:var(--muted);font-size:14.5px}
+.tbl-wrap{overflow-x:auto}
+
+/* 측정 카드 */
+.scards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.scard{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:14px 16px;display:grid;gap:12px;min-width:0}
+.scard-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font:400 21px var(--font-d)}
+.scard-h .cnt{margin-left:auto;font:400 18px var(--font-d);color:var(--muted)}
+.tagc{display:inline-grid;place-items:center;min-width:40px;height:40px;padding:0 10px;border-radius:12px;font:400 21px var(--font-d);color:#1d1a2c}
+.tagc.blue{background:var(--cap-blue)}.tagc.green{background:var(--cap-green)}.tagc.amber{background:var(--cap-amber)}.tagc.pink{background:var(--cap-pink)}.tagc.lilac{background:var(--cap-lilac)}
+.rec-in{display:grid;gap:10px;border-top:2px dashed var(--line);padding-top:12px}
+.rec-in .line{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font:500 18px var(--font-b)}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{width:50px;height:50px;border-radius:14px;border:2px solid var(--ink);background:var(--surface);font:400 26px/1 var(--font-d);cursor:pointer;color:var(--ink)}
+.stepper button:disabled{opacity:.4;cursor:not-allowed}
+.stepper output{min-width:48px;text-align:center;font:400 30px var(--font-d)}
+.ucards{display:flex;gap:12px;flex-wrap:wrap}
+.ucard{
+  border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:8px 14px 10px;cursor:pointer;
+  display:grid;justify-items:center;gap:2px;min-width:132px;font:400 18px/1.2 var(--font-d);color:var(--ink);touch-action:manipulation;
+}
+.ucard svg{width:112px;height:76px}
+.ucard[aria-pressed="true"]{border-color:var(--ink);background:var(--lemon)}
+.ucard:hover:not([disabled]){border-color:var(--muted)}
+.ucard[disabled]{opacity:.5;cursor:not-allowed}
+.sel,.num-in{font:400 22px var(--font-d)}
+select,input[type=number]{
+  font:500 18px var(--font-b);min-height:52px;padding:8px 12px;border-radius:14px;border:2px solid var(--ink);
+  background:var(--surface);color:var(--ink);max-width:100%;
+}
+input[type=number]{width:96px;text-align:center;font:400 26px var(--font-d)}
+.sentence{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font:500 18.5px/1.6 var(--font-b)}
+
+/* 무대(SVG) */
+.wall{fill:var(--wall)} .dot{fill:var(--dot)}
+.shelf{fill:var(--wood)} .shelf-sh{fill:var(--wood-d)}
+.pedestal{fill:var(--pedestal);stroke:var(--wood-d);stroke-width:2.5}
+.pedestal-top{fill:var(--wood);stroke:var(--wood-d);stroke-width:2.5}
+.tagbox{fill:var(--surface);stroke:var(--ink);stroke-width:2.5}
+.tagtxt{font-family:var(--font-d);fill:var(--ink);font-size:23px;text-anchor:middle}
+.tagtxt.s{font-size:19px}
+.lbl{font-family:var(--font-b);font-weight:700;fill:var(--ink);font-size:17px;text-anchor:middle}
+.lbl.bg{paint-order:stroke;stroke:var(--wall);stroke-width:5px;stroke-linejoin:round}
+.vessel{outline:none}
+.gfill{fill:var(--glass)}
+.gline{fill:none;stroke:var(--glass-line);stroke-width:3.5;stroke-linejoin:round;transition:stroke .15s}
+.water{fill:var(--water);opacity:.93}
+.surf{fill:none;stroke:var(--water-hi);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.shine{fill:#fff;opacity:.55}
+.pleat{stroke:var(--glass-line);stroke-width:1.8;fill:none;opacity:.4}
+.ridge{stroke:rgba(255,255,255,.65);stroke-width:2;fill:none}
+.cap-blue{fill:var(--cap-blue)}.cap-green{fill:var(--cap-green)}.cap-pink{fill:var(--cap-pink)}.cap-amber{fill:var(--cap-amber)}.cap-lilac{fill:var(--cap-lilac)}
+.band{fill:var(--cap-pink);opacity:.5}
+.band.blue{fill:var(--cap-blue)}
+.handle{fill:none;stroke:var(--glass-line);stroke-width:8;stroke-linecap:round}
+.rim{fill:var(--glass-line);opacity:.55}
+.tick{stroke:var(--glass-line);stroke-width:2.4;stroke-linecap:round;opacity:.8}
+.capg{transition:transform .4s ease, opacity .4s ease}
+.capg.off{transform:translateY(-30px);opacity:0}
+.pop{transform-origin:0 0;transition:transform .28s cubic-bezier(.3,1.5,.5,1)}
+.pop.focus{transform:scale(1.08)}
+.vessel.drag{cursor:grab;touch-action:none}
+.vessel.dragging{cursor:grabbing}
+.vessel.drag:hover .gline,.vessel.clk:hover .gline,.vessel.clk:focus-visible .gline{stroke:var(--focus);stroke-width:5}
+.vessel.clk{cursor:pointer}
+.vessel.dim{opacity:.45}
+.s-body{stroke:var(--water);fill:none;stroke-linecap:round}
+.s-hi{stroke:var(--water-hi);fill:none;stroke-dasharray:10 22;stroke-linecap:round;opacity:.9}
+.zone{fill:none;stroke:var(--primary);stroke-width:3;stroke-dasharray:8 8;opacity:0;transition:opacity .2s}
+.zone.on{opacity:.85;animation:dash 1.2s linear infinite}
+.zone.hot{fill:var(--primary);fill-opacity:.12;opacity:1}
+@keyframes dash{to{stroke-dashoffset:-32}}
+.numc{fill:var(--lemon);stroke:var(--ink);stroke-width:2.5}
+.numt{font-family:var(--font-d);font-size:17px;text-anchor:middle;fill:#2F2B45}
+.num-in{transform-origin:0 0;animation:popin .35s cubic-bezier(.3,1.6,.5,1)}
+svg.nonum .num{display:none}
+@keyframes popin{from{transform:scale(0)}to{transform:scale(1)}}
+.pipe{fill:var(--wood-d)}
+.dimline{stroke:var(--primary);stroke-width:2.5;stroke-dasharray:6 5;fill:none}
+.dimtxt{font-family:var(--font-b);font-weight:700;font-size:15px;fill:var(--primary);text-anchor:middle}
+.cmp{stroke-width:3;stroke-dasharray:10 7;fill:none;opacity:.95}
+.cmp.blue{stroke:var(--cap-blue)}.cmp.green{stroke:var(--cap-green)}
+.hl{fill:var(--lemon);fill-opacity:.35;stroke:var(--primary);stroke-width:3.5;stroke-dasharray:9 7}
+.callout rect{fill:var(--surface);stroke:var(--ink);stroke-width:2.5}
+.callout text{font-family:var(--font-d);font-size:21px;fill:var(--ink);text-anchor:middle}
+.fadein{animation:fadein .5s ease both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* 마무리 */
+.sum{display:grid;gap:20px;max-width:860px;margin:0 auto}
+.sum h2{font-size:clamp(28px,4vw,40px)}
+.blank{display:grid;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px 20px}
+.blank.ok{border-color:var(--good);background:var(--good-soft)}
+.blank .sentence{font-size:20px}
+.win{background:var(--lemon);border:2px solid var(--ink);border-radius:24px;padding:22px 24px;display:grid;gap:10px;justify-items:start}
+.win h3{font-size:30px}
+
+@media (max-width:720px){
+  .step .t{display:none}
+  .step{padding:6px 8px}
+  .btn{font-size:19px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* 활동 3·4: 한 화면에 들어오도록 줄인 배치 */
+.urow{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:center}
+.ulabel{font:400 19px var(--font-d)}
+.urow-end{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mrows{display:grid;gap:8px}
+.mrow{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:6px 14px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;min-width:0}
+.mrow .mname{font:400 20px var(--font-d)}
+.mrow .mhint{color:var(--muted);font-weight:500;font-size:16px}
+.mrow .mlabel{font:500 17px var(--font-b)}
+.mrow .cnt{margin-left:auto;font:400 17px var(--font-d);color:var(--muted)}
+.mrow .fb{flex-basis:100%;font-size:15px}
+.mrow .btn.small,.urow .btn.small{min-height:44px;font-size:17px;padding:6px 14px}
+.mrow .stepper button{width:44px;height:44px}
+.mrow .chip{min-height:44px;font-size:17px;min-width:0;padding:6px 12px}
+.stage-wrap{min-height:210px}
+.fit .stage-col{gap:10px}
+.fit .controls{gap:10px}
+.fit .guide{padding:10px 16px;font-size:17px}
+.fit .ucard{min-width:96px;padding:3px 10px 5px;font-size:16px}
+.fit .ucard svg{width:70px;height:44px}
+.fit .fb:not(:empty){padding:6px 12px;font-size:15px}
+.fit .side{gap:12px}
+.fit .card{padding:12px 16px;gap:8px}
+.fit .q + .q{padding-top:8px}
+.fit .q{gap:6px}
+.fit .chip.wide{min-height:40px;padding:5px 14px}
+.mrow .btn.ghost{margin-left:auto}
+.fit .qt{font-size:17px}
+.fit .chip{min-height:48px;font-size:18px}
+.fit .tbl caption{font-size:19px;padding-bottom:6px}
+.fit .tbl th,.fit .tbl td{padding:6px 6px}
+.fit .tbl tbody th{white-space:nowrap}
+.fit .tbl col.c1{width:30%}
+
+/* 낮은 화면(크롬북 등): 모든 요소를 줄여서 스크롤 없이 한 화면에 들어오게 한다 */
+@media (max-height: 980px){
+  body{padding-block:4px 4px}
+  .top{padding:2px 0 6px;gap:8px 12px}
+  .brand{font-size:21px}.brand svg{width:26px;height:26px}
+  .step{min-height:38px;padding:3px 12px 3px 5px;font-size:15px}
+  .step .n{width:28px;height:28px;font-size:15px}
+  .prog{font-size:13px}
+  .lab-head{margin:0 0 8px;gap:4px 14px}
+  .lab-head h2{font-size:21px}
+  .lab-head .goal{display:none}
+  .subtabs{gap:8px}.subtabs .chip{min-height:38px;font-size:15px;padding:4px 12px}
+  .lab-nav .btn{min-height:38px;font-size:16px;padding:4px 14px}
+  .lab-grid{gap:14px}
+  .stage-col,.controls{gap:8px}
+  .guide{padding:6px 12px;font-size:15px;gap:8px}.guide svg{width:20px;height:20px;margin-top:1px}
+  .btn{min-height:46px;font-size:18px;padding:6px 18px;border-radius:14px}
+  .btn.small,.mrow .btn.small,.urow .btn.small{min-height:38px;font-size:15px;padding:4px 12px}
+  .btn.ghost{min-height:40px;font-size:15px}
+  .chip{min-height:42px;font-size:17px;padding:4px 12px}
+  .chip.v{min-height:44px;padding:3px 6px;font-size:16px;flex-direction:row;gap:6px}
+  .chip.v svg{width:22px;height:30px}
+  .fit .chip{min-height:34px;font-size:15px;padding:2px 12px}
+  .chip.wide,.fit .chip.wide{min-height:34px;font-size:15px;padding:3px 12px}
+  .pred-first .chip.v{min-height:38px}
+  .side{gap:8px}
+  .card,.pred-first .card,.fit .card{padding:7px 12px;gap:5px}
+  .card h3,.pred-first .card h3{font-size:17px}
+  .q,.fit .q,.pred-first .q{gap:5px}
+  .q + .q,.fit .q + .q,.pred-first .q + .q{padding-top:6px}
+  .qt,.fit .qt{font-size:15px;line-height:1.35}
+  .fb,.fb:not(:empty),.pred-first .fb:not(:empty),.fit .fb:not(:empty){font-size:13.5px;padding:4px 10px;line-height:1.35}
+  .card .hint,.hint{font-size:13.5px}
+  .tbl{font-size:14px}
+  .tbl th,.tbl td,.fit .tbl th,.fit .tbl td{padding:3px 4px}
+  .tbl thead th{font-size:14px}.tbl tbody th{font-size:14px}.tbl td.have{font-size:16px}
+  .ucards{gap:8px}
+  .ucard,.fit .ucard{display:flex;align-items:center;gap:6px;min-width:0;padding:2px 12px 2px 6px;font-size:15px;border-radius:14px}
+  .ucard svg,.fit .ucard svg{width:48px;height:34px}
+  .ulabel{font-size:16px}
+  .mrow{padding:3px 10px;gap:4px 8px;border-radius:14px}
+  .mrow .mname{font-size:17px}.mrow .mhint{font-size:14px}.mrow .mlabel{font-size:15px}
+  .mrow .stepper button{width:36px;height:36px;font-size:20px}
+  .stepper output{font-size:22px;min-width:32px}
+  .mrow .chip{min-height:36px;font-size:14px}
+  .scards{gap:8px}
+  select,input[type=number]{min-height:34px;font-size:14px;padding:2px 6px}
+  select{max-width:100%}
+  input[type=number]{width:72px;font-size:20px}
+  .sentence{font-size:14px;gap:5px;line-height:1.3}
+  .toggle{min-height:34px;font-size:14px}
+}
+@media (max-height: 700px){
+  .guide{font-size:14px;padding:4px 10px}
+  .btn{min-height:42px;font-size:17px}
+  .tbl th,.tbl td{padding:3px 4px}
+  .mrow .stepper button{width:32px;height:32px}
+  .lab-head h2{font-size:19px}
+}
+@media (max-height: 650px){
+  .pred-first .chip.v{min-height:33px}
+  .chip.v svg{width:18px;height:24px}
+  .fit .chip{min-height:30px;font-size:14px}
+  .chip{min-height:36px;font-size:15px}
+  .fb,.fb:not(:empty),.pred-first .fb:not(:empty),.fit .fb:not(:empty){padding:2px 8px;font-size:13px}
+  .qt,.fit .qt{font-size:14px}
+  .card h3,.pred-first .card h3{font-size:15px}
+  .q,.fit .q,.pred-first .q{gap:3px}
+  .q + .q,.fit .q + .q,.pred-first .q + .q{padding-top:4px}
+  .card,.pred-first .card,.fit .card{padding:6px 10px;gap:4px}
+  .side{gap:6px}
+  .tbl th,.tbl td,.fit .tbl th,.fit .tbl td{padding:2px 4px}
+  select,input[type=number]{min-height:30px}
+  .guide{padding:3px 10px}
+  .step{min-height:34px}.step .n{width:26px;height:26px}
+  .lab-nav .btn,.subtabs .chip{min-height:34px}
+}
+</style>
+<div class="wrap" id="app">
+  <header class="top">
+    <button class="brand" data-act="home" aria-label="처음 화면으로">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M13 5h14v6l5 20a4 4 0 0 1-4 5H12a4 4 0 0 1-4-5l5-20z" fill="var(--glass)" stroke="var(--glass-line)" stroke-width="2.5" stroke-linejoin="round"/><path d="M10.4 24h19.2l1.9 7.6a3 3 0 0 1-3 3.4H11.5a3 3 0 0 1-3-3.4z" fill="var(--water)"/><rect x="11" y="3" width="18" height="5" rx="2.5" fill="var(--cap-blue)"/></svg>
+      <span>들이 실험실</span>
+    </button>
+    <ol class="steps" id="steps" aria-label="활동 진행 상황"></ol>
+  </header>
+
+  <main id="main">
+    <section id="v-home" class="home">
+      <div class="hero">
+        <svg id="homeSvg" class="hero-art" viewBox="0 0 960 330" role="img" aria-label="물병, 종이컵, 계량컵이 놓인 실험실 선반"></svg>
+        <div class="hero-text">
+          <h1>들이를 비교해 봐요!</h1>
+          <p class="sub">물건마다 물이 얼마나 들어갈까요?</p>
+          <div class="row">
+            <button class="btn primary" data-act="start" id="startBtn">실험 시작하기</button>
+            <button class="btn ghost" data-act="resume" id="resumeBtn" hidden>이어서 하기</button>
+          </div>
+          <p class="note">이 실험실의 물병과 물건의 크기는 수업을 위해 만든 가상의 값이에요. 직접 물을 따르고, 세고, 비교하면서 알아봐요.</p>
+        </div>
+      </div>
+      <ol class="plan" aria-label="활동 순서">
+        <li><span class="n">1</span><b>생각 깨우기</b><span>두 물병 중 어느 물병의 들이가 더 클까요?</span></li>
+        <li><span class="n">2</span><b>물을 옮겨 비교하기</b><span>물을 옮기고, 같은 수조에 나누어 담아 봐요.</span></li>
+        <li><span class="n">3</span><b>여러 단위로 재어 보기</b><span>요구르트병, 우유갑, 작은 병으로 재어 봐요.</span></li>
+        <li><span class="n">4</span><b>서로 다른 단위</b><span>같은 물뿌리개를 두 단위로 재어 봐요.</span></li>
+      </ol>
+    </section>
+
+    <section id="v-lab" hidden>
+      <div class="lab-head">
+        <h2 id="labTitle"></h2>
+        <div class="subtabs" id="subtabs" role="tablist"></div>
+        <nav class="lab-nav" aria-label="활동 이동">
+          <button class="btn" data-act="prev" id="prevBtn">이전 활동</button>
+          <button class="btn primary" data-act="next" id="nextBtn">다음 활동</button>
+        </nav>
+        <p class="goal" id="labGoal"></p>
+      </div>
+      <div class="lab-grid">
+        <div class="stage-col">
+          <div class="stage-wrap"><svg id="stage" viewBox="0 0 960 620" role="group" aria-label="실험 무대"></svg></div>
+          <div class="controls" id="controls"></div>
+        </div>
+        <aside class="side" id="side" aria-label="기록과 질문"></aside>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script>
+(function(){
+'use strict';
+/* =====================================================================
+   1. 기준 데이터  (모든 활동이 이 한 곳의 값만 사용한다)
+   - 내부 단위는 mL. 화면에는 mL를 보여 주지 않고 "몇 개"만 보여 준다.
+   - 종이컵 1개 = 200 mL
+   - 물병 가 = 종이컵 6개 = 1200 mL, 물병 나 = 종이컵 5개 = 1000 mL (차이 = 종이컵 1개)
+   - 물병 가는 가장 큰 물병(종이컵 8개 분량, 가상 값). 주전자, 그릇, 분무기도 교과서에 용량이 없어 가상 값이다.
+   ===================================================================== */
+const ML_CUP = 200;
+const UNITS = {
+  cup:  { key:'cup',  name:'종이컵',          short:'종이컵', ml: 200 },
+  yog:  { key:'yog',  name:'작은 요구르트병', short:'요구르트병', ml: 75 },
+  meas: { key:'meas', name:'우유갑',          short:'우유갑', ml: 150 },
+};
+UNITS.small={key:'small',name:'작은 병',short:'작은 병',ml:50};
+const UNIT_ORDER = ['yog','meas','small'];
+const SUBJECTS = {
+  ga:      { key:'ga',      kind:'ga',      name:'물병 가', short:'가', ml: 8 * ML_CUP, color:'blue'  },
+  na:      { key:'na',      kind:'na',      name:'물병 가', short:'나', ml: 600, color:'green' },
+  da:      { key:'da',      kind:'da',      name:'물병 나', short:'다', ml: 450, color:'blue'  },
+  kettle:  { key:'kettle',  kind:'kettle',  name:'물뿌리개',  short:'물뿌리개', ml: 600, color:'amber' },
+  bowl:    { key:'bowl',    kind:'bowl',    name:'그릇',    short:'그릇',   ml: 4 * ML_CUP, color:'pink'  },
+  sprayer: { key:'sprayer', kind:'sprayer', name:'분무기',  short:'분무기', ml: 2 * ML_CUP, color:'lilac' },
+};
+const THINGS = ['kettle', 'bowl', 'sprayer'];
+
+/* 용량(ml)을 단위(ml)로 재면: 가득 찬 컵 몇 개 + 남는 물 */
+function measure(ml, unitMl){
+  const full = Math.floor(ml / unitMl + 1e-9);
+  const rest = ml - full * unitMl;
+  const kind = rest < 1e-6 ? 'none' : (Math.abs(rest * 2 - unitMl) < 1e-6 ? 'half' : 'some');
+  return { full, rest, kind, value: ml / unitMl };
+}
+function fmtCount(full, kind){
+  if(kind === 'none') return full + '개';
+  if(kind === 'half') return full === 0 ? '반 개' : full + '개와 반';
+  return full + '개와 조금';
+}
+function fmtValue(x){
+  const w = Math.floor(x + 1e-9), r = x - w;
+  if(r < 1e-9) return w + '개';
+  if(Math.abs(r - .5) < 1e-9) return w === 0 ? '반 개' : w + '개와 반';
+  return x.toFixed(1) + '개';
+}
+const recValue = r => r.n + (r.half ? .5 : 0);
+
+/* 데이터 검증: 콘솔에서 __lab.verify() 로 확인 */
+function verifyData(){return [['가 요구르트병',SUBJECTS.na.ml/UNITS.yog.ml===8],['나 요구르트병',SUBJECTS.da.ml/UNITS.yog.ml===6],['물뿌리개 종이컵',SUBJECTS.kettle.ml/UNITS.cup.ml===3],['물뿌리개 요구르트병',SUBJECTS.kettle.ml/UNITS.yog.ml===8],['활동2 정수 측정',UNIT_ORDER.every(u=>[SUBJECTS.na,SUBJECTS.da].every(v=>v.ml%UNITS[u].ml===0))]].map(([name,ok])=>({name,ok}));}
+/* =====================================================================
+   2. 기하: 물병 단면(2D)의 넓이가 용량에 정확히 비례하도록 만든다.
+   - 종이컵 1개 = 단면 넓이 3000 (무대 좌표). 단위·물병 모두 같은 비율.
+   - 그래서 "눈에 보이는 크기"와 "실제 들이"가 어긋나지 않는다.
+   ===================================================================== */
+const AREA_PER_ML = 3000 / ML_CUP;
+const DEG = Math.PI / 180;
+const NS = 'http://www.w3.org/2000/svg';
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const RM = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){ return false; } })();
+function el(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  if(attrs) for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+
+function polyArea(p){
+  let a = 0;
+  for(let i = 0; i < p.length; i++){ const q = p[(i + 1) % p.length]; a += p[i][0] * q[1] - q[0] * p[i][1]; }
+  return Math.abs(a) / 2;
+}
+/* 반평면 {p : p·g >= c} 로 다각형 자르기 (Sutherland–Hodgman) */
+function clipHalf(pts, gx, gy, c){
+  const out = [], n = pts.length;
+  for(let i = 0; i < n; i++){
+    const a = pts[i], b = pts[(i + 1) % n];
+    const da = a[0] * gx + a[1] * gy - c, db = b[0] * gx + b[1] * gy - c;
+    if(da >= 0) out.push(a);
+    if((da >= 0) !== (db >= 0)){ const t = da / (da - db); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); }
+  }
+  return out;
+}
+const areaBelow = (pts, gx, gy, c) => polyArea(clipHalf(pts, gx, gy, c));
+/* 물의 넓이가 area 가 되는 수면 위치 c (중력 방향 깊이) */
+function solveC(pts, gx, gy, area, full){
+  let lo = 1e9, hi = -1e9;
+  for(const p of pts){ const h = p[0] * gx + p[1] * gy; if(h < lo) lo = h; if(h > hi) hi = h; }
+  if(area <= 1e-6) return hi + 1;
+  if(area >= full - 1e-6) return lo - 1;
+  let a = lo, b = hi;
+  for(let i = 0; i < 40; i++){ const m = (a + b) / 2; if(areaBelow(pts, gx, gy, m) > area) a = m; else b = m; }
+  return (a + b) / 2;
+}
+
+/* 단면 만들기: y 는 위쪽이 +, 화면 좌표(위가 -)로 바꿔서 저장 */
+function ys(H, step){ const a = []; for(let y = 0; y < H; y += step) a.push(y); a.push(H); return a; }
+function symPoly(H, hw, step = 1.5){
+  const R = [], L = [];
+  for(const y of ys(H, step)){ const w = hw(y); R.push([w, -y]); L.push([-w, -y]); }
+  return R.concat(L.reverse());
+}
+function sidePoly(H, left, right, step = 1.5){
+  const R = [], L = [];
+  for(const y of ys(H, step)){ R.push([right(y), -y]); L.push([left(y), -y]); }
+  return R.concat(L.reverse());
+}
+const rnd = (y, r, b) => y < r ? b - r + Math.sqrt(Math.max(0, r * r - (r - y) * (r - y))) : b;
+const sstep = s => s * s * (3 - 2 * s);
+function bottleHW(o){
+  return y => {
+    let w;
+    if(y < o.r) w = o.b - o.r + Math.sqrt(Math.max(0, o.r * o.r - (o.r - y) * (o.r - y)));
+    else if(y < o.hb) w = o.b;
+    else if(y < o.hb + o.hs) w = o.b + (o.n - o.b) * sstep((y - o.hb) / o.hs);
+    else w = o.n;
+    if(o.pleat && y > o.pleat.y0 && y < o.pleat.y1){
+      const ph = (y - o.pleat.y0) / (o.pleat.y1 - o.pleat.y0);
+      w -= o.pleat.amp * 0.5 * (1 - Math.cos(ph * 2 * Math.PI * o.pleat.count)) * Math.sin(ph * Math.PI);
+    }
+    return w;
+  };
+}
+
+const SPECS = {};
+function finish(kind, pts, lipRaw, Hraw, targetMl, extra, slotPad){
+  const target = targetMl * AREA_PER_ML;
+  const f = Math.sqrt(target / polyArea(pts));
+  const sp = pts.map(p => [p[0] * f, p[1] * f]);
+  let minX = 1e9, maxX = -1e9;
+  sp.forEach(p => { minX = Math.min(minX, p[0]); maxX = Math.max(maxX, p[0]); });
+  const spec = {
+    kind, pts: sp, f, H: Hraw * f, lip: [lipRaw[0] * f, lipRaw[1] * f], minX, maxX, W: maxX - minX,
+    areaFull: target, capMl: targetMl, slotPad: slotPad || 10,
+    d: 'M' + sp.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L') + 'Z',
+  };
+  return Object.assign(spec, extra(f, spec));
+}
+function bottleSpec(kind, o, ml, cap, extraFront){
+  const hw = bottleHW(o);
+  const pts = symPoly(o.H, hw);
+  return finish(kind, pts, [hw(o.H), -o.H], o.H, ml, f => {
+    const n = hw(o.H) * f, H = o.H * f, b = o.b * f, hb = o.hb * f;
+    let capSvg = '';
+    if(typeof cap === 'function') capSvg = cap(f, n, H);
+    else if(cap) capSvg = `<rect x="${-(n + 4)}" y="${-H - 17}" width="${2 * n + 8}" height="21" rx="5" class="${cap}"/><path d="M${-n * .5} ${-H - 13}v13M0 ${-H - 13}v13M${n * .5} ${-H - 13}v13" class="ridge"/>`;
+    const shine = `<rect x="${-b + 9}" y="${-hb + 12}" width="6" height="${Math.max(10, hb - 30)}" rx="3" class="shine"/>`;
+    return { back: '', front: shine + (extraFront ? extraFront(f, hw) : ''), cap: capSvg, mouth: { x: 0, hw: n } };
+  });
+}
+function getSpec(kind){
+  if(SPECS[kind]) return SPECS[kind];
+  let s;
+  switch(kind){
+    case 'ga': // 가장 크고 폭이 가장 넓은 물병 (뚜껑이 젖혀지는 파란 뚜껑)
+      s = bottleSpec('ga', { b:62, r:18, H:222, hb:170, hs:30, n:30 }, 8 * ML_CUP, (f, n, H) =>
+        `<rect x="${-(n + 5)}" y="${-H - 19}" width="${2 * n + 10}" height="23" rx="7" class="cap-blue"/><rect x="${n - 6}" y="${-H - 12}" width="16" height="9" rx="3" class="cap-lilac"/><path d="M${-n * .6} ${-H - 15}v15M${-n * .2} ${-H - 15}v15M${n * .2} ${-H - 15}v15" class="ridge"/>`); break;
+    case 'na': // 가보다 폭이 좁은 물병 (초록 뚜껑)
+      s = bottleSpec('na', { b:45, r:12, H:196, hb:146, hs:28, n:20 }, 600, 'cap-green'); break;
+    case 'da': { // 폭이 가장 좁고 주름이 있는 물병 (파란 뚜껑)
+      const pl = { y0:20, y1:118, amp:7, count:5 };
+      s = bottleSpec('da', { b:37, r:10, H:176, hb:128, hs:32, n:14, pleat: pl }, 450, 'cap-amber', (f, hw) => {
+        let r = '';
+        for(let k = 0; k < pl.count; k++){
+          const y = pl.y0 + (k + .5) / pl.count * (pl.y1 - pl.y0), w = hw(y) * f;
+          r += `<path d="M${-w + 2} ${-y * f}L${w - 2} ${-y * f}" class="pleat"/>`;
+        }
+        return r;
+      }); break;
+    }
+    case 'cup': { // 종이컵
+      const H = 60, hw = y => rnd(y, 6, 21 + 9 * y / H);
+      s = finish('cup', symPoly(H, hw), [hw(H), -H], H, ML_CUP, f => {
+        const band = (y0, y1) => `<path d="M${hw(y0) * f} ${-y0 * f}L${hw(y1) * f} ${-y1 * f}L${-hw(y1) * f} ${-y1 * f}L${-hw(y0) * f} ${-y0 * f}Z" class="band"/>`;
+        return { back: band(16, 30), front: `<rect x="${-hw(H) * f - 2}" y="${-H * f - 2}" width="${2 * hw(H) * f + 4}" height="5" rx="2.5" class="rim"/>`, cap: '', mouth: { x: 0, hw: hw(H) * f } };
+      }); break;
+    }
+    case 'small': s=bottleSpec('small',{b:16,r:4,H:45,hb:28,hs:8,n:8},50,'cap-blue'); break;
+    case 'yog': // 작은 요구르트병
+      s = bottleSpec('yog', { b:19, r:6, H:50, hb:31, hs:10, n:9 }, 75, 'cap-pink'); break;
+    case 'meas': { // 계량컵
+      const H = 76, hw = y => rnd(y, 8, 40);
+      s = finish('meas', symPoly(H, hw), [hw(H), -H], H, 150, f => {
+        const x0 = 40 * f, y0 = -H * f * .8, y1 = -H * f * .3;
+        const back = `<path d="M${x0 - 2} ${y0}C${x0 + 36} ${y0} ${x0 + 36} ${y1} ${x0 - 2} ${y1}" class="handle"/>`;
+        let tk = ''; [.25, .5, .75].forEach(q => { tk += `<path d="M${-40 * f + 4} ${-H * f * q}h${q === .5 ? 20 : 13}" class="tick"/>`; });
+        return { back, front: `<rect x="${-40 * f + 8}" y="${-H * f + 12}" width="6" height="${H * f - 30}" rx="3" class="shine"/>` + tk + `<rect x="${-40 * f - 2}" y="${-H * f - 2}" width="${80 * f + 4}" height="5" rx="2.5" class="rim"/>`, cap: '', mouth: { x: 0, hw: 40 * f } };
+      }, 38); break;
+    }
+    case 'kettle': { // 주전자 (오른쪽 위가 넓게 벌어진 주둥이)
+      const H = 150, R = 16;
+      const left = y => y < 100 ? -rnd(y, R, 70) : -(70 - 18 * sstep((y - 100) / 50));
+      const right = y => y < 100 ? rnd(y, R, 70) : 70 + 28 * sstep((y - 100) / 50);
+      s = finish('kettle', sidePoly(H, left, right), [98, -H], H, 600, f => {
+        const back = `<path d="M${-69 * f} ${-112 * f}C${-128 * f} ${-118 * f} ${-128 * f} ${-30 * f} ${-69 * f} ${-34 * f}" class="handle"/>`;
+        const cap = `<g><rect x="${-56 * f}" y="${-H * f - 10}" width="${118 * f}" height="13" rx="6" class="cap-amber"/><circle cx="${4 * f}" cy="${-H * f - 17}" r="${8 * f}" class="cap-lilac"/></g>`;
+        const front = `<rect x="${-62 * f}" y="${-98 * f}" width="6" height="${58 * f}" rx="3" class="shine"/><path d="M${-70 * f + 3} ${-60 * f}h${140 * f - 6}" class="pleat"/>`;
+        return { back, front, cap, mouth: { x: 23 * f, hw: 75 * f } };
+      }, 34); break;
+    }
+    case 'bowl': { // 그릇
+      const H = 80, hw = y => { const w0 = 46 + 44 * (y / H); return y < 20 ? w0 - 20 + Math.sqrt(400 - (20 - y) * (20 - y)) : w0; };
+      s = finish('bowl', symPoly(H, hw), [hw(H), -H], H, 4 * ML_CUP, f => {
+        const band = `<path d="M${hw(44) * f} ${-44 * f}L${hw(56) * f} ${-56 * f}L${-hw(56) * f} ${-56 * f}L${-hw(44) * f} ${-44 * f}Z" class="band"/>`;
+        return { back: band, front: `<rect x="${-hw(H) * f - 2}" y="${-H * f - 2}" width="${2 * hw(H) * f + 4}" height="5" rx="2.5" class="rim"/>`, cap: '', mouth: { x: 0, hw: hw(H) * f } };
+      }, 14); break;
+    }
+    case 'sprayer': // 분무기: 위쪽 분사 장치는 뚜껑처럼 벗겨진다
+      s = bottleSpec('sprayer', { b:30, r:10, H:130, hb:80, hs:26, n:13 }, 2 * ML_CUP, (f, n, H) =>
+        `<rect x="${-n - 4}" y="${-H - 13}" width="${2 * n + 8}" height="17" rx="4" class="cap-lilac"/>` +
+        `<rect x="${-n - 8}" y="${-H - 42}" width="${2 * n + 28}" height="30" rx="11" class="cap-amber"/>` +
+        `<rect x="${n + 14}" y="${-H - 36}" width="20" height="11" rx="5" class="cap-lilac"/>` +
+        `<path d="M${n + 4} ${-H - 12}l17 5l-3 19l-11-4z" class="cap-lilac"/>`, null);
+      s.slotPad = 10; break;
+    case 'beaker': { // 같은 모양의 통(활동 1, 2): 종이컵 8개 분량
+      const H = 110, hw = y => 85;
+      s = finish('beaker', symPoly(H, hw), [hw(H), -H], H, 800, f => ({
+        back: '', front: `<rect x="${-75 * f + 9}" y="${-H * f + 14}" width="6" height="${H * f - 34}" rx="3" class="shine"/><rect x="${-75 * f - 2}" y="${-H * f - 2}" width="${150 * f + 4}" height="5" rx="2.5" class="rim"/>`,
+        cap: '', mouth: { x: 0, hw: 75 * f } })); break;
+    }
+    case 'tray': { // 받침 (종이컵 2개 분량의 얕은 접시)
+      const H = 20, hw = y => rnd(y, 5, 150);
+      s = finish('tray', symPoly(H, hw), [hw(H), -H], H, 2 * ML_CUP, f => ({
+        back: '', front: `<rect x="${-150 * f - 3}" y="${-H * f - 3}" width="${300 * f + 6}" height="6" rx="3" class="rim"/>`, cap: '', mouth: { x: 0, hw: 150 * f } })); break;
+    }
+    default: throw new Error('unknown kind ' + kind);
+  }
+  SPECS[kind] = s;
+  return s;
+}
+
+/* 그림용 작은 아이콘 (HTML 안에서 사용) */
+function iconSVG(kind, opt = {}){
+  const s = getSpec(kind), fill = opt.fill == null ? 1 : opt.fill;
+  const vb = opt.vb || [s.minX - 44, -s.H - 46, s.W + 88, s.H + 56];
+  let water = '';
+  if(fill > 0){
+    const area = fill * s.areaFull, c = solveC(s.pts, 0, 1, area, s.areaFull);
+    water = `<path class="water" d="M${vb[0]} ${c}H${vb[0] + vb[2]}V12H${vb[0]}Z" clip-path="url(#ic${kind})"/>`;
+  }
+  return `<svg viewBox="${vb.join(' ')}" aria-hidden="true" preserveAspectRatio="xMidYMax meet"><defs><clipPath id="ic${kind}"><path d="${s.d}"/></clipPath></defs>` +
+    `<g>${s.back}<path class="gfill" d="${s.d}"/>${water}<path class="gline" d="${s.d}" style="stroke-width:5"/>${s.front}<g class="capg">${s.cap}</g></g></svg>`;
+}
+
+/* =====================================================================
+   3. 무대, 용기(물 표현), 물줄기
+   ===================================================================== */
+const CANCEL = { cancel: true };
+const guard = p => p.catch(e => { if(e !== CANCEL) console.error(e); });
+
+class Stage{
+  constructor(svg){
+    this.svg = svg; this.alive = true; this.time = 0;
+    this.vessels = new Set(); this.fx = new Set();
+    svg.innerHTML = '';
+    this.layers = {};
+    for(const n of ['bg', 'under', 'mid', 'mid2', 'fx', 'top']) this.layers[n] = el('g', { class: 'L-' + n }, svg);
+    let last = performance.now();
+    const loop = ts => {
+      if(!this.alive) return;
+      const dt = Math.min(.1, Math.max(0, (ts - last) / 1000)); last = ts; this.time += dt;
+      this.vessels.forEach(v => v.updateWater(dt, this.time));
+      this.fx.forEach(f => f(dt, this.time));
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+  destroy(){ this.alive = false; this.vessels.clear(); this.fx.clear(); this.svg.innerHTML = ''; }
+  remove(v){ v.el.remove(); this.vessels.delete(v); }
+  tween(ms, fn, ef = ease){
+    if(window.__labFast){            // 테스트용 빠른 모드: 가상 시간으로 진행
+      return new Promise((res, rej) => {
+        let t = 0;
+        const step = () => {
+          if(!this.alive) return rej(CANCEL);
+          t += 50; const p = ms <= 0 ? 1 : Math.min(1, t / ms);
+          fn(ef(p));
+          if(p < 1) setTimeout(step, 0); else res();
+        };
+        setTimeout(step, 0);
+      });
+    }
+    return new Promise((res, rej) => {
+      const t0 = performance.now();
+      const step = () => {
+        if(!this.alive) return rej(CANCEL);
+        const p = ms <= 0 ? 1 : Math.min(1, (performance.now() - t0) / ms);
+        fn(ef(p));
+        if(p < 1) requestAnimationFrame(step); else res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  sleep(ms){ return this.tween(ms, () => {}, t => t); }
+  loop(fn){
+    if(window.__labFast){
+      return new Promise((res, rej) => {
+        const step = () => {
+          if(!this.alive) return rej(CANCEL);
+          if(fn(.05)) res(); else setTimeout(step, 0);
+        };
+        setTimeout(step, 0);
+      });
+    }
+    return new Promise((res, rej) => {
+      let last = performance.now();
+      const step = () => {
+        if(!this.alive) return rej(CANCEL);
+        const now = performance.now(), dt = Math.min(.1, Math.max(0, (now - last) / 1000)); last = now;
+        if(fn(dt)) res(); else requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+}
+
+let UID = 0;
+class Vessel{
+  constructor(stage, kind, o = {}){
+    this.stage = stage; this.kind = kind; this.spec = getSpec(kind);
+    this.capMl = o.capMl != null ? o.capMl : this.spec.capMl;
+    this.vol = o.vol || 0; this.B = { x: o.x || 0, y: o.y || 0 }; this.rot = 0; this.scale = o.scale || 1;
+    this.amp = 1.3; this.recv = false; this.phase = Math.random() * 6; this.id = 'v' + (++UID);
+    const s = this.spec;
+    const g = el('g', { class: 'vessel' }, stage.layers[o.layer || 'mid']);
+    g.innerHTML = `<g class="pop"><g class="back">${s.back}</g><path class="gfill" d="${s.d}"/>` +
+      `<clipPath id="c${this.id}"><path d="${s.d}"/></clipPath><g clip-path="url(#c${this.id})"><path class="water"/><path class="surf"/></g>` +
+      `<path class="gline" d="${s.d}"/><g class="front">${s.front}</g><g class="capg">${s.cap}</g></g>`;
+    this.el = g; this.pop = g.firstChild;
+    this.water = g.querySelector('.water'); this.surf = g.querySelector('.surf'); this.capg = g.querySelector('.capg');
+    stage.vessels.add(this);
+    this.render();
+  }
+  get areaNow(){ return this.vol / this.capMl * this.spec.areaFull; }
+  get full(){ return this.vol >= this.capMl - 1e-6; }
+  setCap(on, instant){
+    if(instant){ const t = this.capg.style.transition; this.capg.style.transition = 'none'; this.capg.classList.toggle('off', !on); void this.capg.getBoundingClientRect(); this.capg.style.transition = t; }
+    else this.capg.classList.toggle('off', !on);
+  }
+  render(){
+    const { B, rot, scale } = this, L = this.spec.lip;
+    let t = `translate(${B.x.toFixed(2)} ${B.y.toFixed(2)})`;
+    if(scale !== 1) t += ` scale(${scale.toFixed(3)})`;
+    if(rot) t += ` translate(${L[0]} ${L[1]}) rotate(${rot.toFixed(2)}) translate(${-L[0]} ${-L[1]})`;
+    this.el.setAttribute('transform', t);
+  }
+  computeC(){
+    const r = this.rot * DEG, gx = Math.sin(r), gy = Math.cos(r), a = this.areaNow;
+    const key = a.toFixed(2) + '|' + this.rot.toFixed(2);
+    if(key !== this._k){ this._c = solveC(this.spec.pts, gx, gy, a, this.spec.areaFull); this._k = key; }
+    return this._c;
+  }
+  surfaceY(){ return this.B.y + (this.computeC()) * this.scale; }
+  mouthX(){ return this.B.x + this.spec.mouth.x * this.scale; }
+  topY(){ return this.B.y - this.spec.H * this.scale; }
+  /* 수면이 주둥이(lip)를 지나는 기울기 — 이 각도부터 물이 흘러나온다 */
+  critAngle(){
+    const s = this.spec, a = this.areaNow;
+    if(a >= s.areaFull - 1e-6) return 0;
+    const at = deg => { const r = deg * DEG, gx = Math.sin(r), gy = Math.cos(r); return areaBelow(s.pts, gx, gy, s.lip[0] * gx + s.lip[1] * gy); };
+    let lo = 0, hi = 172;
+    if(at(hi) >= a) return hi;
+    for(let i = 0; i < 34; i++){ const m = (lo + hi) / 2; if(at(m) > a) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  updateWater(dt, time){
+    if(this.vol <= 1e-6){
+      if(!this._empty){ this.water.removeAttribute('d'); this.surf.removeAttribute('d'); this._empty = true; }
+      return;
+    }
+    this._empty = false;
+    const c = this.computeC(), r = this.rot * DEG, gx = Math.sin(r), gy = Math.cos(r), u0 = Math.cos(r), u1 = -Math.sin(r);
+    const target = RM ? 0 : (this.recv ? 3.2 : 1.3);
+    this.amp += (target - this.amp) * Math.min(1, dt * 7);
+    const amp = this.amp;
+    let d = '', first = null, last = null;
+    for(let t = -330; t <= 330; t += 15){
+      const off = amp * Math.sin(t * .05 + time * 2.4 + this.phase) + amp * .4 * Math.sin(t * .12 - time * 1.7);
+      const px = gx * (c + off) + u0 * t, py = gy * (c + off) + u1 * t;
+      d += (t === -330 ? 'M' : 'L') + px.toFixed(1) + ' ' + py.toFixed(1);
+      if(first === null) first = [px, py]; last = [px, py];
+    }
+    this.surf.setAttribute('d', d);
+    d += `L${(last[0] + gx * 1400).toFixed(1)} ${(last[1] + gy * 1400).toFixed(1)}L${(first[0] + gx * 1400).toFixed(1)} ${(first[1] + gy * 1400).toFixed(1)}Z`;
+    this.water.setAttribute('d', d);
+  }
+}
+
+class Stream{
+  constructor(stage){
+    this.g = el('g', { style: 'display:none' }, stage.layers.fx);
+    this.p = el('path', { class: 's-body' }, this.g);
+    this.h = el('path', { class: 's-hi' }, this.g);
+    this.on = false;
+    stage.fx.add((dt, t) => { if(this.on) this.h.style.strokeDashoffset = String(-(t * 150) % 32); });
+  }
+  show(x0, y0, x1, y1, w = 8){
+    this.setD(`M${x0.toFixed(1)} ${y0.toFixed(1)}Q${x1.toFixed(1)} ${y0.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`, w);
+  }
+  setD(d, w = 7){
+    this.p.setAttribute('d', d); this.h.setAttribute('d', d);
+    this.p.style.strokeWidth = w; this.h.style.strokeWidth = Math.max(2, w * .35);
+    this.g.style.display = ''; this.on = true;
+  }
+  hide(){ this.g.style.display = 'none'; this.on = false; }
+}
+
+/* ---------- 물 따르기 ---------- */
+/* src 의 주둥이 끝이 world 좌표 lip 에 오도록 이동하며 기울인다 */
+async function approach(stage, src, lip, speed = 1){
+  src.setCap(false);
+  const L = src.spec.lip, B0 = { ...src.B }, r0 = src.rot;
+  const B1 = { x: lip.x - L[0] * src.scale, y: lip.y - L[1] * src.scale };
+  const r1 = Math.min(src.critAngle() + 4, 172);
+  const dist = Math.hypot(B1.x - B0.x, B1.y - B0.y);
+  const ms = (dist < 2 && Math.abs(r1 - r0) < 2) ? 0 : (320 + Math.min(dist, 500) * .7 + Math.abs(r1 - r0) * 2) / speed;
+  await stage.tween(ms, t => {
+    src.B.x = lerp(B0.x, B1.x, t); src.B.y = lerp(B0.y, B1.y, t); src.rot = lerp(r0, r1, t); src.render();
+  });
+}
+async function retract(stage, v, home, ms = 380){
+  const B0 = { ...v.B }, r0 = v.rot;
+  await stage.tween(ms, t => {
+    if(home){ v.B.x = lerp(B0.x, home.x, t); v.B.y = lerp(B0.y, home.y, t); }
+    v.rot = lerp(r0, 0, t); v.render();
+  });
+}
+/* src → dst 로 물을 흘린다. dst 가 가득 차면 멈춘다(spill 이 있으면 받침으로 넘친다). */
+async function pourPhase(stage, src, dst, o){
+  const rate = (o.rate || 250) * (o.speed || 1);   // mL / 초
+  const sp = o.speed || 1;
+  let moved = 0;
+  const spill = o.spill || null;                    // { tray, stream, pathFn }
+  await stage.loop(dt => {
+    const crit = src.critAngle();
+    const target = Math.min(crit + 4, 172);
+    const maxStep = 170 * sp * dt;
+    src.rot += clamp(target - src.rot, -maxStep, maxStep);
+    src.render();
+    const f = clamp((src.rot - crit) / 3.5, 0, 1);
+    let dv = 0, into = 0, over = 0;
+    if(f > 0 && src.vol > 0){
+      dv = Math.min(rate * dt * f, src.vol);
+      if(o.limit != null) dv = Math.min(dv, o.limit - moved);
+      const room = Math.max(0, dst.capMl - dst.vol);
+      into = Math.min(dv, room); over = dv - into;
+      if(over > 1e-9 && !spill){ dv = into; over = 0; }
+    }
+    if(dv > 0){
+      src.vol -= dv; moved += dv; dst.vol += into;
+      if(src.vol < 1e-6) src.vol = 0;
+      if(dst.capMl - dst.vol < 1e-6) dst.vol = dst.capMl;
+      if(over > 0 && spill) spill.tray.vol = Math.min(spill.tray.capMl, spill.tray.vol + over);
+    }
+    dst.recv = into > 0;
+    if(spill) spill.tray.recv = over > 0;
+    /* 물줄기 */
+    if(f > 0.05 && dv > 0){
+      const w = 4 + f * 5;
+      if(into > 0) o.stream.show(o.lip.x, o.lip.y, o.dstX, dst.surfaceY() + 1, w);
+      else o.stream.show(o.lip.x, o.lip.y, o.dstX, dst.topY() + 4, w);
+      if(over > 0 && spill){ spill.stream.setD(spill.pathFn(), 6); } else if(spill) spill.stream.hide();
+    } else { o.stream.hide(); if(spill) spill.stream.hide(); }
+    const fullStop = !spill && dst.vol >= dst.capMl - 1e-6;
+    const limitStop = o.limit != null && moved >= o.limit - 1e-6;
+    return src.vol <= 0 || fullStop || limitStop;
+  });
+  o.stream.hide(); if(spill) spill.stream.hide();
+  dst.recv = false; if(spill) spill.tray.recv = false;
+  return moved;
+}
+
+/* ---------- 끌어서 옮기기 (마우스·터치) ---------- */
+function svgPoint(svg, e){
+  const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+  return { x: p.x, y: p.y };
+}
+function makeDrag(stage, v, o){
+  v.el.classList.add('drag');
+  let s = null;
+  v.el.addEventListener('pointerdown', e => {
+    if(e.button > 0 || !o.canDrag()) return;
+    e.preventDefault();
+    const p = svgPoint(stage.svg, e);
+    s = { px: p.x, py: p.y, bx: v.B.x, by: v.B.y, moved: false, id: e.pointerId };
+    try { v.el.setPointerCapture(e.pointerId); } catch(_){}
+  });
+  v.el.addEventListener('pointermove', e => {
+    if(!s || e.pointerId !== s.id) return;
+    const p = svgPoint(stage.svg, e), dx = p.x - s.px, dy = p.y - s.py;
+    if(!s.moved){
+      if(Math.hypot(dx, dy) < 8) return;
+      s.moved = true; v.el.classList.add('dragging'); o.onStart && o.onStart();
+    }
+    v.B.x = s.bx + dx; v.B.y = s.by + dy; v.render();
+    const lip = { x: v.B.x + v.spec.lip[0] * v.scale, y: v.B.y + v.spec.lip[1] * v.scale };
+    o.onMove && o.onMove(Math.hypot(lip.x - o.target().x, lip.y - o.target().y) < (o.radius || 150));
+  });
+  const end = async e => {
+    if(!s || (e && e.pointerId !== s.id)) return;
+    const st = s; s = null;
+    try { v.el.releasePointerCapture(st.id); } catch(_){}
+    v.el.classList.remove('dragging');
+    if(!st.moved){ o.onTap && o.onTap(); return; }
+    const lip = { x: v.B.x + v.spec.lip[0] * v.scale, y: v.B.y + v.spec.lip[1] * v.scale };
+    const near = Math.hypot(lip.x - o.target().x, lip.y - o.target().y) < (o.radius || 150);
+    o.onMove && o.onMove(false); o.onEnd && o.onEnd();
+    if(near && o.canDrag()) o.onDrop();
+    else {
+      const B0 = { ...v.B }, h = o.home();
+      await guard(stage.tween(320, t => { v.B.x = lerp(B0.x, h.x, t); v.B.y = lerp(B0.y, h.y, t); v.render(); }));
+    }
+  };
+  v.el.addEventListener('pointerup', end);
+  v.el.addEventListener('pointercancel', end);
+}
+
+/* ---------- 배경 ---------- */
+function drawRoom(st, shelves, h = 620){
+  let s = `<defs><pattern id="dots" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="2.6" class="dot"/><circle cx="33" cy="33" r="2.6" class="dot"/></pattern></defs>` +
+    `<rect width="960" height="${h}" class="wall"/><rect width="960" height="${h}" fill="url(#dots)"/>`;
+  shelves.forEach(y => { s += `<rect x="24" y="${y}" width="912" height="16" rx="8" class="shelf"/><rect x="40" y="${y + 16}" width="880" height="7" rx="3.5" class="shelf-sh"/>`; });
+  st.layers.bg.innerHTML = s;
+}
+function drawPedestal(layer, x, y, w, h){
+  const g = el('g', { class: 'fadein' }, layer);
+  g.innerHTML = `<rect class="pedestal" x="${x - w / 2}" y="${y - h}" width="${w}" height="${h}" rx="7"/><rect class="pedestal-top" x="${x - w / 2 - 5}" y="${y - h - 6}" width="${w + 10}" height="10" rx="5"/>`;
+  return g;
+}
+function tagEl(layer, x, y, text, color, small){
+  const w = Math.max(40, text.length * (small ? 15 : 22) + 22);
+  const g = el('g', { transform: `translate(${x} ${y})` }, layer);
+  g.innerHTML = `<rect class="tagbox" x="${-w / 2}" y="-20" width="${w}" height="40" rx="14" style="fill:var(--cap-${color || 'blue'})"/><text class="tagtxt${small ? ' s' : ''}" y="8" style="fill:#1d1a2c">${text}</text>`;
+  return g;
+}
+
+/* =====================================================================
+   4. 재기 무대 (활동 2-B, 3, 4 공통)
+   - 물병/물건 하나(또는 둘)와, 단위 용기(컵)를 놓은 선반
+   - 컵이 가득 차면 옆 줄로 옮겨 놓아 개수를 셀 수 있다
+   - 컵의 크기(mL)는 UNITS 에서만 가져온다 → 모든 활동에서 같은 용량
+   ===================================================================== */
+class Measure{
+  constructor(st, cfg){
+    this.st = st; this.cfg = cfg; this.unit = null; this.stn = []; this.busy = false;
+    this.numOn = cfg.numbers !== false;
+    const single = cfg.layout === 'single';
+    this.shelves = single ? [500] : [244, 530];
+    drawRoom(st, single ? [160, 500] : this.shelves, single ? 620 : 590);
+    st.svg.classList.toggle('nonum', !this.numOn);
+    cfg.subjects.forEach((k, i) => this.addStation(i, k, this.shelves[single ? 0 : i]));
+  }
+  addStation(i, key, shelfY){
+    const st = this.st;
+    const stn = {
+      i, key, shelfY, srcX: 118, workX: 292, rowX0: 372, rowW: 560, cups: [], work: null, P: 0,
+      poured: 0, done: false, busy: false, auto: false, in: { n: 0, half: false, saved: false, fb: '', fbc: '' },
+      stream: new Stream(st), under: el('g', {}, st.layers.under), top: el('g', {}, st.layers.top), tag: null, zoneEl: null,
+    };
+    this.stn[i] = stn;
+    this.makeSource(stn);
+    return stn;
+  }
+  makeSource(stn){
+    const st = this.st, S = SUBJECTS[stn.key];
+    if(stn.src) st.remove(stn.src);
+    stn.home = { x: stn.srcX, y: stn.shelfY };
+    const v = stn.src = new Vessel(st, S.kind, { capMl: S.ml, vol: S.ml, x: stn.srcX, y: stn.shelfY, layer: 'mid2' });
+    v.el.classList.add('clk');
+    v.el.setAttribute('tabindex', '0'); v.el.setAttribute('role', 'button'); v.el.setAttribute('aria-label', S.name + '을 눌러 컵에 담기');
+    const go = () => guard(this.autoAll(stn));  // 물병을 누르면(또는 컵 위로 끌어 놓으면) 끝까지 한 컵씩 담는다
+    v.el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    makeDrag(st, v, {
+      canDrag: () => this.canPour(stn), target: () => this.hoverFor(stn), radius: 160, home: () => stn.home,
+      onStart: () => this.zone(stn, true), onMove: hot => this.zoneHot(stn, hot), onEnd: () => this.zone(stn, false),
+      onTap: go, onDrop: go,
+    });
+    if(stn.tag) stn.tag.remove();
+    stn.tag = tagEl(st.layers.under, stn.srcX, stn.shelfY + 36, S.name, S.color, true);
+  }
+  zone(stn, on){ if(stn.zoneEl) stn.zoneEl.classList.toggle('on', on); }
+  zoneHot(stn, hot){ if(stn.zoneEl) stn.zoneEl.classList.toggle('hot', hot); }
+  canPour(stn, internal){
+    if(this.cfg.enabled && !this.cfg.enabled(stn)) return false;
+    return !!this.unit && !this.busy && !stn.done && !(stn.auto && !internal);
+  }
+  nmax(){ const u = this.unit; return Math.max(...this.stn.map(s => Math.ceil(SUBJECTS[s.key].ml / u.ml - 1e-9))); }
+  rowScale(){ const us = getSpec(this.unit.key); return Math.min(1, this.stn[0].rowW / (this.nmax() * (us.W + us.slotPad))); }
+  speed(){ const n = this.nmax(); return (n > 10 ? 1.8 : n > 7 ? 1.35 : 1) * (RM ? 1.5 : 1); }
+  hoverFor(stn){
+    const us = getSpec(this.unit.key);
+    return { x: stn.workX - .35 * us.mouth.hw, y: stn.shelfY - stn.P - us.H - 26 };
+  }
+  makeWork(stn){
+    const u = this.unit;
+    const v = new Vessel(this.st, u.key, { capMl: u.ml, vol: 0, x: stn.workX, y: stn.shelfY - stn.P });
+    v.el.style.opacity = 0;
+    guard(this.st.tween(300, t => { v.el.style.opacity = t; }));
+    stn.work = v;
+  }
+  prepare(stn){
+    const u = this.unit, us = getSpec(u.key);
+    stn.P = clamp(stn.src.spec.H - us.H - 30, 14, 160);
+    drawPedestal(stn.under, stn.workX + (u.key === 'meas' ? 6 : 0), stn.shelfY, us.W + 44, stn.P);
+    stn.zoneEl = el('ellipse', { class: 'zone', cx: stn.workX, cy: stn.shelfY - stn.P - us.H - 6, rx: Math.max(56, us.W * .9), ry: 30 }, stn.under);
+    this.makeWork(stn);
+  }
+  resetStation(stn){
+    const st = this.st, S = SUBJECTS[stn.key];
+    if(this.cmpEl){ this.cmpEl.remove(); this.cmpEl = null; }
+    stn.cups.forEach(v => st.remove(v)); stn.cups = [];
+    if(stn.work){ st.remove(stn.work); stn.work = null; }
+    stn.under.innerHTML = ''; stn.top.innerHTML = ''; stn.stream.hide();
+    stn.poured = 0; stn.done = false; stn.busy = false; stn.auto = false;
+    stn.in = { n: 0, half: false, saved: false, fb: '', fbc: '' };
+    const v = stn.src; v.vol = S.ml; v.rot = 0; v.B = { ...stn.home }; v.render(); v.setCap(true);
+    if(this.unit) this.prepare(stn);
+  }
+  setUnit(key){
+    if(this.busy) return false;
+    this.unit = UNITS[key];
+    this.stn.forEach(s => this.resetStation(s));
+    this.cfg.refresh();
+    return true;
+  }
+  setSubject(i, key){
+    if(this.busy) return false;
+    const stn = this.stn[i]; stn.key = key;
+    this.makeSource(stn); this.resetStation(stn);
+    this.cfg.refresh();
+    return true;
+  }
+  redo(stn){ if(this.busy) return; this.resetStation(stn); this.cfg.refresh(); }
+  resetAll(){ if(this.busy) return; this.stn.forEach(s => this.resetStation(s)); this.cfg.refresh(); }
+
+  async pourOne(stn, o = {}){
+    if(!this.canPour(stn, o.internal)) return;
+    const st = this.st, src = stn.src, u = this.unit, us = getSpec(u.key), sp = o.speed || this.speed();
+    this.busy = true; stn.busy = true; this.zone(stn, false); this.cfg.refresh();
+    const cup = stn.work, lip = this.hoverFor(stn);
+    await approach(st, src, lip, sp);
+    await pourPhase(st, src, cup, { lip, dstX: stn.workX, stream: stn.stream, rate: 250, speed: sp });
+    const full = cup.vol >= cup.capMl - 1e-6, empty = src.vol <= 1e-6;
+    await Promise.all([retract(st, src, null, 360 / sp), this.toRow(stn, cup, full, sp)]);
+    if(empty){ stn.done = true; } else { this.makeWork(stn); }
+    if(!o.stay || stn.done) await retract(st, src, stn.home, 420 / sp);
+    this.busy = false; stn.busy = false;
+    this.cfg.refresh();
+    if(stn.done && this.cfg.onDone) this.cfg.onDone(stn);
+  }
+  async toRow(stn, cup, full, sp){
+    const st = this.st, us = getSpec(this.unit.key), s = this.rowScale(), slot = (us.W + us.slotPad) * s, idx = stn.cups.length;
+    const x = stn.rowX0 + slot * (idx + .5);
+    stn.cups.push(cup); stn.work = null;
+    const B0 = { ...cup.B };
+    await st.tween(440 / sp, t => {
+      cup.B.x = lerp(B0.x, x, t); cup.B.y = lerp(B0.y, stn.shelfY, t) - Math.sin(Math.PI * t) * 44;
+      cup.scale = lerp(1, s, t); cup.render();
+    });
+    if(full){
+      stn.poured++;
+      const g = el('g', { class: 'num', transform: `translate(${x.toFixed(1)} ${(stn.shelfY - us.H * s - 20).toFixed(1)})` }, stn.top);
+      g.innerHTML = `<g class="num-in"><circle class="numc" r="13"/><text class="numt" y="6">${stn.poured}</text></g>`;
+    }
+  }
+  async autoAll(stn){
+    if(!this.canPour(stn)) return;
+    stn.auto = true;
+    const sp = this.speed();
+    while(!stn.done) await this.pourOne(stn, { stay: true, speed: sp, internal: true });
+    stn.auto = false;
+  }
+  flashNumbers(){
+    const svg = this.st.svg; svg.classList.remove('nonum');
+    clearTimeout(this._fl);
+    if(!this.numOn) this._fl = setTimeout(() => svg.classList.add('nonum'), 4200);
+  }
+  setNumbers(on){ this.numOn = on; clearTimeout(this._fl); this.st.svg.classList.toggle('nonum', !on); this.cfg.refresh(); }
+
+  /* ---------- 아래쪽 기록 줄 (물병을 눌러 담으므로 버튼은 없다) ---------- */
+  toggleHTML(){
+    return `<label class="toggle"><input type="checkbox" data-act="m-num" ${this.numOn ? 'checked' : ''}> 컵에 번호 붙여서 세기</label>`;
+  }
+  cardsHTML(){
+    const u = this.unit;
+    return `<div class="mrows">` + this.stn.map(stn => {
+      const S = SUBJECTS[stn.key];
+      const unpicked = this.cfg.enabled && !this.cfg.enabled(stn);
+      const redo = (stn.poured > 0 || stn.done) && !this.busy ? `<button class="btn ghost small" data-act="m-redo" data-i="${stn.i}">다시</button>` : '';
+      let mid;
+      if(stn.done && this.cfg.record) mid = this.recInline(stn);
+      else mid = `<span class="mhint">${!u ? '재는 단위를 먼저 골라요.' : (stn.busy || stn.auto) ? '담는 중이에요…' : '물병을 눌러서 컵에 담아요.'}</span>`;
+      return `<div class="mrow"><span class="tagc ${unpicked ? 'lilac' : S.color}">${unpicked ? '?' : S.short}</span><b class="mname">${unpicked ? '물건을 먼저 골라요' : S.name}</b>` +
+        mid + (this.numOn && u && !stn.done ? `<span class="cnt" aria-live="polite">센 개수 ${stn.poured}</span>` : '') + redo +
+        (stn.done && this.cfg.record && stn.in.fb ? `<p class="fb ${stn.in.fbc || ''}" role="status">${stn.in.fb}</p>` : '') + `</div>`;
+    }).join('') + `</div>`;
+  }
+  recInline(stn){
+    const u = this.unit, S = SUBJECTS[stn.key], r = measure(S.ml, u.ml), x = stn.in;
+    return `<span class="mlabel">${u.name}</span>` +
+      `<span class="stepper"><button data-act="m-step" data-i="${stn.i}" data-d="-1" aria-label="하나 줄이기" ${x.saved ? 'disabled' : ''}>−</button><output aria-live="polite">${x.n}</output><button data-act="m-step" data-i="${stn.i}" data-d="1" aria-label="하나 늘리기" ${x.saved ? 'disabled' : ''}>+</button></span><span>개</span>` +
+      (r.kind !== 'none' ? `<button class="chip" aria-pressed="${x.half}" data-act="m-half" data-i="${stn.i}" ${x.saved ? 'disabled' : ''}>+ 반 개 더</button>` : '') +
+      `<button class="btn small primary" data-act="m-save" data-i="${stn.i}" ${x.saved ? 'disabled' : ''}>${x.saved ? '기록 완료' : '기록하기'}</button>`;
+  }
+  handle(act, b){
+    const stn = this.stn[+b.dataset.i];
+    switch(act){
+      case 'm-redo': this.redo(stn); return true;
+      case 'm-num': this.setNumbers(b.checked); return true;
+      case 'm-step': stn.in.n = clamp(stn.in.n + (+b.dataset.d), 0, 40); this.cfg.refresh(); return true;
+      case 'm-half': stn.in.half = !stn.in.half; this.cfg.refresh(); return true;
+      case 'm-save': {
+        const res = this.cfg.onSave(stn, stn.in);
+        stn.in.fb = res.ok ? '' : res.msg; stn.in.fbc = res.ok ? 'good' : 'try'; stn.in.saved = !!res.ok;
+        if(!res.ok) this.flashNumbers();
+        this.cfg.refresh(); return true;
+      }
+    }
+    return false;
+  }
+}
+
+/* 두 줄을 나란히 놓고 차이를 보여 준다: 큰 쪽(a)에서 작은 쪽(b)에 없는 부분을 표시 */
+function drawCompare(sc){
+  const st = sc.st;
+  let a = sc.stn[0], b = sc.stn[1];
+  if(SUBJECTS[a.key].ml < SUBJECTS[b.key].ml) [a, b] = [b, a];
+  const us = getSpec(sc.unit.key), s = sc.rowScale(), slot = (us.W + us.slotPad) * s;
+  const nb = b.cups.filter(c => c.full).length;
+  const x0 = a.rowX0 + slot * nb, x1 = a.rowX0 + slot * a.cups.length;
+  const yTop = Math.min(a.shelfY, b.shelfY) - us.H * s - 34, yBot = Math.max(a.shelfY, b.shelfY) + 6;
+  if(sc.cmpEl) sc.cmpEl.remove();
+  const g = sc.cmpEl = el('g', { class: 'fadein' }, st.layers.top);
+  g.innerHTML = `<rect class="hl" x="${x0 + 1}" y="${a.shelfY - us.H * s - 10}" width="${Math.max(10, x1 - x0 - 2)}" height="${us.H * s + 16}" rx="10"/>` +
+    `<path class="dimline" d="M${x0} ${yTop}V${yBot}"/>` +
+    `<g class="callout" transform="translate(${clamp(x1 - 10, 380, 790)} ${a.shelfY - us.H * s - 52})"><rect x="-168" y="-21" width="336" height="42" rx="14"/><text y="8">${SUBJECTS[a.key].name}가 물이 더 많이 들어가요</text></g>`;
+}
+
+/* 단위 고르기 카드 (같은 축척의 그림이라 크기를 비교할 수 있다) */
+function unitCardsHTML(keys, selected, disabled){
+  const vb = [-72, -92, 164, 104];
+  return `<div class="ucards" role="group" aria-label="재는 데 쓸 단위">` + keys.map(k => {
+    const u = UNITS[k];
+    return `<button class="ucard" data-act="unit" data-k="${k}" aria-pressed="${selected === k}" ${disabled ? 'disabled' : ''}>${iconSVG(k, { vb, fill: 1 })}<span>${u.name}</span></button>`;
+  }).join('') + `</div>`;
+}
+
+/* =====================================================================
+   5. 저장 · 화면 틀 · 질문
+   ===================================================================== */
+const KEY = 'deuri-lab-v1';
+const DB = { flags: {}, rec: {}, ans: {}, final: {} };
+/* 진행 상황은 이 화면이 열려 있는 동안만 기억한다. 새로 접속하면 처음 상태로 시작한다.
+   (예전 버전이 브라우저에 저장해 둔 기록이 있으면 한 번 지운다.) */
+function loadDB(){ try { localStorage.removeItem(KEY); } catch(e){} }
+function saveDB(){}
+/* 받침에 따라 조사 고르기 */
+const jo = (w, a, b) => { const c = w.charCodeAt(w.length - 1) - 0xAC00; return w + ((c >= 0 && c % 28 !== 0) ? a : b); };
+const recOf = (s, u) => DB.rec[s + ':' + u];
+const ansOk = id => !!(DB.ans[id] && DB.ans[id].ok);
+const unitsBoth = () => UNIT_ORDER.filter(u => recOf('na', u) && recOf('da', u));
+const commonUnits = () => UNIT_ORDER.filter(u => THINGS.every(t => recOf(t, u)));
+
+const LAB = { view: 'home', act: 0, sub: 'A', stage: null, homeStage: null, cur: null, scene: null };
+const refresh = () => { renderControls(); renderPanel(); renderSteps(); fitStage(); };
+/* 무대 높이를 화면에 남는 공간에 맞춘다 (크롬북처럼 낮은 화면에서도 한 화면에 들어오도록) */
+function fitStage(){
+  if(LAB.view !== 'lab') return;
+  const w = $('.stage-wrap'), col = $('.stage-col');
+  if(!w || !col) return;
+  w.style.maxHeight = '';
+  if(getComputedStyle(col).display === 'none') return;
+  const stacked = Math.abs($('.side').getBoundingClientRect().left - col.getBoundingClientRect().left) < 40;
+  if(stacked) return;                                  // 한 줄로 쌓이는 좁은 화면에서는 그대로 둔다
+  const below = col.getBoundingClientRect().bottom - w.getBoundingClientRect().bottom;
+  const top = w.getBoundingClientRect().top;
+  const avail = window.innerHeight - top - below - 10;
+  w.style.maxHeight = Math.max(210, Math.floor(avail)) + 'px';
+}
+window.addEventListener('resize', () => { try { fitStage(); } catch(e){} });
+function newStage(){
+  if(LAB.stage) LAB.stage.destroy();
+  LAB.stage = new Stage($('#stage'));
+  return LAB.stage;
+}
+function killStages(){
+  if(LAB.stage){ LAB.stage.destroy(); LAB.stage = null; }
+  if(LAB.homeStage){ LAB.homeStage.destroy(); LAB.homeStage = null; }
+  LAB.scene = null;
+}
+const ICON_INFO = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--sky)" stroke="var(--ink)" stroke-width="2"/><path d="M12 11v6M12 7v1.5" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/></svg>';
+const guideHTML = t => `<p class="guide" role="status">${ICON_INFO}<span>${t}</span></p>`;
+
+/* 질문(보기 고르기). 오답이면 정답을 알려 주지 않고 다시 관찰하게 한다. */
+const PRAISE = ['정확해요!', '참 잘했어요!', '잘 관찰했어요!', '멋져요!'];
+const QS = {
+  'a1-most':  { text: '어느 물병에 물이 가장 많이 들어가나요?', opts: [['ga', '물병 가', 'ga'], ['na', '물병 가', 'na'], ['da', '물병 나', 'da']], ok: 'ga',
+    good: '물병 가예요. 폭이 가장 넓어서 가장 많이 들어가요.', hint: '같은 통에 담은 물의 높이를 다시 비교해 봐요.' },
+  'a1-least': { text: '어느 물병에 물이 가장 적게 들어가나요?', opts: [['ga', '물병 가', 'ga'], ['na', '물병 가', 'na'], ['da', '물병 나', 'da']], ok: 'da',
+    good: '물병 나예요. 폭이 가장 좁아서 가장 적게 들어가요.', hint: '폭과 같은 통의 물 높이를 다시 비교해 봐요.' },
+  'a2-more':  { text: '어느 물병에 물이 더 적게 들어가나요?', opts: [['na', '물병 가'], ['da', '물병 나']], ok: 'da',
+    good: '물병 나예요. 가의 물을 나에 부었더니 나가 가득 차고도 가에 물이 남았고, 같은 수조에 담았을 때도 나의 물이 더 낮았어요.', hint: '실험 A에서 나가 가득 찬 뒤에도 가에 물이 남았는지, 실험 B에서 컵의 물 높이는 어느 쪽이 낮은지 다시 봐요.' },
+  'a2-diff':  { text: '물병 가와 나의 들이 차이를 알 수 있나요?', opts: [['yes', '네, 정확히 알 수 있어요.'], ['no', '아니요, 정확히 알기 어려워요.']], ok: 'no',
+    good: '남은 물의 양이나 수조의 물 높이만으로는 정확히 말하기 어려워요. 같은 단위로 재어 보면 알 수 있어요.', hint: '남은 물이나 수조의 높이를 보고 “몇 개만큼”이라고 정확히 말할 수 있는지 생각해 봐요.' },
+  'a3-more':  { text: '물병 가와 나 중 어느 물병에 물이 더 많이 들어가나요?', opts: [['na', '물병 가'], ['da', '물병 나']], ok: 'na',
+    good: '물병 가예요. 요구르트병 개수가 더 많아요.', hint: '기록표에서 요구르트병 개수를 비교해 봐요.' },
+  'a3-diff':  { text: '물병 가는 물병 나보다 요구르트병 몇 개만큼 더 들어가나요?', opts: [['1', '1개'], ['2', '2개'], ['3', '3개'], ['4', '4개']], ok: '2',
+    good: '가(8개)는 나(6개)보다 요구르트병 2개만큼 더 들어가요.', hint: '기록표에서 두 개수의 차이를 세어 봐요.' },
+  'a4-most':  { text: '어떤 물건에 물이 가장 많이 들어가나요?', opts: [['kettle', '주전자'], ['bowl', '그릇'], ['sprayer', '분무기']], ok: 'kettle',
+    good: '주전자예요. 같은 단위로 잰 개수가 가장 많아요.', hint: '같은 단위로 잰 개수를 표에서 비교해 봐요.' },
+  'a4-least': { text: '어떤 물건에 물이 가장 적게 들어가나요?', opts: [['kettle', '주전자'], ['bowl', '그릇'], ['sprayer', '분무기']], ok: 'sprayer',
+    good: '분무기예요. 같은 단위로 잰 개수가 가장 적어요.', hint: '같은 단위로 잰 개수가 가장 적은 물건을 표에서 찾아봐요.' },
+};
+function qHTML(id, lockMsg){
+  const q = QS[id], a = DB.ans[id], ok = a && a.ok;
+  if(lockMsg) return `<div class="q"><p class="qt">${q.text}</p><p class="hint">${lockMsg}</p></div>`;
+  const icons = !!q.opts[0][2];
+  const chips = q.opts.map(o => {
+    const sel = a && String(a.v) === String(o[0]);
+    const cls = sel ? (ok ? 'good' : 'bad') : '';
+    return `<button class="chip ${q.wide ? 'wide' : ''} ${icons ? 'v' : ''} ${cls}" data-act="ans" data-q="${id}" data-v="${o[0]}" aria-pressed="${!!sel}" ${ok ? 'disabled' : ''}>${o[2] ? iconSVG(o[2], { fill: .6 }) : ''}${o[1]}</button>`;
+  }).join('');
+  const fb = ok ? `<p class="fb good">${id.startsWith('a1') ? '' : PRAISE[id.length % PRAISE.length] + ' '}${q.good}</p>` : (a ? `<p class="fb try">${q.hint}</p>` : '<p class="fb"></p>');
+  return `<div class="q" data-q="${id}"><p class="qt">${q.text}</p><div class="chips ${icons ? 'three' : ''}">${chips}</div>${fb}</div>`;
+}
+function answer(id, v, btn){
+  const q = QS[id];
+  const ok = String(v) === String(q.ok);
+  DB.ans[id] = { v, ok }; saveDB();
+  refresh();
+  if(!ok){
+    const b = $(`[data-act="ans"][data-q="${id}"][data-v="${v}"]`);
+    if(b){ b.classList.add('shake'); b.focus({ preventScroll: true }); }
+  }
+}
+
+/* 기록표 */
+function cellHTML(rec){ return rec ? `<td class="have ok">${fmtValue(recValue(rec))}</td>` : `<td><span class="ph">직접 측정</span></td>`; }
+function bottleTable(curUnit){
+  const rows = UNIT_ORDER.map(u => {
+    const a = recOf('na', u), b = recOf('da', u);
+    let diff = '<td><span class="ph">—</span></td>';
+    if(a && b) diff = `<td class="have">${fmtValue(recValue(a) - recValue(b))}</td>`;
+    return `<tr class="${curUnit === u ? 'cur' : ''}"><th scope="row">${UNITS[u].short}</th>${cellHTML(a)}${cellHTML(b)}${diff}</tr>`;
+  }).join('');
+  return `<div class="tbl-wrap"><table class="tbl"><caption class="sr">측정 기록표</caption><colgroup><col style="width:34%"><col><col><col></colgroup><thead><tr><th scope="col">단위</th><th scope="col">물병 가</th><th scope="col">물병 나</th><th scope="col">차이</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function thingTable(curKey, curUnit){
+  const head = UNIT_ORDER.map(u => `<th scope="col">${UNITS[u].short}</th>`).join('');
+  const rows = THINGS.map(t => `<tr class="${curKey === t ? 'cur' : ''}"><th scope="row">${SUBJECTS[t].name}</th>` +
+    UNIT_ORDER.map(u => { const r = recOf(t, u); return r ? `<td class="have ok">${fmtValue(recValue(r))}</td>` : `<td><span class="ph">—</span></td>`; }).join('') + `</tr>`).join('');
+  return `<div class="tbl-wrap"><table class="tbl"><caption class="sr">물건별 기록표</caption><colgroup><col style="width:25%"><col><col><col></colgroup><thead><tr><th scope="col">물건</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* =====================================================================
+   6. 활동 1: 세 물병의 들이를 비교해 봅시다
+   ===================================================================== */
+const A1 = {
+ title:'생각 깨우기. 들이를 비교해 볼까요?', goal:'들이는 그릇에 가득 담을 수 있는 양이에요.',
+ mount(){ const st=newStage(); drawRoom(st,[470],700); ['na','da'].forEach((k,i)=>{const v=new Vessel(st,k,{capMl:SUBJECTS[k].ml,vol:0,x:300+i*360,y:470,scale:1.6});tagEl(st.layers.under,300+i*360,510,SUBJECTS[k].name,'green',true);}); },
+ controls(){return guideHTML('어느 물병에 물이 더 많이 들어갈지 예상해 보세요. 다음 활동에서 확인해요.');},
+ panel(){return `<section class="card"><h3>어느 물병의 들이가 더 클까요?</h3><div class="chips">${['na','da'].map(k=>`<button class="chip" data-act="predict" data-k="${k}" aria-pressed="${DB.flags.pred===k}">${SUBJECTS[k].name}</button>`).join('')}</div><p class="hint">${DB.flags.pred?'예상을 기록했어요. 실험으로 확인해 봐요.':'물병의 모양을 살펴보세요.'}</p></section>`;},
+ onAct(a,b){if(a==='predict'){DB.flags.pred=b.dataset.k;refresh();}}
+};
+/* =====================================================================
+   7. 활동 2: 여러 가지 방법으로 물병 가와 나의 들이를 비교해 봅시다
+   ===================================================================== */
+const A2 = {
+  S: null,
+  title: '활동 1. 물병의 들이를 비교해 봅시다.',
+  goal: '물을 직접 옮기거나 같은 크기의 수조에 나누어 담으며 두 물병의 들이를 비교해요.',
+  subs: [['A', '실험 A. 가의 물을 나에 옮기기'], ['B', '실험 B. 같은 수조에 각각 따르기']],
+  mount(){ LAB.sub === 'B' ? this.mountB() : this.mountA(); },
+  mountA(){
+    const st = newStage(); drawRoom(st, [470]);
+    const S = this.S = { mode: 'A', busy: false, poured: false, checked: false, over: false };
+    const na = S.na = new Vessel(st, 'na', { capMl: 600, vol: 600, x: 200, y: 470, layer: 'mid2' });
+    const da = S.da = new Vessel(st, 'da', { capMl: 450, vol: 0, x: 650, y: 470 }); da.setCap(false, true);
+    const tray = S.tray = new Vessel(st, 'tray', { capMl: 400, vol: 0, x: 650, y: 470, layer: 'mid2' }); tray.el.style.pointerEvents = 'none';
+    tagEl(st.layers.under, 200, 508, '물병 가', 'green', true);
+    tagEl(st.layers.under, 650, 508, '물병 나', 'blue', true);
+    S.s1 = new Stream(st); S.s2 = new Stream(st);
+    const lip = this.daLip();
+    S.zone = el('ellipse', { class: 'zone', cx: lip.x + 14, cy: lip.y - 6, rx: 78, ry: 32 }, st.layers.under);
+    S.home = { x: 200, y: 470 };
+    na.el.classList.add('clk');
+    na.el.setAttribute('tabindex', '0'); na.el.setAttribute('role', 'button'); na.el.setAttribute('aria-label', '물병 가의 물을 물병 나에 따르기');
+    const go = () => guard(this.pour());
+    na.el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    makeDrag(st, na, {
+      canDrag: () => !S.busy && !S.poured, target: () => this.daLip(), radius: 170, home: () => S.home,
+      onStart: () => S.zone.classList.add('on'), onMove: hot => S.zone.classList.toggle('hot', hot), onEnd: () => S.zone.classList.remove('on', 'hot'),
+      onTap: go, onDrop: go,
+    });
+  },
+  daLip(){ const da = this.S.da; return { x: da.mouthX() - 10, y: da.topY() - 44 }; },
+  spillPath(){
+    const S = this.S, da = S.da, pts = da.spec.pts, half = pts.length / 2;
+    const yTray = S.tray.B.y + S.tray.computeC();
+    let d = '';
+    for(let i = half - 1; i >= 0; i--){
+      const x = da.B.x + pts[i][0] + 5, y = da.B.y + pts[i][1];
+      if(y > yTray) break;
+      d += (d ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+    }
+    return d || `M${da.B.x + 20} ${da.topY()}V${yTray}`;
+  },
+  /* 가의 물을 모두 다에 따른다. 나가 가득 차면 나머지 물은 받침으로 넘친다. */
+  async pour(){
+    const S = this.S, st = LAB.stage;
+    if(S.busy || S.poured) return;
+    S.busy = true; S.zone.classList.remove('on', 'hot'); refresh();
+    const lip = this.daLip();
+    await approach(st, S.na, lip);
+    await pourPhase(st, S.na, S.da, { lip, dstX: S.da.mouthX(), stream: S.s1, rate: 230, limit: 450 });
+    await retract(st, S.na, S.home);
+    S.poured = true; DB.flags.a2P = true; DB.flags.a2A = true; saveDB(); S.busy = false; refresh();
+  },
+  mountB(){
+    const st = newStage(); drawRoom(st, [470]);
+    const S = this.S = { mode: 'B', busy: false, done: {}, cups: {}, srcs: {}, streams: {}, cfg: {} };
+    const cfgs = [{ k: 'na', srcX: 130, cupX: 350 }, { k: 'da', srcX: 580, cupX: 800 }];
+    cfgs.forEach(c => {
+      const Sj = SUBJECTS[c.k];
+      const src = new Vessel(st, Sj.kind, { capMl: Sj.ml, vol: Sj.ml, x: c.srcX, y: 470, layer: 'mid2' });
+      const P = 20;
+      drawPedestal(st.layers.under, c.cupX, 470, 200, P);
+      const cup = new Vessel(st, 'beaker', { capMl: 800, vol: 0, x: c.cupX, y: 470 - P });
+      cup.el.style.pointerEvents = 'none';
+      S.srcs[c.k] = src; S.cups[c.k] = cup; S.streams[c.k] = new Stream(st); S.cfg[c.k] = c; c.home = { x: c.srcX, y: 470 };
+      tagEl(st.layers.under, c.srcX, 508, Sj.name, Sj.color, true);
+      tagEl(st.layers.under, c.cupX, 508, '같은 크기의 수조', 'lilac', true);
+      c.zone = el('ellipse', { class: 'zone', cx: c.cupX, cy: 470 - P - cup.spec.H - 8, rx: 86, ry: 32 }, st.layers.under);
+      src.el.classList.add('clk'); src.el.setAttribute('tabindex', '0'); src.el.setAttribute('role', 'button'); src.el.setAttribute('aria-label', Sj.name + '의 물을 수조에 따르기');
+      const go = () => guard(this.pourB(c.k));
+      src.el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+      makeDrag(st, src, {
+        canDrag: () => !S.busy && !S.done[c.k], target: () => this.lipB(c.k), radius: 170, home: () => c.home,
+        onStart: () => c.zone.classList.add('on'), onMove: hot => c.zone.classList.toggle('hot', hot), onEnd: () => c.zone.classList.remove('on', 'hot'),
+        onTap: go, onDrop: go,
+      });
+    });
+  },
+  lipB(k){ const c = this.S.cfg[k], cup = this.S.cups[k]; return { x: c.cupX - 40, y: cup.topY() - 34 }; },
+  async pourB(k){
+    const S = this.S, st = LAB.stage, c = S.cfg[k];
+    if(S.busy || S.done[k]) return;
+    S.busy = true; c.zone.classList.remove('on', 'hot'); refresh();
+    const src = S.srcs[k], cup = S.cups[k], lip = this.lipB(k);
+    await approach(st, src, lip);
+    await pourPhase(st, src, cup, { lip, dstX: c.cupX, stream: S.streams[k], rate: 380 });
+    await retract(st, src, c.home);
+    S.done[k] = true; S.busy = false;
+    if(S.done.na && S.done.da){
+      const yA = S.cups.na.surfaceY(), yB = S.cups.da.surfaceY();
+      const g = el('g', { class: 'fadein' }, st.layers.top);
+      g.innerHTML = `<rect class="hl" x="${S.cfg.na.cupX - 75}" y="${Math.min(yA, yB)}" width="${S.cfg.da.cupX - S.cfg.na.cupX + 150}" height="${Math.abs(yB - yA)}" rx="4"/>` +
+        `<path class="cmp blue" d="M${S.cfg.na.cupX - 100} ${yA}H${S.cfg.da.cupX + 100}"/><path class="cmp green" d="M${S.cfg.na.cupX - 100} ${yB}H${S.cfg.da.cupX + 100}"/>` +
+        `<g class="callout" transform="translate(${(S.cfg.na.cupX + S.cfg.da.cupX) / 2} ${Math.min(yA, yB) - 120})"><rect x="-120" y="-20" width="240" height="40" rx="14"/><text y="8">물의 높이가 달라요</text></g>`;
+      DB.flags.a2B = true; saveDB();
+    }
+    refresh();
+  },
+  controls(){
+    const S = this.S;
+    if(S.mode === 'B'){
+      const all = S.done.na && S.done.da;
+      const g = all ? '두 수조의 물 높이를 비교해 보세요. 어느 쪽 물이 더 높나요? 수조의 물 높이만으로는 얼마나 차이 나는지 정확히 알기 어려워요. 오른쪽 질문에 답해 보세요.' :
+        '같은 크기의 수조 두 개에 물병 가와 나의 물을 각각 따라요. 물병을 수조 위로 끌어 놓거나 버튼을 눌러요. 두 수조의 물 높이를 비교해 봐요.';
+      return guideHTML(g) + `<div class="btnrow"><button class="btn primary" data-act="b-pour" data-k="na" ${S.busy || S.done.na ? 'disabled' : ''}>물병 가의 물을 수조에 따르기</button>` +
+        `<button class="btn primary" data-act="b-pour" data-k="da" ${S.busy || S.done.da ? 'disabled' : ''}>물병 나의 물을 수조에 따르기</button>` +
+        `<button class="btn ghost" data-act="reset" ${S.busy ? 'disabled' : ''}>처음부터 다시</button></div>`;
+    }
+    const g = !S.poured ? '물병 가를 눌러서 물병 나 위로 끌어 놓거나, 아래 버튼을 눌러 가의 물을 나가 가득 찰 때까지 따라 봐요. 나가 가득 차면 어떻게 될까요?' :
+      '물병 나가 가득 차고도 물병 가에 물이 남았어요.';
+    const b = `<button class="btn primary" data-act="a2-pour" ${S.busy || S.poured ? 'disabled' : ''}>물병 가의 물을 나에 따르기</button>` +
+      `<button class="btn ghost" data-act="reset" ${S.busy ? 'disabled' : ''}>처음부터 다시</button>`;
+    return guideHTML(g) + `<div class="btnrow">${b}</div>`;
+  },
+  panel(){
+    const flags = DB.flags, ready = flags.a2A && flags.a2B;
+    const li = (ok, t) => `<li style="display:flex;gap:10px;align-items:flex-start"><span aria-hidden="true" style="flex:none;min-width:2.6em;white-space:nowrap;font-family:var(--font-d);color:${ok ? 'var(--good)' : 'var(--muted)'}">${ok ? '완료' : '대기'}</span><span style="white-space:nowrap">${t}</span></li>`;
+    return `<section class="card"><h3>실험 순서</h3><ul style="margin:0;padding:0;list-style:none;display:grid;gap:8px;font-weight:500">` +
+      li(flags.a2A, '실험 A: 가의 물을 나에 따르기') +
+      li(flags.a2B, '실험 B: 두 수조에 각각 따라 높이 비교') + `</ul></section>` +
+      `<section class="card ${ready ? '' : 'locked'}"><h3>질문에 답해 봐요</h3>` +
+      (ready ? qHTML('a2-more') + qHTML('a2-diff') : `<p class="hint">${!flags.a2A && !flags.a2B ? '실험 A와 실험 B를 모두 해 보면 답할 수 있어요.' : !flags.a2A ? '실험 A도 해 보면 답할 수 있어요. 위의 “실험 A” 탭을 눌러요.' : '실험 B도 해 보면 답할 수 있어요. 위의 “실험 B” 탭을 눌러요.'}</p>`) + `</section>`;
+  },
+  onAct(act, b){
+    switch(act){
+      case 'a2-pour': guard(this.pour()); break;
+      case 'b-pour': guard(this.pourB(b.dataset.k)); break;
+    }
+  },
+};
+
+/* =====================================================================
+   8. 활동 3: 여러 가지 단위로 물병 가와 나의 들이를 재어 봅시다 (핵심)
+   ===================================================================== */
+const A3 = {
+  S: null,
+  title: '활동 2. 여러 가지 물건을 단위로 이용해 봅시다.',
+  goal: '여러 가지 단위로 들이를 재어 보고, 단위에 따라 재는 개수가 달라지는 것을 알아봐요.',
+  subs: [['A', '실험 A. 요구르트병으로 재기'], ['B', '실험 B. 다른 단위로 재기']],
+  mount(){
+    const st = newStage();
+    const sc = LAB.scene = new Measure(st, {
+      layout: 'double', subjects: ['na', 'da'], numbers: true, toggleNumbers: true, record: true, refresh,
+      onSave: (stn, x) => this.save(stn, x),
+      onDone: () => { if(sc.stn.every(s => s.done)) drawCompare(sc); refresh(); },
+    });
+    this.S = { unit: null };
+  },
+  save(stn, x){
+    const S = SUBJECTS[stn.key], u = LAB.scene.unit, m = measure(S.ml, u.ml);
+    const okN = x.n === m.full, okH = (m.kind === 'half') === x.half;
+    if(okN && okH){
+      DB.rec[stn.key + ':' + u.key] = { n: x.n, half: x.half }; saveDB();
+      return { ok: true, msg: `${S.name}에는 ${u.name} ${fmtCount(m.full, m.kind)}만큼 들어가요. 기록표에 적었어요!` };
+    }
+    if(!okN) return { ok: false, msg: '다시 세어 볼까요? 컵을 하나씩 짚으며 세어 봐요.' };
+    return { ok: false, msg: m.kind === 'none' ? '마지막 컵의 물이 가득 찼는지 다시 살펴볼까요?' : '마지막 컵을 다시 살펴봐요. 물이 어느 정도 차 있나요?' };
+  },
+  controls(){
+    const sc = LAB.scene, A = LAB.sub === 'A';
+    const keys = A ? ['yog'] : ['meas', 'small'];
+    let g;
+    if(!sc.unit) g = A ? '먼저 요구르트병을 눌러서 골라요.' : '재어 볼 단위를 하나 골라요. 단위마다 컵의 크기가 달라요.';
+    else if(sc.stn.every(s => s.done)) g = '두 물병을 모두 쟀어요! 컵을 세어서 기록표에 적어 봐요.';
+    else if(sc.stn.some(s => s.poured > 0 || s.done)) g = '컵이 하나씩 채워져요. 몇 개인지 세어 봐요.';
+    else g = '물병을 눌러서 컵에 담아 봐요. 컵 위로 끌어 놓아도 돼요.';
+    return guideHTML(g) + `<div class="urow"><span class="ulabel">재는 단위</span>${unitCardsHTML(keys, sc.unit && sc.unit.key, sc.busy)}<span class="urow-end">${sc.toggleHTML()}<button class="btn ghost small" data-act="reset" ${sc.busy ? 'disabled' : ''}>처음부터 다시</button></span></div>` + sc.cardsHTML();
+  },
+  panel(){
+    const sc = LAB.scene, cur = sc && sc.unit && sc.unit.key;
+    const cupOk = recOf('na', 'yog') && recOf('da', 'yog');
+    return `<section class="card">${bottleTable(cur)}</section>` +
+      `<section class="card ${cupOk ? '' : 'locked'}" aria-label="핵심 질문">` +
+      (cupOk ? qHTML('a3-more') + qHTML('a3-diff') : `<p class="hint">요구르트병으로 물병 가와 나를 모두 재어 기록하면 답할 수 있어요.</p>`) +
+      `</section>`;
+  },
+  onAct(act, b){
+    if(act === 'unit') LAB.scene.setUnit(b.dataset.k);
+  },
+};
+
+/* =====================================================================
+   9. 활동 4: 우리 주변에 있는 물건의 들이를 비교해 봅시다
+   ===================================================================== */
+const A4 = {
+ title:'활동 3. 서로 다른 단위로 들이를 재면?', goal:'같은 물뿌리개를 서로 다른 단위로 재어 보고 공통 단위의 필요성을 알아봐요.',
+ mount(){const st=newStage(); LAB.scene=new Measure(st,{layout:'single',subjects:['kettle'],numbers:true,toggleNumbers:true,record:true,refresh,onSave:(station,x)=>A3.save(station,x),onDone:()=>refresh()});},
+ controls(){const sc=LAB.scene;return guideHTML('같은 물뿌리개의 물을 종이컵과 요구르트병으로 각각 재어 보세요.')+`<div class="urow">${unitCardsHTML(['cup','yog'],sc.unit&&sc.unit.key,sc.busy)}<button class="btn ghost small" data-act="reset" ${sc.busy?'disabled':''}>다시 하기</button></div>`+sc.cardsHTML();},
+ panel(){const a=recOf('kettle','cup'),b=recOf('kettle','yog');return `<section class="card"><h3>물뿌리개 측정 기록</h3><table class="tbl"><tr><th>종이컵</th>${cellHTML(a)}</tr><tr><th>요구르트병</th>${cellHTML(b)}</tr></table></section><section class="card">${a&&b?qHTML('a4-most')+qHTML('a4-least'):'두 단위로 모두 재어 기록해 보세요.'}</section>`;},
+ onAct(a,b){if(a==='unit')LAB.scene.setUnit(b.dataset.k);}
+};
+QS['a4-most']={text:'같은 물뿌리개인데 측정한 수가 다른 까닭은?',opts:[['unit','단위의 크기가 달라서'],['water','물의 양이 달라서']],ok:'unit',good:'같은 양도 단위의 크기에 따라 측정한 수가 달라요.',hint:'물뿌리개는 같은 물건이에요.'};
+QS['a4-least']={text:'들이를 쉽게 비교하려면 어떻게 해야 할까요?',opts:[['same','같은 단위로 재기'],['different','서로 다른 단위로 재기']],ok:'same',good:'공통된 단위를 사용하면 들이를 쉽게 나타내고 비교할 수 있어요.',hint:'단위의 크기가 같아야 개수를 비교할 수 있어요.'};
+const ACTS = { 1: A1, 2: A2, 3: A3, 4: A4 };
+
+/* =====================================================================
+   11. 화면 전환 · 진행 표시 · 이벤트
+   ===================================================================== */
+const STEP_LABELS = ['생각 깨우기','들이 비교','여러 단위','공통 단위'];
+const LIVE_QS = { 1: ['a1-most', 'a1-least'], 2: ['a2-more', 'a2-diff'], 3: ['a3-more', 'a3-diff'], 4: ['a4-most', 'a4-least', 'a4-diff'] };
+function isDone(n){
+  if(n < 5 && DB.flags['done' + n]) return true;
+  return liveDone(n);
+}
+function liveDone(n){
+  switch(n){
+    case 1: return !!DB.flags.pred;
+    case 2: return !!(DB.flags.a2A && DB.flags.a2B && ansOk('a2-more') && ansOk('a2-diff'));
+    case 3: return !!(recOf('na', 'yog') && recOf('da', 'yog') && unitsBoth().length === 3 && ansOk('a3-more') && ansOk('a3-diff'));
+    case 4: return !!(recOf('kettle','cup') && recOf('kettle','yog') && ansOk('a4-most') && ansOk('a4-least'));
+  }
+  return false;
+}
+function renderSteps(){
+  for(const n of [1, 2, 3, 4]) if(!DB.flags['done' + n] && liveDone(n)){ DB.flags['done' + n] = true; saveDB(); }
+  const ck = '<svg class="ck" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const cur = LAB.view === 'lab' ? LAB.act : 0;
+  const doneN = [1, 2, 3, 4].filter(isDone).length;
+  $('#steps').innerHTML = STEP_LABELS.map((t, i) => {
+    const n = i + 1, d = isDone(n);
+    return `<li><button class="step ${cur === n ? 'cur' : ''} ${d ? 'done' : ''}" data-act="goact" data-n="${n}" aria-label="활동 ${n}: ${t}${d ? ' (완료)' : ''}" ${cur === n ? 'aria-current="step"' : ''}><span class="n"><span>${n===1?"도입":n-1}</span>${ck}</span><span class="t">${t}</span></button></li>`;
+  }).join('') + `<li class="prog" aria-live="polite">${doneN}/4 단계 완료</li>`;
+  if(LAB.view === 'lab'){
+    $('#nextBtn').textContent = LAB.act === 4 ? '처음으로' : '다음 활동';
+    $('#nextBtn').classList.toggle('primary', isDone(LAB.act));
+    $('#prevBtn').textContent = LAB.act === 1 ? '처음으로' : '이전 활동';
+  }
+}
+function renderControls(){ if(LAB.view === 'lab' && LAB.cur){ $('#controls').innerHTML = LAB.cur.controls(); } }
+function renderPanel(){ if(LAB.view === 'lab' && LAB.cur){ $('#side').innerHTML = LAB.cur.panel(); } }
+function renderSubtabs(){
+  const a = LAB.cur;
+  $('#subtabs').innerHTML = a.subs ? a.subs.map(s => `<button class="chip" role="tab" data-act="sub" data-s="${s[0]}" aria-pressed="${LAB.sub === s[0]}" aria-selected="${LAB.sub === s[0]}">${s[1]}</button>`).join('') : '';
+}
+function show(view){
+  ['home', 'lab'].forEach(v => { $('#v-' + v).hidden = v !== view; });
+  LAB.view = view; renderSteps();
+  window.scrollTo({ top: 0 });
+}
+function goHome(){ killStages(); LAB.cur = null; show('home'); startHome(); renderHomeButtons(); }
+function goAct(n, sub, fresh){
+  /* 활동에 새로 들어오거나 다시 시작하면 이전 답은 지우고, 완료 표시만 남긴다 */
+  if(fresh === undefined) fresh = sub === undefined;
+  if(fresh){
+    LIVE_QS[n].forEach(id => { delete DB.ans[id]; });
+    if(n === 2){
+      /* 다시 하기는 지금 보고 있는 실험(A 또는 B)만 지우고, 새로 들어오면 둘 다 지운다 */
+      if(sub === undefined || sub === 'A'){ delete DB.flags.a2P; delete DB.flags.a2A; }
+      if(sub === undefined || sub === 'B') delete DB.flags.a2B;
+    }
+    saveDB();
+  }
+  killStages();
+  LAB.act = n; LAB.cur = ACTS[n]; LAB.sub = sub || 'A';
+  show('lab');
+  $('#labTitle').textContent = LAB.cur.title; $('#labGoal').textContent = LAB.cur.goal;
+  $('.lab-grid').classList.toggle('pred-first', n === 1);
+  const vbH = n === 1 ? 700 : n === 3 ? 590 : 620;
+  $('.lab-grid').classList.toggle('fit', n === 3 || n === 4);
+  $('#stage').setAttribute('viewBox', `0 0 960 ${vbH}`); $('.stage-wrap').style.aspectRatio = `960/${vbH}`;
+  LAB.cur.mount(); renderSubtabs(); refresh();
+}
+function renderHomeButtons(){
+  const any = Object.keys(DB.flags).length || Object.keys(DB.rec).length || Object.keys(DB.ans).length;
+  const r = $('#resumeBtn'); r.hidden = !any;
+  const next = [1, 2, 3, 4].find(n => !isDone(n));
+  r.textContent = next ? `이어서 하기 (활동 ${next})` : '활동 1부터 다시 보기';
+  r.dataset.n = next || 1;
+}
+function startHome(){
+  const st = LAB.homeStage = new Stage($('#homeSvg'));
+  const bg = st.layers.bg;
+  bg.innerHTML = `<defs><pattern id="hd" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="2.6" class="dot"/><circle cx="33" cy="33" r="2.6" class="dot"/></pattern></defs><rect width="960" height="330" class="wall"/><rect width="960" height="330" fill="url(#hd)"/><rect x="24" y="290" width="912" height="16" rx="8" class="shelf"/><rect x="40" y="306" width="880" height="7" rx="3.5" class="shelf-sh"/>`;
+  const items = [['na', 200, .8], ['da', 430, .6], ['cup', 625, .7], ['meas', 745, .75], ['yog', 850, 1]];
+  items.forEach(([k, x, fr]) => { const s = getSpec(k); const v = new Vessel(st, k, { capMl: s.capMl, vol: s.capMl * fr, x, y: 290 }); v.setCap(k === 'yog' || k === 'ga', true); });
+}
+function route(act, b, e){
+  switch(act){
+    case 'home': goHome(); return;
+    case 'start': goAct(1); return;
+    case 'resume': goAct(+b.dataset.n); return;
+    case 'goact': goAct(+b.dataset.n); return;
+    case 'prev': LAB.act === 1 ? goHome() : goAct(LAB.act - 1); return;
+    case 'next': LAB.act === 4 ? goHome() : goAct(LAB.act + 1); return;
+    case 'sub': { if(LAB.cur.subs && !(LAB.stage && LAB.scene && LAB.scene.busy)) goAct(LAB.act, b.dataset.s); return; }
+    case 'reset': goAct(LAB.act, LAB.sub, true); return;
+    case 'ans': answer(b.dataset.q, b.dataset.v, b); return;
+  }
+  if(LAB.scene && LAB.scene.handle(act, b)) return;
+  if(LAB.cur && LAB.cur.onAct) LAB.cur.onAct(act, b, e);
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if(!b || b.disabled) return;
+  route(b.dataset.act, b, e);
+});
+
+window.__lab = {
+  verify: verifyData, DB, LAB, SUBJECTS, UNITS, measure, fmtCount, getSpec, Vessel, ACTS,
+  go: (n, s) => goAct(n, s), home: goHome,
+};
+loadDB();
+goHome();
+
+})();
+</script>
+
+</body></html>
