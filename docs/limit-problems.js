@@ -1,5 +1,5 @@
-import {subject,topic} from './quality-revisions.js?v=8a281ca2f2b6';
-import {seeded} from './core-revisions.js?v=8a281ca2f2b6';
+import {subject,topic} from './quality-revisions.js?v=a6bf77d7dfbf';
+import {seeded} from './core-revisions.js?v=a6bf77d7dfbf';
 const SCENES=[
  ['소풍 가방','소풍 가방에 넣을 짐의 한도입니다.',['물병','도시락','돗자리','간식','그림책','손수건 꾸러미'],[[400,800],[500,1000],[300,800],[100,400],[250,700],[100,250]]],
  ['캠핑 배낭','캠핑 활동에서 정한 배낭 짐의 한도입니다.',['침낭','손전등','물통','간식','접이식 의자','캠핑 냄비'],[[600,1400],[150,450],[600,1500],[150,500],[800,1800],[400,900]]],

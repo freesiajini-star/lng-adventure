@@ -28,3 +28,9 @@
 
 .entry-school{white-space:nowrap;font-weight:800;color:#fff;text-shadow:0 1px 2px #000c}
 @media(max-width:700px){.student-entry{flex-wrap:wrap}.student-entry{justify-content:flex-start}.entry-school{flex:0 0 auto;text-align:left;font-size:11px}.masthead .header-right{align-items:flex-end}}
+/* Keep both class lists visible together, including tablet layouts. */
+.class-rank-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start}.class-rank-pair .side-card{min-width:0;padding:12px 7px}.class-rank-pair h2{font-size:13px;line-height:1.5}.class-rank-pair h2 small{display:block}.class-rank-pair .rank-row{grid-template-columns:20px minmax(0,1fr) auto;gap:3px;font-size:11px;padding:7px 0}.class-rank-pair .rank-row>span:nth-child(2){white-space:normal;overflow-wrap:anywhere}.class-rank-pair .rank-score{font-size:11px;white-space:nowrap}
+@media(min-width:961px){.workspace{grid-template-columns:170px minmax(0,1fr) 310px}}
+@media(max-width:960px){.rank-sidebar{display:block}.class-rank-pair{margin:12px 0}.rank-sidebar .class-rank-pair .side-card,.rank-sidebar .class-ranking{display:block!important}}
+/* Password text uses the same size as the class/number labels. */
+.student-entry #entryPassword[readonly]{color:#fff;-webkit-text-fill-color:#fff;font-size:inherit;letter-spacing:1px;min-width:8ch;width:8ch;text-align:center;padding-inline:5px}#entryMessage{color:#fff;font-size:inherit;text-shadow:0 1px 3px #000b}
