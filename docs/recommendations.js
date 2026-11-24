@@ -1,4 +1,4 @@
-import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=7218b52df547';
+import {ACTIVE_TYPES,TYPE_NAMES} from './math.js?v=f8c3837f1d13';
 export const RECOMMENDATION_RULES={days:14,minQuestions:10,graduateAccuracy:.8,limit:5,bonusLimit:100};
 export function weakTypes(days){
  const totals={};for(const d of days)for(const[key,t]of Object.entries(d?.types||{})){const match=/^s(\d+)t(\d+)$/.exec(key);if(!match)continue;const stage=+match[1],type=+match[2];if(!ACTIVE_TYPES[stage-1]?.includes(type))continue;const a=totals[key]??={key,stage,type,correct:0,wrong:0};a.correct+=Math.max(0,Number(t.correct)||0);a.wrong+=Math.max(0,Number(t.wrong)||0);}

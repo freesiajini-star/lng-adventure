@@ -65,3 +65,10 @@ body.theme-bakery .score-strip>div{box-shadow:none}
  body.theme-bakery[data-problem-glow="on"] .rank-sidebar .side-card,
  body.theme-bakery[data-problem-glow="on"] .other-ranks-panel .side-card{box-shadow:none}
 }
+/* Rank glows live behind all cards, never on a neighboring card face. */
+.rank-glow-layer{display:none;position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+body.theme-bakery[data-problem-glow="on"] .workspace{position:relative}
+body.theme-bakery[data-problem-glow="on"] .rank-glow-layer{display:block}
+body.theme-bakery[data-problem-glow="on"] .rank-sidebar .side-card,
+body.theme-bakery[data-problem-glow="on"] .other-ranks-panel .side-card{box-shadow:none}
+@media print{.rank-glow-layer{display:none!important}}
