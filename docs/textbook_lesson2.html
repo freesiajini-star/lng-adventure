@@ -7,6 +7,7 @@
 <style>
 /* 레이아웃: 위 = 진행 단계, 가운데 = 실험 무대, 아래 = 조작·안내, 오른쪽(넓은 화면) = 기록·질문 */
 :root{
+  --cap-red:#9A2133;
   --bg:#FBF6EC; --surface:#FFFFFF; --surface2:#FFF9F0; --ink:#2F2B45; --muted:#6A6585; --line:#E6DCCB;
   --primary:#D6532F; --primary-ink:#FFFFFF; --focus:#2F6FC9;
   --sky:#D3EBF8; --mint:#D2F0DE; --lemon:#FFEFB0; --lilac:#E5DEFB; --rose:#FFDCE4;
@@ -105,6 +106,10 @@ button{font-family:inherit;color:inherit}
 }
 .chip:hover{border-color:var(--muted)}
 .chip[aria-pressed="true"]{border-color:var(--ink);background:var(--lemon)}
+.chip.bottle-choice{background:var(--bottle-choice-bg);color:#fff}
+.chip.bottle-choice.red{--bottle-choice-bg:var(--cap-red)}
+.chip.bottle-choice.blue{--bottle-choice-bg:var(--cap-blue);text-shadow:0 0 2px #294878,0 1px 2px #294878}
+.chip.bottle-choice[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
 .chip.good{border-color:var(--good);background:var(--good-soft)}
 .chip.bad{border-color:var(--try);background:var(--try-soft)}
 .chip[disabled]{cursor:default;opacity:1}
@@ -258,6 +263,7 @@ input[type=number]{width:96px;text-align:center;font:400 26px var(--font-d)}
 .handle{fill:none;stroke:var(--glass-line);stroke-width:8;stroke-linecap:round}
 .rim{fill:var(--glass-line);opacity:.55}
 .tick{stroke:var(--glass-line);stroke-width:2.4;stroke-linecap:round;opacity:.8}
+.red-lid .capg .cap-green{fill:var(--cap-red)}
 .capg{transition:transform .4s ease, opacity .4s ease}
 .capg.off{transform:translateY(-30px);opacity:0}
 .pop{transform-origin:0 0;transition:transform .28s cubic-bezier(.3,1.5,.5,1)}
@@ -313,6 +319,7 @@ svg.nonum .num{display:none}
 .urow-end{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .mrows{display:grid;gap:8px}
 .mrow{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:6px 14px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;min-width:0}
+.mrow .bottle-label{box-sizing:border-box;flex:0 0 112px;text-align:center;white-space:nowrap}
 .mrow .mname{font:400 20px var(--font-d)}
 .mrow .mhint{color:var(--muted);font-weight:500;font-size:16px}
 .mrow .mlabel{font:500 17px var(--font-b)}
@@ -446,7 +453,7 @@ svg.nonum .num{display:none}
         <li><span class="n">도입</span><b>생각 깨우기</b><span>두 물병 중 어느 물병의 들이가 더 클까요?</span></li>
         <li><span class="n">1</span><b>물을 옮겨 비교하기</b><span>물을 옮기고, 같은 수조에 나누어 담아 봐요.</span></li>
         <li><span class="n">2</span><b>여러 단위로 재어 보기</b><span>요구르트병, 머그잔, 작은 병으로 재어 봐요.</span></li>
-        <li><span class="n">3</span><b>서로 다른 단위</b><span>같은 물뿌리개를 두 단위로 재어 봐요.</span></li>
+        <li><span class="n">3</span><b>불편한 점</b><span>같은 물뿌리개를 두 단위로 재어 봐요.</span></li>
       </ol>
     </section>
 
@@ -483,12 +490,16 @@ svg.nonum .num{display:none}
    ===================================================================== */
 const ML_CUP = 200;
 const UNITS = {
-  cup:  { key:'cup',  name:'종이컵',          short:'종이컵', ml: 200 },
-  yog:  { key:'yog',  name:'작은 요구르트병', short:'요구르트병', ml: 75 },
-  meas: { key:'meas', name:'머그잔',          short:'머그잔', ml: 150 },
+  cup:  { key:'cup',  name:'종이컵',          short:'종이컵', counter:'잔', ml: 200 },
+  yog:  { key:'yog',  name:'작은 요구르트병', short:'요구르트병', counter:'병', ml: 75 },
+  meas: { key:'meas', name:'머그잔',          short:'머그잔', counter:'잔', ml: 150 },
 };
-UNITS.small={key:'small',name:'작은 병',short:'작은 병',ml:50};
+UNITS.small={key:'small',name:'작은 병',short:'작은 병',counter:'병',ml:50};
 const UNIT_ORDER = ['yog','meas','small'];
+const BOTTLE_LABELS = {
+  na: { name: '내 물병', color: 'green' },
+  da: { name: '친구 물병', color: 'amber' },
+};
 const SUBJECTS = {
   ga:      { key:'ga',      kind:'ga',      name:'물병 가', short:'가', ml: 8 * ML_CUP, color:'blue'  },
   na:      { key:'na',      kind:'na',      name:'물병 가', short:'나', ml: 600, color:'green' },
@@ -506,16 +517,16 @@ function measure(ml, unitMl){
   const kind = rest < 1e-6 ? 'none' : (Math.abs(rest * 2 - unitMl) < 1e-6 ? 'half' : 'some');
   return { full, rest, kind, value: ml / unitMl };
 }
-function fmtCount(full, kind){
-  if(kind === 'none') return full + '개';
-  if(kind === 'half') return full === 0 ? '반 개' : full + '개와 반';
-  return full + '개와 조금';
+function fmtCount(full, kind, counter){
+  if(kind === 'none') return full + counter;
+  if(kind === 'half') return full === 0 ? '반 ' + counter : full + counter + '과 반';
+  return full + counter + '과 조금';
 }
-function fmtValue(x){
+function fmtValue(x, counter){
   const w = Math.floor(x + 1e-9), r = x - w;
-  if(r < 1e-9) return w + '개';
-  if(Math.abs(r - .5) < 1e-9) return w === 0 ? '반 개' : w + '개와 반';
-  return x.toFixed(1) + '개';
+  if(r < 1e-9) return w + counter;
+  if(Math.abs(r - .5) < 1e-9) return w === 0 ? '반 ' + counter : w + counter + '과 반';
+  return x.toFixed(1) + counter;
 }
 const recValue = r => r.n + (r.half ? .5 : 0);
 
@@ -799,10 +810,10 @@ class Vessel{
     this.vol = o.vol || 0; this.B = { x: o.x || 0, y: o.y || 0 }; this.rot = 0; this.scale = o.scale || 1;
     this.amp = 1.3; this.recv = false; this.phase = Math.random() * 6; this.id = 'v' + (++UID);
     const s = this.spec;
-    const g = el('g', { class: 'vessel' }, stage.layers[o.layer || 'mid']);
+    const g = el('g', { class: o.redLid ? 'vessel red-lid' : 'vessel' }, stage.layers[o.layer || 'mid']);
     g.innerHTML = `<g class="pop"><g class="back">${s.back}</g><path class="gfill" d="${s.d}"/>` +
       `<clipPath id="c${this.id}"><path d="${s.d}"/></clipPath><g clip-path="url(#c${this.id})"><path class="water"/><path class="surf"/></g>` +
-      `<path class="gline" d="${s.d}"/><g class="front">${s.front}</g><g class="capg">${s.cap}</g></g>`;
+      `<path class="gline" d="${s.d}"/><g class="front">${s.front}</g><g class="capg">${o.noLid ? '' : s.cap}</g></g>`;
     this.el = g; this.pop = g.firstChild;
     this.water = g.querySelector('.water'); this.surf = g.querySelector('.surf'); this.capg = g.querySelector('.capg');
     stage.vessels.add(this);
@@ -1008,7 +1019,7 @@ function drawPedestal(layer, x, y, w, h){
 function tagEl(layer, x, y, text, color, small){
   const w = Math.max(40, text.length * (small ? 15 : 22) + 22);
   const g = el('g', { transform: `translate(${x} ${y})` }, layer);
-  g.innerHTML = `<rect class="tagbox" x="${-w / 2}" y="-20" width="${w}" height="40" rx="14" style="fill:var(--cap-${color || 'blue'})"/><text class="tagtxt${small ? ' s' : ''}" y="8" style="fill:#1d1a2c">${text}</text>`;
+  g.innerHTML = `<rect class="tagbox" x="${-w / 2}" y="-20" width="${w}" height="40" rx="14" style="fill:var(--cap-${color || 'blue'})"/><text class="tagtxt${small ? ' s' : ''}" y="8" style="fill:${color === 'red' || color === 'blue' ? '#fff' : '#1d1a2c'}${color === 'blue' ? ';stroke:#294878;stroke-width:2;paint-order:stroke' : ''}">${text}</text>`;
   return g;
 }
 
@@ -1041,11 +1052,12 @@ class Measure{
   }
   makeSource(stn){
     const st = this.st, S = SUBJECTS[stn.key];
+    const label = BOTTLE_LABELS[stn.key] || S;
     if(stn.src) st.remove(stn.src);
     stn.home = { x: stn.srcX, y: stn.shelfY };
     const v = stn.src = new Vessel(st, S.kind, { capMl: S.ml, vol: S.ml, x: stn.srcX, y: stn.shelfY, layer: 'mid2' });
     v.el.classList.add('clk');
-    v.el.setAttribute('tabindex', '0'); v.el.setAttribute('role', 'button'); v.el.setAttribute('aria-label', S.name + '을 눌러 컵에 담기');
+    v.el.setAttribute('tabindex', '0'); v.el.setAttribute('role', 'button'); v.el.setAttribute('aria-label', label.name + ' 눌러서 물 따르기');
     const go = () => guard(this.autoAll(stn));  // 물병을 누르면(또는 컵 위로 끌어 놓으면) 끝까지 한 컵씩 담는다
     v.el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
     makeDrag(st, v, {
@@ -1054,7 +1066,7 @@ class Measure{
       onTap: go, onDrop: go,
     });
     if(stn.tag) stn.tag.remove();
-    stn.tag = tagEl(st.layers.under, stn.srcX, stn.shelfY + 36, S.name, S.color, true);
+    stn.tag = tagEl(st.layers.under, stn.srcX, stn.shelfY + 36, label.name, label.color, true);
   }
   zone(stn, on){ if(stn.zoneEl) stn.zoneEl.classList.toggle('on', on); }
   zoneHot(stn, hot){ if(stn.zoneEl) stn.zoneEl.classList.toggle('hot', hot); }
@@ -1163,21 +1175,23 @@ class Measure{
     const u = this.unit;
     return `<div class="mrows">` + this.stn.map(stn => {
       const S = SUBJECTS[stn.key];
+      const bottleLabel = BOTTLE_LABELS[stn.key];
       const unpicked = this.cfg.enabled && !this.cfg.enabled(stn);
       const redo = (stn.poured > 0 || stn.done) && !this.busy ? `<button class="btn ghost small" data-act="m-redo" data-i="${stn.i}">다시</button>` : '';
       let mid;
       if(stn.done && this.cfg.record) mid = this.recInline(stn);
       else mid = `<span class="mhint">${!u ? '재는 단위를 먼저 골라요.' : (stn.busy || stn.auto) ? '담는 중이에요…' : '물병을 눌러서 컵에 담아요.'}</span>`;
-      return `<div class="mrow"><span class="tagc ${unpicked ? 'lilac' : S.color}">${unpicked ? '?' : S.short}</span><b class="mname">${unpicked ? '물건을 먼저 골라요' : S.name}</b>` +
-        mid + (this.numOn && u && !stn.done ? `<span class="cnt" aria-live="polite">센 개수 ${stn.poured}</span>` : '') + redo +
+      return `<div class="mrow">${bottleLabel ? `<span class="tagc bottle-label ${bottleLabel.color}">${bottleLabel.name}</span>` :
+        `<span class="tagc ${unpicked ? 'lilac' : S.color}">${unpicked ? '?' : S.short}</span><b class="mname">${unpicked ? '물건을 먼저 골라요' : S.name}</b>`}` +
+        mid + (this.numOn && u && !stn.done ? `<span class="cnt" aria-live="polite">센 개수 ${stn.poured}${u.counter}</span>` : '') + redo +
         (stn.done && this.cfg.record && stn.in.fb ? `<p class="fb ${stn.in.fbc || ''}" role="status">${stn.in.fb}</p>` : '') + `</div>`;
     }).join('') + `</div>`;
   }
   recInline(stn){
     const u = this.unit, S = SUBJECTS[stn.key], r = measure(S.ml, u.ml), x = stn.in;
     return `<span class="mlabel">${u.name}</span>` +
-      `<span class="stepper"><button data-act="m-step" data-i="${stn.i}" data-d="-1" aria-label="하나 줄이기" ${x.saved ? 'disabled' : ''}>−</button><output aria-live="polite">${x.n}</output><button data-act="m-step" data-i="${stn.i}" data-d="1" aria-label="하나 늘리기" ${x.saved ? 'disabled' : ''}>+</button></span><span>개</span>` +
-      (r.kind !== 'none' ? `<button class="chip" aria-pressed="${x.half}" data-act="m-half" data-i="${stn.i}" ${x.saved ? 'disabled' : ''}>+ 반 개 더</button>` : '') +
+      `<span class="stepper"><button data-act="m-step" data-i="${stn.i}" data-d="-1" aria-label="하나 줄이기" ${x.saved ? 'disabled' : ''}>−</button><output aria-live="polite">${x.n}</output><button data-act="m-step" data-i="${stn.i}" data-d="1" aria-label="하나 늘리기" ${x.saved ? 'disabled' : ''}>+</button></span><span>${u.counter}</span>` +
+      (r.kind !== 'none' ? `<button class="chip" aria-pressed="${x.half}" data-act="m-half" data-i="${stn.i}" ${x.saved ? 'disabled' : ''}>+ 반 ${u.counter} 더</button>` : '') +
       `<button class="btn small primary" data-act="m-save" data-i="${stn.i}" ${x.saved ? 'disabled' : ''}>${x.saved ? '기록 완료' : '기록하기'}</button>`;
   }
   handle(act, b){
@@ -1211,7 +1225,7 @@ function drawCompare(sc){
   const g = sc.cmpEl = el('g', { class: 'fadein' }, st.layers.top);
   g.innerHTML = `<rect class="hl" x="${x0 + 1}" y="${a.shelfY - us.H * s - 10}" width="${Math.max(10, x1 - x0 - 2)}" height="${us.H * s + 16}" rx="10"/>` +
     `<path class="dimline" d="M${x0} ${yTop}V${yBot}"/>` +
-    `<g class="callout" transform="translate(${clamp(x1 - 10, 380, 790)} ${a.shelfY - us.H * s - 52})"><rect x="-168" y="-21" width="336" height="42" rx="14"/><text y="8">${SUBJECTS[a.key].name}가 물이 더 많이 들어가요</text></g>`;
+    `<g class="callout" transform="translate(${clamp(x1 - 10, 380, 790)} ${a.shelfY - us.H * s - 52})"><rect x="-168" y="-21" width="336" height="42" rx="14"/><text y="8">${BOTTLE_LABELS[a.key].name}에 물이 더 많이 들어가요</text></g>`;
 }
 
 /* 단위 고르기 카드 (같은 축척의 그림이라 크기를 비교할 수 있다) */
@@ -1280,10 +1294,10 @@ const QS = {
     good: '물병 나예요. 가의 물을 나에 부었더니 나가 가득 차고도 가에 물이 남았고, 같은 수조에 담았을 때도 나의 물이 더 낮았어요.', hint: '실험 A에서 나가 가득 찬 뒤에도 가에 물이 남았는지, 실험 B에서 컵의 물 높이는 어느 쪽이 낮은지 다시 봐요.' },
   'a2-diff':  { text: '물병 가와 나의 들이 차이를 알 수 있나요?', opts: [['yes', '네, 정확히 알 수 있어요.'], ['no', '아니요, 정확히 알기 어려워요.']], ok: 'no',
     good: '남은 물의 양이나 수조의 물 높이만으로는 정확히 말하기 어려워요. 같은 단위로 재어 보면 알 수 있어요.', hint: '남은 물이나 수조의 높이를 보고 “몇 개만큼”이라고 정확히 말할 수 있는지 생각해 봐요.' },
-  'a3-more':  { text: '물병 가와 나 중 어느 물병에 물이 더 많이 들어가나요?', opts: [['na', '물병 가'], ['da', '물병 나']], ok: 'na',
-    good: '물병 가예요. 요구르트병 개수가 더 많아요.', hint: '기록표에서 요구르트병 개수를 비교해 봐요.' },
-  'a3-diff':  { text: '물병 가는 물병 나보다 요구르트병 몇 개만큼 더 들어가나요?', opts: [['1', '1개'], ['2', '2개'], ['3', '3개'], ['4', '4개']], ok: '2',
-    good: '가(8개)는 나(6개)보다 요구르트병 2개만큼 더 들어가요.', hint: '기록표에서 두 개수의 차이를 세어 봐요.' },
+  'a3-more':  { text: '내 물병과 친구 물병 중 어느 쪽에 물이 더 많이 들어가나요?', opts: [['na', '내 물병'], ['da', '친구 물병']], ok: 'na',
+    good: '내 물병이에요. 요구르트병 개수가 더 많아요.', hint: '기록표에서 요구르트병 개수를 비교해 봐요.' },
+  'a3-diff':  { text: '내 물병에는 친구 물병보다 요구르트병 몇 병만큼 물이 더 들어가나요?', opts: [['1', '1병'], ['2', '2병'], ['3', '3병'], ['4', '4병']], ok: '2',
+    good: '내 물병(8병)에는 친구 물병(6병)보다 요구르트병 2병만큼 물이 더 들어가요.', hint: '기록표에서 두 개수의 차이를 세어 봐요.' },
   'a4-most':  { text: '어떤 물건에 물이 가장 많이 들어가나요?', opts: [['kettle', '주전자'], ['bowl', '그릇'], ['sprayer', '분무기']], ok: 'kettle',
     good: '주전자예요. 같은 단위로 잰 개수가 가장 많아요.', hint: '같은 단위로 잰 개수를 표에서 비교해 봐요.' },
   'a4-least': { text: '어떤 물건에 물이 가장 적게 들어가나요?', opts: [['kettle', '주전자'], ['bowl', '그릇'], ['sprayer', '분무기']], ok: 'sprayer',
@@ -1313,20 +1327,20 @@ function answer(id, v, btn){
 }
 
 /* 기록표 */
-function cellHTML(rec){ return rec ? `<td class="have ok">${fmtValue(recValue(rec))}</td>` : `<td><span class="ph">직접 측정</span></td>`; }
+function cellHTML(rec, unitKey){ return rec ? `<td class="have ok">${fmtValue(recValue(rec), UNITS[unitKey].counter)}</td>` : `<td><span class="ph">직접 측정</span></td>`; }
 function bottleTable(curUnit){
   const rows = UNIT_ORDER.map(u => {
     const a = recOf('na', u), b = recOf('da', u);
     let diff = '<td><span class="ph">—</span></td>';
-    if(a && b) diff = `<td class="have">${fmtValue(recValue(a) - recValue(b))}</td>`;
-    return `<tr class="${curUnit === u ? 'cur' : ''}"><th scope="row">${UNITS[u].short}</th>${cellHTML(a)}${cellHTML(b)}${diff}</tr>`;
+    if(a && b) diff = `<td class="have">${fmtValue(recValue(a) - recValue(b), UNITS[u].counter)}</td>`;
+    return `<tr class="${curUnit === u ? 'cur' : ''}"><th scope="row">${UNITS[u].short}</th>${cellHTML(a, u)}${cellHTML(b, u)}${diff}</tr>`;
   }).join('');
-  return `<div class="tbl-wrap"><table class="tbl"><caption class="sr">측정 기록표</caption><colgroup><col style="width:34%"><col><col><col></colgroup><thead><tr><th scope="col">단위</th><th scope="col">물병 가</th><th scope="col">물병 나</th><th scope="col">차이</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return `<div class="tbl-wrap"><table class="tbl"><caption class="sr">측정 기록표</caption><colgroup><col style="width:34%"><col><col><col></colgroup><thead><tr><th scope="col">단위</th><th scope="col">내 물병</th><th scope="col">친구 물병</th><th scope="col">차이</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function thingTable(curKey, curUnit){
   const head = UNIT_ORDER.map(u => `<th scope="col">${UNITS[u].short}</th>`).join('');
   const rows = THINGS.map(t => `<tr class="${curKey === t ? 'cur' : ''}"><th scope="row">${SUBJECTS[t].name}</th>` +
-    UNIT_ORDER.map(u => { const r = recOf(t, u); return r ? `<td class="have ok">${fmtValue(recValue(r))}</td>` : `<td><span class="ph">—</span></td>`; }).join('') + `</tr>`).join('');
+    UNIT_ORDER.map(u => { const r = recOf(t, u); return r ? `<td class="have ok">${fmtValue(recValue(r), UNITS[u].counter)}</td>` : `<td><span class="ph">—</span></td>`; }).join('') + `</tr>`).join('');
   return `<div class="tbl-wrap"><table class="tbl"><caption class="sr">물건별 기록표</caption><colgroup><col style="width:25%"><col><col><col></colgroup><thead><tr><th scope="col">물건</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
@@ -1335,9 +1349,9 @@ function thingTable(curKey, curUnit){
    ===================================================================== */
 const A1 = {
  title:'생각 깨우기. 들이를 비교해 볼까요?', goal:'들이는 그릇에 가득 담을 수 있는 양이에요.',
- mount(){ const st=newStage(); drawRoom(st,[470],700); ['na','da'].forEach((k,i)=>{const v=new Vessel(st,k,{capMl:SUBJECTS[k].ml,vol:0,x:300+i*360,y:470,scale:1.6});tagEl(st.layers.under,300+i*360,510,SUBJECTS[k].name,'green',true);}); },
+ mount(){ const st=newStage(); drawRoom(st,[470],700); ['na','da'].forEach((k,i)=>{const v=new Vessel(st,k,{capMl:SUBJECTS[k].ml,vol:0,x:300+i*360,y:470,scale:1.6,redLid:k==='na',noLid:k==='da'});tagEl(st.layers.under,300+i*360,510,SUBJECTS[k].name,k==='na'?'red':'blue',true);}); },
  controls(){return guideHTML('어느 물병에 물이 더 많이 들어갈지 예상해 보세요. 다음 활동에서 확인해요.');},
- panel(){return `<section class="card"><h3>어느 물병의 들이가 더 클까요?</h3><div class="chips">${['na','da'].map(k=>`<button class="chip" data-act="predict" data-k="${k}" aria-pressed="${DB.flags.pred===k}">${SUBJECTS[k].name}</button>`).join('')}</div><p class="hint">${DB.flags.pred?'예상을 기록했어요. 실험으로 확인해 봐요.':'물병의 모양을 살펴보세요.'}</p></section>`;},
+ panel(){return `<section class="card"><h3>어느 물병의 들이가 더 클까요?</h3><div class="chips">${['na','da'].map(k=>`<button class="chip bottle-choice ${k==='na'?'red':'blue'}" data-act="predict" data-k="${k}" aria-pressed="${DB.flags.pred===k}">${SUBJECTS[k].name}</button>`).join('')}</div><p class="hint">${DB.flags.pred?'예상을 기록했어요. 실험으로 확인해 봐요.':'물병의 모양을 살펴보세요.'}</p></section>`;},
  onAct(a,b){if(a==='predict'){DB.flags.pred=b.dataset.k;refresh();}}
 };
 /* =====================================================================
@@ -1352,10 +1366,10 @@ const A2 = {
   mountA(){
     const st = newStage(); drawRoom(st, [470]);
     const S = this.S = { mode: 'A', busy: false, poured: false, checked: false, over: false };
-    const na = S.na = new Vessel(st, 'na', { capMl: 600, vol: 600, x: 200, y: 470, layer: 'mid2' });
-    const da = S.da = new Vessel(st, 'da', { capMl: 450, vol: 0, x: 650, y: 470 }); da.setCap(false, true);
+    const na = S.na = new Vessel(st, 'na', { capMl: 600, vol: 600, x: 200, y: 470, layer: 'mid2', redLid: true });
+    const da = S.da = new Vessel(st, 'da', { capMl: 450, vol: 0, x: 650, y: 470, noLid: true });
     const tray = S.tray = new Vessel(st, 'tray', { capMl: 400, vol: 0, x: 650, y: 470, layer: 'mid2' }); tray.el.style.pointerEvents = 'none';
-    tagEl(st.layers.under, 200, 508, '물병 가', 'green', true);
+    tagEl(st.layers.under, 200, 508, '물병 가', 'red', true);
     tagEl(st.layers.under, 650, 508, '물병 나', 'blue', true);
     S.s1 = new Stream(st); S.s2 = new Stream(st);
     const lip = this.daLip();
@@ -1400,13 +1414,13 @@ const A2 = {
     const cfgs = [{ k: 'na', srcX: 130, cupX: 350 }, { k: 'da', srcX: 580, cupX: 800 }];
     cfgs.forEach(c => {
       const Sj = SUBJECTS[c.k];
-      const src = new Vessel(st, Sj.kind, { capMl: Sj.ml, vol: Sj.ml, x: c.srcX, y: 470, layer: 'mid2' });
+      const src = new Vessel(st, Sj.kind, { capMl: Sj.ml, vol: Sj.ml, x: c.srcX, y: 470, layer: 'mid2', redLid: c.k === 'na', noLid: c.k === 'da' });
       const P = 20;
       drawPedestal(st.layers.under, c.cupX, 470, 200, P);
       const cup = new Vessel(st, 'beaker', { capMl: 800, vol: 0, x: c.cupX, y: 470 - P });
       cup.el.style.pointerEvents = 'none';
       S.srcs[c.k] = src; S.cups[c.k] = cup; S.streams[c.k] = new Stream(st); S.cfg[c.k] = c; c.home = { x: c.srcX, y: 470 };
-      tagEl(st.layers.under, c.srcX, 508, Sj.name, Sj.color, true);
+      tagEl(st.layers.under, c.srcX, 508, Sj.name, c.k === 'na' ? 'red' : 'blue', true);
       tagEl(st.layers.under, c.cupX, 508, '같은 크기의 수조', 'lilac', true);
       c.zone = el('ellipse', { class: 'zone', cx: c.cupX, cy: 470 - P - cup.spec.H - 8, rx: 86, ry: 32 }, st.layers.under);
       src.el.classList.add('clk'); src.el.setAttribute('tabindex', '0'); src.el.setAttribute('role', 'button'); src.el.setAttribute('aria-label', Sj.name + '의 물을 수조에 따르기');
@@ -1494,7 +1508,7 @@ const A3 = {
     const okN = x.n === m.full, okH = (m.kind === 'half') === x.half;
     if(okN && okH){
       DB.rec[stn.key + ':' + u.key] = { n: x.n, half: x.half }; saveDB();
-      return { ok: true, msg: `${S.name}에는 ${u.name} ${fmtCount(m.full, m.kind)}만큼 들어가요. 기록표에 적었어요!` };
+      return { ok: true, msg: `${(BOTTLE_LABELS[stn.key] || S).name}에는 ${u.name} ${fmtCount(m.full, m.kind, u.counter)}만큼 들어가요. 기록표에 적었어요!` };
     }
     if(!okN) return { ok: false, msg: '다시 세어 볼까요? 컵을 하나씩 짚으며 세어 봐요.' };
     return { ok: false, msg: m.kind === 'none' ? '마지막 컵의 물이 가득 찼는지 다시 살펴볼까요?' : '마지막 컵을 다시 살펴봐요. 물이 어느 정도 차 있나요?' };
@@ -1505,7 +1519,7 @@ const A3 = {
     let g;
     if(!sc.unit) g = A ? '먼저 요구르트병을 눌러서 골라요.' : '재어 볼 단위를 하나 골라요. 단위마다 컵의 크기가 달라요.';
     else if(sc.stn.every(s => s.done)) g = '두 물병을 모두 쟀어요! 컵을 세어서 기록표에 적어 봐요.';
-    else if(sc.stn.some(s => s.poured > 0 || s.done)) g = '컵이 하나씩 채워져요. 몇 개인지 세어 봐요.';
+    else if(sc.stn.some(s => s.poured > 0 || s.done)) g = `${sc.unit.short} ${sc.unit.counter === '병' ? '한 병' : '한 잔'}씩 채워져요. 몇 ${sc.unit.counter}인지 세어 봐요.`;
     else g = '물병을 눌러서 컵에 담아 봐요. 컵 위로 끌어 놓아도 돼요.';
     return guideHTML(g) + `<div class="urow"><span class="ulabel">재는 단위</span>${unitCardsHTML(keys, sc.unit && sc.unit.key, sc.busy)}<span class="urow-end">${sc.toggleHTML()}<button class="btn ghost small" data-act="reset" ${sc.busy ? 'disabled' : ''}>처음부터 다시</button></span></div>` + sc.cardsHTML();
   },
@@ -1514,7 +1528,7 @@ const A3 = {
     const cupOk = recOf('na', 'yog') && recOf('da', 'yog');
     return `<section class="card">${bottleTable(cur)}</section>` +
       `<section class="card ${cupOk ? '' : 'locked'}" aria-label="핵심 질문">` +
-      (cupOk ? qHTML('a3-more') + qHTML('a3-diff') : `<p class="hint">요구르트병으로 물병 가와 나를 모두 재어 기록하면 답할 수 있어요.</p>`) +
+      (cupOk ? qHTML('a3-more') + qHTML('a3-diff') : `<p class="hint">요구르트병으로 내 물병과 친구 물병을 모두 재어 기록하면 답할 수 있어요.</p>`) +
       `</section>`;
   },
   onAct(act, b){
@@ -1526,10 +1540,10 @@ const A3 = {
    9. 활동 4: 우리 주변에 있는 물건의 들이를 비교해 봅시다
    ===================================================================== */
 const A4 = {
- title:'활동 3. 서로 다른 단위로 들이를 재면?', goal:'같은 물뿌리개를 서로 다른 단위로 재어 보고 공통 단위의 필요성을 알아봐요.',
+ title:'활동 3. 서로 다른 단위로 들이 잴 때 불편한 점', goal:'같은 물뿌리개를 서로 다른 단위로 재어 보고 공통 단위의 필요성을 알아봐요.',
  mount(){const st=newStage(); LAB.scene=new Measure(st,{layout:'single',subjects:['kettle'],numbers:true,toggleNumbers:true,record:true,refresh,onSave:(station,x)=>A3.save(station,x),onDone:()=>refresh()});},
  controls(){const sc=LAB.scene;return guideHTML('같은 물뿌리개의 물을 종이컵과 요구르트병으로 각각 재어 보세요.')+`<div class="urow">${unitCardsHTML(['cup','yog'],sc.unit&&sc.unit.key,sc.busy)}<button class="btn ghost small" data-act="reset" ${sc.busy?'disabled':''}>다시 하기</button></div>`+sc.cardsHTML();},
- panel(){const a=recOf('kettle','cup'),b=recOf('kettle','yog');return `<section class="card"><h3>물뿌리개 측정 기록</h3><table class="tbl"><tr><th>종이컵</th>${cellHTML(a)}</tr><tr><th>요구르트병</th>${cellHTML(b)}</tr></table></section><section class="card">${a&&b?qHTML('a4-most')+qHTML('a4-least'):'두 단위로 모두 재어 기록해 보세요.'}</section>`;},
+ panel(){const a=recOf('kettle','cup'),b=recOf('kettle','yog');return `<section class="card"><h3>물뿌리개 측정 기록</h3><table class="tbl"><tr><th>종이컵</th>${cellHTML(a, 'cup')}</tr><tr><th>요구르트병</th>${cellHTML(b, 'yog')}</tr></table></section><section class="card">${a&&b?qHTML('a4-most')+qHTML('a4-least'):'두 단위로 모두 재어 기록해 보세요.'}</section>`;},
  onAct(a,b){if(a==='unit')LAB.scene.setUnit(b.dataset.k);}
 };
 QS['a4-most']={text:'같은 물뿌리개인데 측정한 수가 다른 까닭은?',opts:[['unit','단위의 크기가 달라서'],['water','물의 양이 달라서']],ok:'unit',good:'같은 양도 단위의 크기에 따라 측정한 수가 달라요.',hint:'물뿌리개는 같은 물건이에요.'};
@@ -1539,7 +1553,7 @@ const ACTS = { 1: A1, 2: A2, 3: A3, 4: A4 };
 /* =====================================================================
    11. 화면 전환 · 진행 표시 · 이벤트
    ===================================================================== */
-const STEP_LABELS = ['생각 깨우기','들이 비교','여러 단위','공통 단위'];
+const STEP_LABELS = ['생각 깨우기','들이 비교','여러 단위','불편한 점'];
 const LIVE_QS = { 1: ['a1-most', 'a1-least'], 2: ['a2-more', 'a2-diff'], 3: ['a3-more', 'a3-diff'], 4: ['a4-most', 'a4-least', 'a4-diff'] };
 function isDone(n){
   if(n < 5 && DB.flags['done' + n]) return true;
