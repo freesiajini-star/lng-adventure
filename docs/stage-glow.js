@@ -34,18 +34,19 @@ export function mountRankGlow(workspace){
  if(!workspace)return;
  const layer=document.createElementNS('http://www.w3.org/2000/svg','svg');
  layer.classList.add('rank-glow-layer');layer.setAttribute('aria-hidden','true');workspace.prepend(layer);
- let frame;
+ let frame,signature="";const observed=new Set();
  const resize=new ResizeObserver(()=>schedule());
  const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);};
  const draw=()=>{
-  if(!workspace.isConnected){resize.disconnect();mutation.disconnect();return;}
+  if(!workspace.isConnected){resize.disconnect();mutation.disconnect();window.removeEventListener('resize',schedule);return;}
   const b=workspace.getBoundingClientRect(),w=b.width,h=b.height;
   const rect=el=>{const r=el.getBoundingClientRect(),radius=parseFloat(getComputedStyle(el).borderTopLeftRadius)||0;return `<rect x="${r.left-b.left}" y="${r.top-b.top}" width="${r.width}" height="${r.height}" rx="${radius}"/>`;};
   const cards=[...workspace.querySelectorAll('.rank-sidebar .side-card,.other-ranks-panel .side-card')].filter(el=>el.getBoundingClientRect().width);
   const holes=[...cards,...workspace.querySelectorAll('.stage-button,.main-column,.score-strip>div')];
-  for(const el of holes)resize.observe(el);
+  const current=new Set([workspace,...holes]);for(const el of observed)if(!current.has(el)){resize.unobserve(el);observed.delete(el);}for(const el of current)if(!observed.has(el)){resize.observe(el);observed.add(el);}
+  const geometry=JSON.stringify([w,h,cards.map(rect),holes.map(rect)]);if(geometry===signature)return;signature=geometry;
   layer.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  layer.innerHTML=`<defs><filter id="rank-glow-blur" filterUnits="userSpaceOnUse" x="-40" y="-40" width="${w+80}" height="${h+80}"><feGaussianBlur stdDeviation="10"/></filter><mask id="rank-glow-holes" maskUnits="userSpaceOnUse" x="-40" y="-40" width="${w+80}" height="${h+80}"><rect x="-40" y="-40" width="${w+80}" height="${h+80}" fill="white"/><g fill="black">${holes.map(rect).join('')}</g></mask></defs><g mask="url(#rank-glow-holes)"><g fill="black" opacity=".6" filter="url(#rank-glow-blur)">${cards.map(rect).join('')}</g></g>`;
+  layer.innerHTML=`<defs>${cards.map((el,i)=>{const r=el.getBoundingClientRect();return `<filter id="rank-glow-blur-${i}" filterUnits="userSpaceOnUse" x="${r.left-b.left-40}" y="${r.top-b.top-40}" width="${r.width+80}" height="${r.height+80}"><feGaussianBlur stdDeviation="10"/></filter>`;}).join('')}<mask id="rank-glow-holes" maskUnits="userSpaceOnUse" x="-40" y="-40" width="${w+80}" height="${h+80}"><rect x="-40" y="-40" width="${w+80}" height="${h+80}" fill="white"/><g fill="black">${holes.map(rect).join('')}</g></mask></defs><g mask="url(#rank-glow-holes)"><g fill="black" opacity=".6">${cards.map((el,i)=>`<g filter="url(#rank-glow-blur-${i})">${rect(el)}</g>`).join('')}</g></g>`;
  };
  const mutation=new MutationObserver(records=>{if(records.some(r=>!layer.contains(r.target)))schedule();});
  mutation.observe(workspace,{childList:true,subtree:true});resize.observe(workspace);window.addEventListener('resize',schedule,{passive:true});schedule();

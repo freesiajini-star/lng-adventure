@@ -1,14 +1,14 @@
-import {compactRank,completeBoard,boardRows,readBoard,writeBoard} from './compact-ranks.js?v=d370fd59ad51';
-import {createSnapshotCache,clearOptimizationCaches} from './snapshot-cache.js?v=d370fd59ad51';
-import {createConditionalTransactions} from './conditional-transactions.js?v=d370fd59ad51';
-import {weakTypes,reserveBonus,finishBonus,reserveBonusProjection,finishBonusProjection} from './recommendations.js?v=d370fd59ad51';
-import {selectionCredit,cleanPolicyFlags,scoringScope} from './scoring-policy.js?v=d370fd59ad51';
-import {createAdvancedDeck} from './advanced-deck.js?v=d370fd59ad51';
-import {isTeacherClaims} from './teacher-session.js?v=d370fd59ad51';
-import {publicOverviewSnapshot} from './public-overview.js?v=d370fd59ad51';
-import {FIREBASE_CONFIG} from './firebase-config.js?v=d370fd59ad51';
-import {makeQuestion,publicQuestion,grade,NICKS,LEGACY_NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=d370fd59ad51';
-import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly,usageProjection} from './learning.js?v=d370fd59ad51';
+import {compactRank,completeBoard,boardRows,readBoard,writeBoard} from './compact-ranks.js?v=f8b8778b26df';
+import {createSnapshotCache,clearOptimizationCaches} from './snapshot-cache.js?v=f8b8778b26df';
+import {createConditionalTransactions} from './conditional-transactions.js?v=f8b8778b26df';
+import {weakTypes,reserveBonus,finishBonus,reserveBonusProjection,finishBonusProjection} from './recommendations.js?v=f8b8778b26df';
+import {selectionCredit,cleanPolicyFlags,scoringScope} from './scoring-policy.js?v=f8b8778b26df';
+import {createAdvancedDeck} from './advanced-deck.js?v=f8b8778b26df';
+import {isTeacherClaims} from './teacher-session.js?v=f8b8778b26df';
+import {publicOverviewSnapshot} from './public-overview.js?v=f8b8778b26df';
+import {FIREBASE_CONFIG} from './firebase-config.js?v=f8b8778b26df';
+import {makeQuestion,publicQuestion,grade,NICKS,LEGACY_NICKS,TYPE_NAMES,POUR_VARIANT_COUNT} from './math.js?v=f8b8778b26df';
+import {dayKey,offsetDay,night,dayUsage,applyAttempt,dayProjection,updateMonthly,usageProjection} from './learning.js?v=f8b8778b26df';
 
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 const clone=x=>x==null?x:structuredClone(x);

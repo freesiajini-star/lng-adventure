@@ -1,4 +1,4 @@
-import {pruneCacheStorage,clearCachePrefix} from './snapshot-cache.js?v=d370fd59ad51';
+import {pruneCacheStorage,clearCachePrefix} from './snapshot-cache.js?v=f8b8778b26df';
 const tuple=s=>[s?.correct||0,s?.wrong||0,s?.score||0,s?.total||0];
 const valid=t=>Array.isArray(t)&&t.length===4&&t.every(Number.isFinite)&&[0,1,3].every(i=>Number.isInteger(t[i])&&t[i]>=0)&&t[3]===t[0]+t[1];
 export function compactRank(summary,nickname){return{n:nickname||'',t:tuple(summary?.total),s:Object.fromEntries(Object.entries(summary?.stages||{}).filter(([,s])=>s).map(([n,s])=>[n,tuple(s)])),r:summary?.sourceRevision||summary?.revision||0};}

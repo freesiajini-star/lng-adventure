@@ -1,8 +1,8 @@
-import {WEIGHING_OBJECTS} from './container-weight-problems.js?v=d370fd59ad51';
-import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=d370fd59ad51';
-export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=d370fd59ad51';
-import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=d370fd59ad51';
-import {reviewQuestion} from './curriculum.js?v=d370fd59ad51';
+import {WEIGHING_OBJECTS} from './container-weight-problems.js?v=f8b8778b26df';
+import {TYPE_GROUPS,GROUP_TITLES} from './type-groups.js?v=f8b8778b26df';
+export {POUR_VARIANT_COUNT,createPourDeck} from './pour-problems.js?v=f8b8778b26df';
+import {restoreQuestion,EXTRA_TYPES} from './restoration.js?v=f8b8778b26df';
+import {reviewQuestion} from './curriculum.js?v=f8b8778b26df';
 // All quantities are integers in mL or g. This module is shared by the server and QA.
 export const STAGES = ['들이 비교','L와 mL','들이 어림과 측정','들이 덧셈·뺄셈','물의 양 같게 하기','무게 비교','g·kg·t','무게 어림과 측정','무게 덧셈·뺄셈','한 개의 무게','비교와 어림','처음 양 찾기','각각의 양 찾기','몇 개까지 담을까?','필요한 양과 가격','저울의 비밀','물 채우는 시간'];
 export const COLORS=['#df7152','#d87832','#cc8327','#b49620','#559c43','#168e81','#327fc0','#676ac6','#9961b9','#bd6f9a','#d73e81','#dc6b21','#b9900a','#159968','#1687bb','#3766ce','#9850c4'];
@@ -42,7 +42,7 @@ function makeQuestionRaw(stage,type,seed=1){
   if(type===2){if(volume){lines(`${fmt(n)}는 몇 ${small}인가요?`);num('바꾼 양',n,small);}else{lines(`${a} t ${b*100} kg은 몇 kg인가요?`);num('바꾼 무게',a*1000+b*100,'kg');}q.explanation=volume?`${a} × 1000 + ${u} = ${n} mL입니다.`:`1 t = 1000 kg이므로 ${a*1000+b*100} kg입니다.`;}
   if(type===3){const opts=[`${n} ${small} = ${a} ${large} ${u} ${small}`,`${n} ${small} = ${a*10} ${large} ${u} ${small}`,`${a} ${large} = ${a*100} ${small}`];lines('단위를 바르게 바꾼 것을 고르세요.');choice('옳은 식',opts,opts[0]);q.explanation=`1 ${large} = 1000 ${small}입니다.`;}
   if(type===4){const delta=pick([-100,0,100]);lines('두 양을 비교하세요.');q.visual={kind:'equation',text:`${fmt(n)}  ○  ${n+delta} ${small}`};choice('알맞은 기호',['>','=','<'],delta<0?'>':delta>0?'<':'=');q.explanation=`${fmt(n)} = ${n} ${small}로 바꾸어 비교합니다.`;}
-  if(type===5){const vals=[n+200,n,n+100];lines(volume?'들이가 작은 것부터 차례로 고르세요.':'무게가 가벼운 것부터 차례로 고르세요.');q.visual={kind:'countTable',rows:vals.map((x,i)=>[['가','나','다'][i],i===1?fmt(x):x+' '+small])};for(let i=0;i<3;i++)choice(`${i+1}번째`,['가','나','다'],['나','다','가'][i]);q.explanation=`같은 단위로 바꾸면 ${n}, ${n+100}, ${n+200} ${small} 순서입니다.`;}
+  if(type===5){const vals=[n,n+r(1,4)*100,n+r(5,9)*100];for(let j=vals.length-1;j>0;j--){const k=r(0,j);[vals[j],vals[k]]=[vals[k],vals[j]];}lines(volume?'들이가 작은 것부터 차례로 고르세요.':'무게가 가벼운 것부터 차례로 고르세요.');q.visual={kind:'countTable',rows:vals.map((x,i)=>[['가','나','다'][i],i===1?fmt(x):x+' '+small])};for(let i=0;i<3;i++)choice(`${i+1}번째`,['가','나','다'],['가','나','다'][vals.indexOf([...vals].sort((x,y)=>x-y)[i])]);q.explanation=`같은 단위로 바꾸면 ${[...vals].sort((x,y)=>x-y).join(", ")} ${small} 순서입니다.`;}
  }
  if(stage===3||stage===8){const vol=stage===3,unit=vol?'mL':'g',big=vol?'L':'kg';
   if(type===0||type===1||type===2||type===3){
