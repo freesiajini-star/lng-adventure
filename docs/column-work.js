@@ -1,4 +1,4 @@
-import {columnSteps,columnTasks} from './column-calculation.js?v=f8b8778b26df';
+import {columnSteps,columnTasks} from './column-calculation.js?v=5bbe875fd0e2';
 export function columnMarkup({optional=false}={}){const content='<section class="column-work" aria-label="직접 푸는 격자 세로셈"><h2>세로셈</h2><div class="column-grid-host"></div><p class="column-message" aria-live="polite"></p><div class="column-controls"><button data-column="check" type="button">다음 칸</button><button data-column="reset" type="button">처음부터</button></div></section>';return optional?'<details class="column-help"><summary>세로셈으로 풀어보기</summary>'+content+'</details>':content;}
 export function mountColumn(root,data,{onComplete=()=>{},onWrong=()=>{}}={}){
  if(!root)return null;const large=data.large||'L',small=data.small||'mL',commutative=data.readOperands&&data.operation==='+';

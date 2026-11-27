@@ -1,5 +1,5 @@
-import {reviseAdvanced} from './advanced-problems.js?v=f8b8778b26df';
-import {makeCargoQuestion} from './cargo-problems.js?v=f8b8778b26df';
+import {reviseAdvanced} from './advanced-problems.js?v=5bbe875fd0e2';
+import {makeCargoQuestion} from './cargo-problems.js?v=5bbe875fd0e2';
 // Quantities are generated in grams or millilitres; pictures never expose an answer.
 export const hasBatchim=s=>{const n=String(s).trim().codePointAt(String(s).trim().length-1);return n>=0xac00&&n<=0xd7a3&&(n-0xac00)%28!==0;};
 export const subject=s=>s+(hasBatchim(s)?'이':'가');
@@ -58,11 +58,11 @@ export function reviseQuality(q,seed){
  }
  if(q.stage===8&&[4,5,6].includes(q.type)){
   const candidates=WEIGHT_OBJECTS.filter(x=>x[1]>=80&&x[2]<=3000),a=pick(candidates),b=pick(candidates.filter(x=>x[0]!==a[0]));
-  const dial=x=>({label:x[0],value:r(Math.ceil(x[1]/50),Math.floor(x[2]/50))*50,max:3000,step:50}),items=[dial(a),dial(b)];
+  const dial=x=>{const step=pick([25,50,100]);return{label:x[0],value:r(Math.ceil(x[1]/step),Math.floor(x[2]/step))*step,max:3000,step};},items=[dial(a),dial(b)];
   if(q.type===6){while(items[0].value===items[1].value)items[1]=dial(b);set(['두 저울을 읽고 더 무거운 것을 고르세요.'],[choice('더 무거운 것',items.map(x=>x.label),items[items[0].value>items[1].value?0:1].label)],{kind:'pairedDials',items},items.map(x=>`${x.label} ${x.value} g`).join(', '));}
   else{const v=items[0];set([q.type===4?'저울의 작은 눈금 한 칸은 몇 g인가요?':'저울의 눈금을 읽으세요.'],[num(q.type===4?'한 눈금':'읽은 값',q.type===4?v.step:v.value)],{kind:'illustratedDial',...v},`한 눈금은 ${v.step} g이고, ${v.label}의 무게는 ${v.value} g입니다.`);}
  }
- if(q.stage===12&&q.type===2){const before=r(20,40)*100,one=r(2,5)*100,count=r(2,5),after=before+one*count;set([`물 ${Math.floor(before/1000)} L${before%1000?' '+before%1000+' mL':''}에 같은 컵으로 물을 가득 담아 ${count}번 더 부었더니 ${Math.floor(after/1000)} L${after%1000?' '+after%1000+' mL':''}가 되었습니다. 컵의 들이는 몇 mL인가요?`],[num('더 부은 물 전체',one*count,'mL'),num('컵의 들이',one,'mL')],{kind:'cupChange',before,after,count,one,capacity:Math.ceil(after/1000)*1000},`${after} − ${before} = ${one*count} mL, ${one*count} ÷ ${count} = ${one} mL입니다.`);}
+ if(q.stage===12&&q.type===2){const before=r(20,40)*100,one=r(3,10)*50,count=r(2,5),after=before+one*count;set([`물 ${Math.floor(before/1000)} L${before%1000?' '+before%1000+' mL':''}에 같은 컵으로 물을 가득 담아 ${count}번 더 부었더니 ${Math.floor(after/1000)} L${after%1000?' '+after%1000+' mL':''}가 되었습니다. 컵의 들이는 몇 mL인가요?`],[num('더 부은 물 전체',one*count,'mL'),num('컵의 들이',one,'mL')],{kind:'cupChange',before,after,count,one,capacity:Math.ceil(after/1000)*1000},`${after} − ${before} = ${one*count} mL, ${one*count} ÷ ${count} = ${one} mL입니다.`);}
  if(q.stage===12&&q.type===2){const cup=pick([['작은 컵','smallCup',150,250],['유리컵','glass-water-full',150,350],['머그잔','mug-water-full',200,450],['텀블러','tumbler-water-full',250,600],['계량컵','measureJug-water-full',250,1000]].filter(x=>q.visual.one>=x[2]&&q.visual.one<=x[3]));q.visual.cup={name:cup[0],art:cup[1]};q.lines=q.lines.map(line=>line.replaceAll('같은 컵','같은 '+cup[0]).replaceAll('컵의 들이는',cup[0]+'의 들이는'));}
  if(q.stage===15&&q.type===4){
   const [dish,liquid,art,servings,cups]=pick([['라따뚜이','토마토소스','ratatouille',2,2],['토마토 수프','토마토소스','soup-tomato',2,2],['옥수수 수프','우유','soup-corn',4,2],['감자 수프','우유','soup-potato',4,2],['채소 수프','채소 국물','soup-vegetable',3,3],['팥빙수','우유','patbingsu',3,1]]),multiple=r(2,6),cup=200,total=cups*cup*multiple;

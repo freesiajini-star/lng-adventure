@@ -5,7 +5,7 @@ test('merged menus preserve old IDs and show two equalizing / four weight famili
  for(let stage of [5,6])for(let type=0;type<TYPE_NAMES[stage-1].length;type++){const q=makeQuestion(stage,type,31);assert.equal(q.type,type);assert.equal(q.stage,stage);}
 });
 test('reference estimates combine full, half, third and mixed receivers',()=>{
- const patterns=new Set();for(let seed=0;seed<1000;seed++){const q=makeQuestion(3,0,seed),v=q.visual;assert.equal(v.kind,'referenceEstimate');assert.ok(v.fills.every(f=>[1,.5,1/3].includes(f)));assert.equal(Number(q.fields[0].answer),Math.round(v.fills.reduce((n,f)=>n+f*1000,0)));patterns.add(v.fills.join(','));assert.ok(!/NaN|undefined/.test(renderVisual(v)));}assert.ok(patterns.size>=8);
+ const patterns=new Set();for(let seed=0;seed<1000;seed++){const q=makeQuestion(3,0,seed),v=q.visual;assert.equal(v.kind,'referenceEstimate');assert.ok(v.fills.every(f=>[1,.5,.25,1/3].includes(f)));assert.equal(Number(q.fields[0].answer),Math.round(v.fills.reduce((n,f)=>n+f*1000,0)));patterns.add(v.fills.join(','));assert.ok(!/NaN|undefined/.test(renderVisual(v)));}assert.ok(patterns.size>=8);
 });
 test('equalizing two families conserve water and infer original amounts',()=>{
  for(let seed=0;seed<1000;seed++){

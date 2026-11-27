@@ -1,5 +1,5 @@
-import {renderElectronicWeighing} from './electronic-weighing.js?v=f8b8778b26df';
-import {artImage} from './art-catalog.js?v=f8b8778b26df';
+import {renderElectronicWeighing} from './electronic-weighing.js?v=5bbe875fd0e2';
+import {artImage} from './art-catalog.js?v=5bbe875fd0e2';
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" fill="var(--stage-ink,#304f4b)" font-family="Malgun Gothic,sans-serif">${s}</text>`;
 const svg=(w,h,c,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${c}</svg>`;
 export function paintedDetails(v){

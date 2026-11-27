@@ -33,7 +33,7 @@ test('all valid 2 kg combinations are accepted; all fields still form one outcom
 test('recipe, cacao, clean-water table, half box and connected balance keep original arithmetic',()=>{
  const recipe=makeQuestion(15,4,1),a=recipe.facts[0].audit;assert.equal(a.k,a.targetScale/a.baseScale);assert.equal(Number(recipe.fields[0].answer)*1000+Number(recipe.fields[1].answer),a.baseAmount*a.k);
  const box=makeQuestion(12,6),bv=box.visual;assert.equal(bv.totals[0]-bv.totals[1],bv.one*(bv.counts[0]-bv.counts[1]));assert.equal(bv.totals[1]-bv.one*bv.counts[1],Number(box.fields.at(-1).answer));
- const balance=makeQuestion(16,1).visual.items;assert.equal(balance[0].rightMass/8,balance[1].leftMass/4);assert.equal(balance[0].leftMass/7,200);assert.equal(balance[1].rightMass*2,1400);
+ const balance=makeQuestion(16,1).visual.items;assert.equal(balance[0].rightMass/balance[0].rightCount,balance[1].leftMass/balance[1].leftCount);assert.equal(balance[0].leftMass,balance[0].rightMass);assert.equal(balance[1].leftMass,balance[1].rightMass);assert.equal(balance[0].leftMass,balance[1].rightMass*2);
 });
 
 test('same-container variants change objects, levels, winners and all ranking permutations',()=>{

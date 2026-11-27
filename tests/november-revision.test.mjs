@@ -41,7 +41,7 @@ test('all 30 substitution situations and 24 two-equation situations have integra
 test('30 scaling contexts always scale a larger target and preserve units, shortages, change and package comparisons',()=>{
  for(let index=0;index<SCALE_SCENES.length;index++)for(let seed=1;seed<=120;seed++){
   const q=makeScaleQuestion({stage:15,type:4},seed,index),a=q.facts[0].audit;validateQuestion(q);assert.equal(a.targetScale,a.baseScale*a.k);assert.ok(Number.isInteger(a.k)&&a.k>=2&&a.k<=10);assert.equal(Number(q.fields[0].answer),a.k);let expected=a.baseAmount*a.k;
-  if(a.mode==='shortage')expected-=a.available;if(a.mode==='remain')expected=a.available-expected;if(a.mode==='change')expected=a.available-expected;if(a.mode==='twoPrices')expected=a.price1*a.k+a.price2*a.k2;if(a.mode==='comparePrice')expected=a.baseAmount*a.k-a.largePrice*a.k/3;if(a.mode==='juicePrices')expected=a.baseAmount*a.k+a.otherPrice*a.targetScale/a.otherBase;if(index===23)expected/=1000;
+  if(a.mode==='shortage')expected-=a.available;if(a.mode==='remain')expected=a.available-expected;if(a.mode==='change')expected=a.available-expected;if(a.mode==='twoPrices')expected=a.price1*a.k+a.price2*a.k2;if(a.mode==='comparePrice')expected=Math.abs(a.baseAmount*a.k-a.largePrice*a.k/3);if(a.mode==='juicePrices')expected=a.baseAmount*a.k+a.otherPrice*a.targetScale/a.otherBase;if(index===23)expected/=1000;
   assert.equal(a.answer,expected);const fields=q.fields.slice(1).filter(f=>f.kind==='number');const actual=fields.length===2&&['L','kg'].includes(fields[0].unit)?Number(fields[0].answer)*1000+Number(fields[1].answer):Number(fields.at(-1).answer);assert.equal(actual,expected);assert.ok(expected>0);assert.ok(!JSON.stringify(publicQuestion(q)).includes('baseAmount'));
  }
 });

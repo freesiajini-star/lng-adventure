@@ -1,13 +1,13 @@
-import {makeContainerWeightQuestion} from './container-weight-problems.js?v=f8b8778b26df';
-import {makeLimitQuestion} from './limit-problems.js?v=f8b8778b26df';
-import {makeLifeQuestion} from './life-problems.js?v=f8b8778b26df';
-import {reviseCore} from './core-revisions.js?v=f8b8778b26df';
-import {makeFillTableQuestion} from './fill-tables.js?v=f8b8778b26df';
-import {makePourQuestion} from './pour-problems.js?v=f8b8778b26df';
+import {makeContainerWeightQuestion} from './container-weight-problems.js?v=5bbe875fd0e2';
+import {makeLimitQuestion} from './limit-problems.js?v=5bbe875fd0e2';
+import {makeLifeQuestion} from './life-problems.js?v=5bbe875fd0e2';
+import {reviseCore,seeded} from './core-revisions.js?v=5bbe875fd0e2';
+import {makeFillTableQuestion} from './fill-tables.js?v=5bbe875fd0e2';
+import {makePourQuestion} from './pour-problems.js?v=5bbe875fd0e2';
 // Restores the visual evidence and questions from the user-supplied pages.
 export const EXTRA_TYPES={3:['우유갑으로 어림'],4:['그림표와 액체의 들이'],6:['무게는 몇 배'],8:['두 저울 비교'],9:['두 바구니의 무게','한도에 맞게 고르기'],12:['절반을 덜면','접시의 무게'],14:['달걀판은 몇 개'],15:['길이와 무게'],16:['같은 것으로 바꾸기']};
 export function restoreQuestion(q,seed=1){
- const s=q.stage,t=q.type;
+ const s=q.stage,t=q.type,random=seeded(seed+s*839+t*101),r=(a,b)=>a+Math.floor(random()*(b-a+1));
  const n=(label,answer,unit='')=>({label,answer:String(answer),unit,kind:'number'});
  const c=(label,options,answer)=>({label,options:[...options],answer,kind:'choice'});
  const set=(source,lines,fields,visual,explanation,work=[])=>Object.assign(q,{source,lines,fields,visual,explanation,work,facts:[]});
@@ -48,7 +48,7 @@ export function restoreQuestion(q,seed=1){
  if(s===8&&t===0)q.visual={kind:'objectCards',cards:[['배추','약 2 (g, kg, t)'],['두부','약 350 (g, kg, t)'],['승용차','약 1 (g, kg, t)']]};
  if(s===8&&(t===4||t===5))q.visual={...q.visual,kind:'illustratedDial',label:'호박',zoom:true};
  if(s===8&&t===6)set('원리125:30',['두 저울의 바늘을 읽으세요.','호박과 무 중 더 무거운 것을 고르세요.'],[c('더 무거운 것',['호박','무'],'호박')],{kind:'pairedDials',items:[{label:'호박',value:1750,max:2000,step:50},{label:'무',value:850,max:2000,step:50}]},'호박은 1750 g, 무는 850 g이므로 호박이 더 무겁습니다.');
- if(s===9&&t===6)set('원리127:44',['두 바구니의 감을 각각 저울에 올렸습니다. 바구니의 무게는 생각하지 않습니다.','감의 무게는 모두 몇 kg 몇 g인가요?'],[n('모두 kg',2,'kg'),n('모두 나머지 g',800,'g')],{kind:'pairedDials',items:[{label:'감 바구니',value:1670,max:2000,step:10},{label:'감 바구니',value:1130,max:2000,step:10}]},'1670 + 1130 = 2800 g = 2 kg 800 g입니다.');
+ if(s===9&&t===6){const a=r(81,189)*10,b=r(81,189)*10,total=a+b;set('원리127:44',['두 바구니의 감을 각각 저울에 올렸습니다. 바구니의 무게는 생각하지 않습니다.','감의 무게는 모두 몇 kg 몇 g인가요?'],[n('모두 kg',Math.floor(total/1000),'kg'),n('모두 나머지 g',total%1000,'g')],{kind:'pairedDials',items:[{label:'감 바구니',value:a,max:2000,step:10},{label:'감 바구니',value:b,max:2000,step:10}]},a+' + '+b+' = '+total+' g = '+Math.floor(total/1000)+' kg '+total%1000+' g입니다.');}
  if(s===4&&t===6)set('원리119:22',['음식 10 mL를 정화하는 데 필요한 맑은 물의 양입니다.','라면 국물 50 mL와 우유 30 mL를 정화하려면 맑은 물이 모두 몇 L 필요한가요?'],[n('라면 국물에 필요한 물',250,'L'),n('우유에 필요한 물',450,'L'),n('모두',700,'L')],{kind:'objectCards',cards:[['라면 국물','10 mL → 물 50 L'],['간장','10 mL → 물 300 L'],['우유','10 mL → 물 150 L'],['식용유','10 mL → 물 1980 L']]},'50 × 5 = 250 L, 150 × 3 = 450 L. 모두 700 L입니다.');
  if(s===11&&t===3)q.visual={kind:'guessDistance',actual:q.lines[0],rows:q.visual.rows};
  if(s===11&&t===0)set('심화106:1-1',['각 그릇을 가득 채워 같은 크기의 어항에 부었습니다.','어항이 가득 찰 때까지 부은 횟수를 보고, 들이가 작은 그릇부터 고르세요.','남거나 넘친 물은 없습니다.'],['다','가','나'].map((x,i)=>c((i+1)+'번째',['가','나','다'],x)),{kind:'cupTable',labels:['가','나','다'],counts:[12,9,14],shapes:['대접','원통','목 긴 병']},'같은 어항을 채우는 데 부은 횟수가 많을수록 그릇의 들이가 작습니다. 14, 12, 9번 순서이므로 다, 가, 나입니다.');
@@ -61,7 +61,7 @@ export function restoreQuestion(q,seed=1){
  if(s===15&&t===5)set('심화112:7-1',['카카오나무 한 그루에서 열매를 약 30개 수확했습니다.','열매 한 개가 500 g일 때, 수확한 열매의 무게는 약 몇 kg인가요?'],[n('전체를 g으로',15000,'g'),n('약',15,'kg')],{kind:'cacao',count:30,one:500},'500 × 30 = 15000 g = 15 kg입니다.');
  if(s===15&&t===6)set('심화124:원리 그림',['굵기와 재질이 같은 막대는 길이가 같으면 무게도 같습니다.','2 m 막대가 4 kg일 때, 3 m 막대는 몇 kg인가요?'],[n('1 m의 무게',2,'kg'),n('3 m의 무게',6,'kg')],{kind:'rods'},'4 ÷ 2 = 2 kg, 2 × 3 = 6 kg입니다.');
  if(s===10&&t===2){const one=Number(q.fields[0].answer);q.lines=['레몬 1개와 방울토마토 3개의 무게가 같습니다.','방울토마토 5개와 키위 1개의 무게가 같습니다.',`레몬이 ${one*3} g일 때, 키위 한 개는 몇 g인가요?`,'같은 종류의 과일은 한 개의 무게가 같습니다.'];q.fields=[n('방울토마토 한 개',one,'g'),n('키위 한 개',one*5,'g')];q.visual.items.push(bal('방울토마토','키위',5,1,one*5));q.explanation=`${one*3} ÷ 3 = ${one} g, ${one} × 5 = ${one*5} g입니다.`;}
- if(s===16&&t===1)set('심화110:대표5',['감 7개와 사과 8개의 무게가 같습니다.','사과 4개와 배 3개의 무게가 같습니다.','감 한 개가 200 g일 때 배 6개의 무게는 몇 kg 몇 g인가요?','같은 종류의 과일은 한 개의 무게가 같습니다.'],[n('감 7개의 무게',1400,'g'),n('배 6개의 무게 kg',1,'kg'),n('나머지 g',400,'g')],{kind:'balances',items:[bal('감','사과',7,8,1400),bal('사과','배',4,3,700)]},'사과 8개는 배 6개와 같습니다. 감 7개의 무게와 같으므로 200 × 7 = 1400 g = 1 kg 400 g입니다.');
+ if(s===16&&t===1){let ac,bc,cc,one,apple,pear;do{ac=r(5,8);bc=[4,6,8][r(0,2)];cc=r(2,3);one=r(1,3)*120;apple=ac*one/bc;pear=ac*one/(cc*2);}while(apple<100||apple>350||pear<200||pear>650);const total=ac*one;set('심화110:대표5',['감 '+ac+'개와 사과 '+bc+'개의 무게가 같습니다.','사과 '+bc/2+'개와 배 '+cc+'개의 무게가 같습니다.','감 한 개가 '+one+' g일 때 배 '+cc*2+'개의 무게는 몇 kg 몇 g인가요?','같은 종류의 과일은 한 개의 무게가 같습니다.'],[n('감 '+ac+'개의 무게',total,'g'),n('배 '+cc*2+'개의 무게 kg',Math.floor(total/1000),'kg'),n('나머지 g',total%1000,'g')],{kind:'balances',items:[bal('감','사과',ac,bc,total),bal('사과','배',bc/2,cc,total/2)]},'사과 '+bc+'개는 배 '+cc*2+'개와 같습니다. 감 '+ac+'개의 무게와 같으므로 '+one+' × '+ac+' = '+total+' g입니다.');}
  if(s===16&&t===6)set('심화126:원리 그림',['우유의 무게는 빵의 무게보다 100 g 더 무겁습니다.','빵 한 개와 우유 한 개의 무게를 더하면 200 g입니다.','빵 한 개와 우유 한 개는 각각 몇 g인가요?'],[n('빵 두 개의 무게',100,'g'),n('빵 한 개',50,'g'),n('우유 한 개',150,'g')],{kind:'substitution'},'우유를 빵 + 100 g으로 바꾸면 빵 두 개 + 100 g = 200 g입니다. 빵은 50 g, 우유는 150 g입니다.');
  if(s===13&&q.visual?.kind==='comparisonBars')q.visual.unit=q.fields.find(f=>f.unit)?.unit||'mL';
  if(s===17&&q.visual?.kind==='flow')q.visual={...q.visual,kind:'bathFlow'};

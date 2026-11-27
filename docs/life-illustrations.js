@@ -1,8 +1,8 @@
-import {paintedVessel,paintedGeometry} from './painted-pour.js?v=f8b8778b26df';
-import {artImage,lifeArtwork} from './art-catalog.js?v=f8b8778b26df';
-import {illustration} from './pour-illustrations.js?v=f8b8778b26df';
-import {vesselGeometry} from './pour-geometry.js?v=f8b8778b26df';
-import {source,sourceDefs,transferArrow} from './source-vessels.js?v=f8b8778b26df';
+import {paintedVessel,paintedGeometry} from './painted-pour.js?v=5bbe875fd0e2';
+import {artImage,lifeArtwork} from './art-catalog.js?v=5bbe875fd0e2';
+import {illustration} from './pour-illustrations.js?v=5bbe875fd0e2';
+import {vesselGeometry} from './pour-geometry.js?v=5bbe875fd0e2';
+import {source,sourceDefs,transferArrow} from './source-vessels.js?v=5bbe875fd0e2';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tx=(x,y,s,size=17)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Malgun Gothic,sans-serif" font-size="${size}" fill="var(--stage-ink,#304f4b)">${esc(s)}</text>`;
 const colors=['#e78d9c','#b5b3dc','#f1c37c','#9ac8ad'];
@@ -35,4 +35,4 @@ export function renderLifeTable(v){let out=sourceDefs()+`<defs><linearGradient i
 export function referenceLayout(v){
  const total=Math.round(v.fills.reduce((n,f)=>n+f*1000,0)),id=v.source==='물통'?'pitcher':v.source==='계량컵'?'measureJug':'waterBottle',a=paintedGeometry(id,total,total),b=paintedGeometry('glass',1000,1000),height=g=>(g.profile.at(-1)[0]-g.profile[0][0])*g.scale,camera=155/Math.max(height(a),height(b));return{total,id,camera,width:Math.max(650,280+v.fills.length*128)};
 }
-export function renderReference(v){const {total,id,camera,width}=referenceLayout(v);let out=paintedVessel(id,total,total,'물',120,210,camera,'reference-source').markup+tx(120,245,v.source,16)+transferArrow(200,125);v.fills.forEach((f,i)=>{const x=300+i*128;out+=paintedVessel('glass',1000,f*1000,'물',x,210,camera,'reference-'+i).markup+tx(x,28,'1 L 그릇',14)+tx(x,245,f===1?'가득':f===.5?'약 절반':'약 3분의 1',13);});return '<svg viewBox="0 0 '+width+' 265" role="img" aria-label="같은 축척으로 그린 물통과 그릇의 물의 양">'+out+'</svg>';}
+export function renderReference(v){const {total,id,camera,width}=referenceLayout(v);let out=paintedVessel(id,total,total,'물',120,210,camera,'reference-source').markup+tx(120,245,v.source,16)+transferArrow(200,125);v.fills.forEach((f,i)=>{const x=300+i*128;out+=paintedVessel('glass',1000,f*1000,'물',x,210,camera,'reference-'+i).markup+tx(x,28,'1 L 그릇',14)+tx(x,245,f===1?'가득':f===.5?'약 절반':f===.25?'약 4분의 1':'약 3분의 1',13);});return '<svg viewBox="0 0 '+width+' 265" role="img" aria-label="같은 축척으로 그린 물통과 그릇의 물의 양">'+out+'</svg>';}
